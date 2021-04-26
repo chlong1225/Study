@@ -3,6 +3,7 @@ package com.demo.algorithm.algo;
 
 import android.util.Log;
 
+
 /**
  * Created by w on 2021/4/24.
  *
@@ -13,18 +14,18 @@ public class LinkedList {
 
     private static final String TAG = "LinkedList";
 
-    private SingleNode head = null;
+    private Node head = null;
 
     /**
-     * 添加节点
+     * 添加节点,便于构建数据
      * @param data :
      */
     public void add(String data) {
-        SingleNode node = new SingleNode(data, null);
+        Node node = new Node(data, null);
         if (head == null) {
             head = node;
         } else {
-            SingleNode p = head;
+            Node p = head;
             while (p.next != null) {
                 p = p.next;
             }
@@ -44,8 +45,8 @@ public class LinkedList {
             head = head.next;
             return;
         }
-        SingleNode pre = head;
-        SingleNode current = head.next;
+        Node pre = head;
+        Node current = head.next;
         while (current != null && !current.data.equals(data)) {
             pre = current;
             current = current.next;
@@ -61,130 +62,192 @@ public class LinkedList {
      *  使用单链表判断字符串是否是回文字符串
      */
 
-    public boolean isReverseStr(SingleNode head) {
+    public boolean isReverseStr() {
+        //链表为空,返回false
         if (head == null) {
             return false;
         }
-        SingleNode p = head;
-        SingleNode q = head;
-
-
-        return false;
+        Node p = head;
+        //链表只有一个元素,返回true
+        if (p.next == null) {
+            return true;
+        }
+        //直接反转链表
+        Node q = reverse();
+        while (p.next != null) {
+            if (!p.data.equals(q.data)) {
+                return false;
+            }
+            p = p.next;
+            q = q.next;
+        }
+        return true;
     }
 
-
     /**
-     * 实现LRU缓存算法
-     */
-    public void addByLru(SingleNode head) {
-
-    }
-
-    /**
-     * @param head :
      * @return : 单链表反转
      */
-    public SingleNode reverse(SingleNode head) {
-        return head;
+    public Node reverse() {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return head;
+        }
+        Node p = head;
+        Node result = head;
+        while(p.next != null) {
+            Node tem = result;
+            result = p.next;
+            result.next = tem;
+        }
+        return result;
     }
 
     /**
-     * @param head :
      * @return : 链表是否为环形
      */
-    public boolean isRing(SingleNode head) {
+    public boolean isRing() {
+        if (head == null) {
+            return false;
+        }
+        Node slow = head;
+        Node fast = head.next;
+        while (slow != null && fast != null) {
+            if (slow == fast) {
+                return true;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
         return false;
     }
 
     /**
+     * 两个链表存入整数
      * @param head1 :
      * @param head2 :
      * @return : 两个有序的链表合并
      */
-    public SingleNode mergeNode(SingleNode head1, SingleNode head2) {
-        return null;
+    public Node mergeNode(Node head1, Node head2) {
+        if (head1 == null) {
+            return head2;
+        }
+        if (head2 == null) {
+            return head1;
+        }
+        Node result = null;
+        Node p = head1;
+        Node q = head2;
+        while (p != null && q != null) {
+            if (Integer.parseInt(p.data) < Integer.parseInt(q.data)) {
+                if (result == null) {
+                    result = p;
+                } else {
+                    result.next = p;
+                }
+                p = p.next;
+            } else {
+                if (result == null) {
+                    result = q;
+                } else {
+                    result.next = q;
+                }
+                q = q.next;
+            }
+        }
+        if (p == null) {
+            if (result == null) {
+                result = q;
+            } else {
+                result.next = q;
+            }
+        }
+        if (q == null) {
+            if (result == null) {
+                result = p;
+            } else {
+                result.next = p;
+            }
+        }
+        return result;
     }
 
     /**
-     * 删除链表倒数第n个结点
-     * @param head
-     * @param n : 倒数节点的序号
+     * 删除链表倒数第k个结点
+     * @param k : 倒数节点的序号
      */
-    public void deleteNode(SingleNode head, int n) {
-
+    public void deleteNode(int k) {
+        if (head == null) {
+            return;
+        }
+        Node fast = head;
+        int i = 0;
+        while (fast != null && i < k) {
+            fast = fast.next;
+            i++;
+        }
+        if (fast == null) {
+            return;
+        }
+        Node p = head;
+        Node pre = null;
+        while (fast.next != null) {
+            fast = fast.next;
+            pre = p;
+            p.next = p;
+        }
+        if (pre == null) {
+            head = head.next;
+        } else {
+            pre.next = p.next;
+        }
     }
 
     /**
-     * @param head
      * @return : 求链表的中间结点
      */
-    public SingleNode quaryCenter(SingleNode head) {
-        return null;
-    }
+    public Node quaryCenter() {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return head;
+        }
+        Node slow = head;
+        Node fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
 
+        return slow;
+    }
 
 
     /**
      * 打印单链表的数据
-     * @param head :
      */
-    public void printSingleAll(SingleNode head) {
+    public void printAll() {
+        printAll(head);
+    }
+    
+    public void printAll(Node head) {
         if (head == null) {
-            Log.e(TAG, "printSingleAll: 链表为空");
+            Log.e(TAG, "printAll: 链表为空");
             return;
         }
         int count = 0;
         while (head != null) {
-            Log.e(TAG, "printSingleAll: data = " + head.data);
+            Log.e(TAG, "printAll: data = " + head.data);
             head = head.next;
             count++;
         }
-        Log.e(TAG, "printSingleAll: count = " + count);
+        Log.e(TAG, "printAll: count = " + count);
 
     }
 
-    /**
-     * 打印双向链表的数据
-     * @param head :
-     */
-    public void printDoubleAll(DoubleNode head) {
-        if (head == null) {
-            Log.e(TAG, "printDoubleAll: 链表为空");
-            return;
-        }
-        int count = 0;
-        while (head != null) {
-            Log.e(TAG, "printDoubleAll: data = " + head.data);
-            count++;
-            head = head.next;
-        }
-        Log.e(TAG, "printDoubleAll: count = " + count);
-    }
 
-
-    /**
-     * 定义单链表的数据结构
-     */
-    public static class SingleNode{
-
-        String data;
-        SingleNode next;
-
-        public SingleNode(String data, SingleNode next) {
-            this.data = data;
-            this.next = next;
-        }
-    }
-
-    /**
-     * 定义双向链表的数据结构
-     */
-    public static class DoubleNode{
-
-        DoubleNode pre;
-        String data;
-        DoubleNode next;
-    }
 
 }
 
