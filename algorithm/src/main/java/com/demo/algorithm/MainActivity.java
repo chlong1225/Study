@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.demo.algorithm.algo.LinkedList;
 import com.demo.algorithm.algo.LruLinkedList;
+import com.demo.algorithm.algo.Node;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,8 +22,52 @@ public class MainActivity extends AppCompatActivity {
 
 //        testDelete();
 
-        testReverseStr();
+//        testReverseStr();
 
+//        testCenter();
+
+        testMerge();
+
+    }
+
+    private void testMerge() {
+        LinkedList list1 = new LinkedList();
+        list1.add("1");
+        list1.add("3");
+        list1.add("5");
+        list1.add("7");
+        LinkedList list2 = new LinkedList();
+        list2.add("2");
+        list2.add("4");
+        list2.add("6");
+        list2.add("8");
+        Node node = LinkedList.mergeNode(list1.getHead(), list2.getHead());
+        list1.printAll(node);
+    }
+
+    private void testCenter() {
+        LinkedList list = new LinkedList();
+        Node head = new Node("a", null);
+        list.add(head);
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        Node end = new Node("e", head);
+        list.add(end);
+        boolean ring1 = list.isRing();
+        LinkedList list1 = new LinkedList();
+        list1.add("a");
+        list1.add("b");
+        list1.add("c");
+        list1.add("d");
+        String center1 = list1.quaryCenter().getData();
+        boolean ring2 = list1.isRing();
+        LinkedList list2 = new LinkedList();
+        list2.add("a");
+        list2.add("b");
+        list2.add("c");
+        String center2 = list2.quaryCenter().getData();
+        Log.e(TAG, "testCenter: " + ring1 + " ;; " + ring2 + " ;; " + center1 + " ;; " + center2);
     }
 
     private void testReverseStr() {
@@ -72,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testLru() {
-        LruLinkedList<String> list = new LruLinkedList<>();
+        LruLinkedList list = new LruLinkedList();
         list.printAll();
         Log.e("LruLinkedList", "testLru: 开始添加数据");
         for (int i = 0; i < 10; i++) {

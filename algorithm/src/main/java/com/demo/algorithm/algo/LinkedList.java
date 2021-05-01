@@ -22,6 +22,10 @@ public class LinkedList {
      */
     public void add(String data) {
         Node node = new Node(data, null);
+        add(node);
+    }
+
+    public void add(Node node) {
         if (head == null) {
             head = node;
         } else {
@@ -31,6 +35,10 @@ public class LinkedList {
             }
             p.next = node;
         }
+    }
+
+    public Node getHead() {
+        return head;
     }
 
     /**
@@ -120,7 +128,7 @@ public class LinkedList {
         }
         Node slow = head;
         Node fast = head.next;
-        while (slow != null && fast != null) {
+        while (slow != null && fast != null && fast.next != null) {
             if (slow == fast) {
                 return true;
             }
@@ -136,48 +144,63 @@ public class LinkedList {
      * @param head2 :
      * @return : 两个有序的链表合并
      */
-    public Node mergeNode(Node head1, Node head2) {
-        if (head1 == null) {
+    public static Node mergeNode(Node head1, Node head2) {
+        //优化方案
+        Node solider = new Node("", null);
+        Node p = solider;
+        while (head1 != null && head2 != null) {
+            if (Integer.parseInt(head1.data) < Integer.parseInt(head2.data)) {
+                p.next = head1;
+                head1 = head1.next;
+            } else {
+                p.next = head2;
+                head2 = head2.next;
+            }
+            p = p.next;
+        }
+        if (head1 != null) {
+            p.next = head1;
+        }
+        if (head2 != null) {
+            p.next = head2;
+        }
+        return solider.next;
+        /*if (head1 == null) {
             return head2;
         }
         if (head2 == null) {
             return head1;
         }
         Node result = null;
-        Node p = head1;
-        Node q = head2;
-        while (p != null && q != null) {
-            if (Integer.parseInt(p.data) < Integer.parseInt(q.data)) {
+        Node p = result;
+        while (head1 != null && head2 != null) {
+            if (Integer.parseInt(head1.data) < Integer.parseInt(head2.data)) {
                 if (result == null) {
-                    result = p;
+                    result = head1;
+                    p = result;
                 } else {
-                    result.next = p;
+                    p.next = head1;
+                    p = p.next;
                 }
-                p = p.next;
+                head1 = head1.next;
             } else {
                 if (result == null) {
-                    result = q;
+                    result = head2;
+                    p = result;
                 } else {
-                    result.next = q;
+                    p.next = head2;
+                    p = p.next;
                 }
-                q = q.next;
+                head2 = head2.next;
             }
         }
-        if (p == null) {
-            if (result == null) {
-                result = q;
-            } else {
-                result.next = q;
-            }
+        if (head1 == null) {
+            p.next = head2;
         }
-        if (q == null) {
-            if (result == null) {
-                result = p;
-            } else {
-                result.next = p;
-            }
+        if (head2 == null) {
+            p.next = head1;
         }
-        return result;
+        return result;*/
     }
 
     /**

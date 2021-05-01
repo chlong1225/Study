@@ -7,7 +7,7 @@ import android.util.Log;
  * <p>
  * 基于单链表的Lru算法
  */
-public class LruLinkedList<T> {
+public class LruLinkedList {
 
     private static final String TAG = "LruLinkedList";
 
@@ -20,7 +20,7 @@ public class LruLinkedList<T> {
     private int length;
 
     //链表头
-    private SNode<T> head;
+    private SNode head;
 
     public LruLinkedList() {
         this(DEFAULT_CAPACITY);
@@ -36,13 +36,12 @@ public class LruLinkedList<T> {
         length = 0;
     }
 
-    public void add(T data) {
-        SNode<T> sNode = new SNode<>(data, null);
-        SNode<T> p = head;
+    public void add(String data) {
+        SNode sNode = new SNode(data, null);
+        SNode p = head;
         //1,删除相同的节点数据
-        SNode<T> pre = head;
+        SNode pre = head;
         while (p != null) {
-            //默认只支持String类型的数据
             if (p.data.equals(data)) {
                 if (pre == p) {
                     //链表头重复了不执行操作
@@ -59,8 +58,8 @@ public class LruLinkedList<T> {
 
         //2,判断是否超出长度,删除尾结点
         if (length >= capacity) {
-            SNode<T> p1 = null;
-            SNode<T> q1 = head;
+            SNode p1 = null;
+            SNode q1 = head;
             while (q1.next != null) {
                 p1 = q1;
                 q1 = q1.next;
@@ -70,7 +69,7 @@ public class LruLinkedList<T> {
         }
 
         //3,添加节点
-        SNode<T> tem = head;
+        SNode tem = head;
         head = sNode;
         head.next = tem;
         length++;
@@ -81,7 +80,7 @@ public class LruLinkedList<T> {
             Log.e(TAG, "printAll: 链表为空");
             return;
         }
-        SNode<T> p = head;
+        SNode p = head;
         while (p != null) {
             Log.e(TAG, "printAll: data = " + p.data.toString());
             p = p.next;
@@ -89,15 +88,15 @@ public class LruLinkedList<T> {
     }
 
 
-    public static class SNode<T>{
+    public static class SNode{
 
-        private T data;
-        private SNode<T> next;
+        private String data;
+        private SNode next;
 
         public SNode() {
         }
 
-        public SNode(T data, SNode<T> next) {
+        public SNode(String data, SNode next) {
             this.data = data;
             this.next = next;
         }
