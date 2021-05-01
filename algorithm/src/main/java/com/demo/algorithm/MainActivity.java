@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,7 +19,34 @@ public class MainActivity extends AppCompatActivity {
 
 //        testLru();
 
-        testDelete();
+//        testDelete();
+
+        testReverseStr();
+
+    }
+
+    private void testReverseStr() {
+        LinkedList list1 = new LinkedList();
+        list1.add("a");
+        list1.add("b");
+        list1.add("c");
+        list1.add("b");
+        list1.add("a");
+        boolean reverseStr1 = list1.isReverseStr();
+        LinkedList list2 = new LinkedList();
+        list2.add("a");
+        list2.add("b");
+        list2.add("c");
+        list2.add("c");
+        list2.add("b");
+        list2.add("a");
+        boolean reverseStr2 = list2.isReverseStr();
+        LinkedList list3 = new LinkedList();
+        list3.add("a");
+        list3.add("b");
+        list3.add("c");
+        boolean reverseStr3 = list3.isReverseStr();
+        Log.e(TAG, "testReverseStr: " + reverseStr1 + " ;; " + reverseStr2 + " ;; " + reverseStr3);
 
     }
 

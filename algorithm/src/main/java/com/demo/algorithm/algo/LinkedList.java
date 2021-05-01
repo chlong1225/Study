@@ -72,13 +72,22 @@ public class LinkedList {
         if (p.next == null) {
             return true;
         }
-        //直接反转链表
-        Node q = reverse();
-        while (p.next != null) {
-            if (!p.data.equals(q.data)) {
-                return false;
+        //直接反转链表,会造成原链表有变化,需要先存储一份
+        Node tem = null;
+        while (p != null) {
+            if (tem == null) {
+                tem = new Node(p.data, null);
+            } else {
+                tem.next = new Node(p.data, null);
             }
             p = p.next;
+        }
+        Node q = reverse();
+        while (tem.next != null) {
+            if (!tem.data.equals(q.data)) {
+                return false;
+            }
+            tem = tem.next;
             q = q.next;
         }
         return true;
@@ -91,14 +100,12 @@ public class LinkedList {
         if (head == null) {
             return null;
         }
-        if (head.next == null) {
-            return head;
-        }
         Node p = head;
-        Node result = head;
-        while(p.next != null) {
+        Node result = null;
+        while(p != null) {
             Node tem = result;
-            result = p.next;
+            result = p;
+            p = p.next;
             result.next = tem;
         }
         return result;
