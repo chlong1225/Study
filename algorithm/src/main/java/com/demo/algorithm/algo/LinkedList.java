@@ -47,15 +47,15 @@ public class LinkedList {
         }
         Node pre = head;
         Node current = head.next;
-        while (current != null && !current.data.equals(data)) {
-            pre = current;
-            current = current.next;
+        while (current != null) {
+            if (current.data.equals(data)) {
+                pre.next = current.next;
+                break;
+            } else {
+                pre = current;
+                current = current.next;
+            }
         }
-        if (current == null) {
-            return;
-        }
-        pre.next = current.next;
-
     }
 
     /**
@@ -182,7 +182,7 @@ public class LinkedList {
             return;
         }
         Node fast = head;
-        int i = 0;
+        int i = 1;
         while (fast != null && i < k) {
             fast = fast.next;
             i++;
@@ -191,13 +191,13 @@ public class LinkedList {
             return;
         }
         Node p = head;
-        Node pre = null;
+        Node pre = head;
         while (fast.next != null) {
             fast = fast.next;
             pre = p;
-            p.next = p;
+            p = p.next;
         }
-        if (pre == null) {
+        if (pre == p) {
             head = head.next;
         } else {
             pre.next = p.next;
@@ -238,9 +238,10 @@ public class LinkedList {
             return;
         }
         int count = 0;
-        while (head != null) {
-            Log.e(TAG, "printAll: data = " + head.data);
-            head = head.next;
+        Node p = head;
+        while (p != null) {
+            Log.e(TAG, "printAll: data = " + p.data);
+            p = p.next;
             count++;
         }
         Log.e(TAG, "printAll: count = " + count);
