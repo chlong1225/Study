@@ -3,7 +3,9 @@ package com.demo.algorithm;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.demo.algorithm.algo.ArrayStack;
 import com.demo.algorithm.algo.LinkedList;
+import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
 
@@ -26,8 +28,37 @@ public class MainActivity extends AppCompatActivity {
 
 //        testCenter();
 
-        testMerge();
+//        testMerge();
 
+        testStack();
+
+    }
+
+    private void testStack() {
+        ArrayStack stack = new ArrayStack();
+        String pop = stack.pop();
+        Log.e(TAG, "testStack: pop = " + pop);
+        for (int i = 0; i < 10; i++) {
+            Log.e(TAG, "testStack: push = " + i);
+            stack.push("" + i);
+        }
+        Log.e(TAG, "testStack: push = a");
+        stack.push("a");
+        for (int i = 0; i < 11; i++) {
+            String pop1 = stack.pop();
+            Log.e(TAG, "testStack: pop1 = " + pop1);
+        }
+        Log.e(TAG, "testStack: ---------------------");
+        LinkedStack linkedStack = new LinkedStack();
+        String pop2 = linkedStack.pop();
+        Log.e(TAG, "testStack: pop2 = " + pop2);
+        for (int i = 0; i < 10; i++) {
+            linkedStack.push("" + i * i);
+        }
+        for (int i = 0; i < 10; i++) {
+            String pop3 = linkedStack.pop();
+            Log.e(TAG, "testStack: pop3 = " + pop3);
+        }
     }
 
     private void testMerge() {
