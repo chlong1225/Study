@@ -3,13 +3,14 @@ package com.demo.algorithm;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.demo.algorithm.algo.ArrayStack;
+import com.demo.algorithm.algo.CalculatorByStack;
 import com.demo.algorithm.algo.LinkedList;
 import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,8 +31,20 @@ public class MainActivity extends AppCompatActivity {
 
 //        testMerge();
 
-        testStack();
+//        testStack();
 
+        testCalculator();
+
+    }
+
+    private void testCalculator() {
+        String expression1 = "";
+        String expression2 = "1+3*4+6/3";
+        String expression3 = "2*3/6+2-1";
+        int calculator1 = CalculatorByStack.calculator(expression1);
+        int calculator2 = CalculatorByStack.calculator(expression2);
+        int calculator3 = CalculatorByStack.calculator(expression3);
+        Log.e(TAG, "testCalculator: calculator1 = " + calculator1 + " ;; calculator2 = " + calculator2 + " ;; calculator3 = " + calculator3);
     }
 
     private void testStack() {
