@@ -5,9 +5,11 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.demo.algorithm.algo.ArrayQueue;
 import com.demo.algorithm.algo.ArrayStack;
 import com.demo.algorithm.algo.CalculatorByStack;
 import com.demo.algorithm.algo.LinkedList;
+import com.demo.algorithm.algo.LinkedQueue;
 import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
@@ -33,8 +35,36 @@ public class MainActivity extends AppCompatActivity {
 
 //        testStack();
 
-        testCalculator();
+//        testCalculator();
 
+        testQueue();
+
+    }
+
+    private void testQueue() {
+        ArrayQueue arrayQueue = new ArrayQueue();
+        for (int i = 0; i < 10; i++) {
+            arrayQueue.enqueue("" + i);
+        }
+        String dequeue = arrayQueue.dequeue();
+        arrayQueue.enqueue("a");
+        arrayQueue.enqueue("b");
+        int size = arrayQueue.size();
+        Log.e(TAG, "testQueue: " + size + " ;; " + dequeue);
+        for (int i = 0; i < size; i++) {
+            Log.e(TAG, "testQueue: " + arrayQueue.dequeue());
+        }
+        Log.e(TAG, "testQueue: -----------------------------");
+        LinkedQueue linkedQueue = new LinkedQueue();
+        for (int i = 0; i < 10; i++) {
+            linkedQueue.enqueue("" + i);
+        }
+        int size1 = linkedQueue.size();
+        Log.e(TAG, "testQueue: size1 = " + size1);
+        for (int i = 0; i < size1; i++) {
+            Log.e(TAG, "testQueue: " + linkedQueue.dequeue());
+        }
+        Log.e(TAG, "testQueue: size2 = " + linkedQueue.size());
     }
 
     private void testCalculator() {
