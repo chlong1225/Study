@@ -1,4 +1,4 @@
-package com.demo.study.utils
+package com.chl.common.utils
 
 import android.util.Log
 

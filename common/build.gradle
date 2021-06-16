@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
 }
 
@@ -8,17 +8,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.demo.study"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildFeatures{
-        viewBinding = true
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -37,15 +33,12 @@ android {
 }
 
 dependencies {
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core-ktx:${rootProject.ext.corektxVersion}"
+    implementation 'androidx.core:core-ktx:1.5.0'
     implementation "androidx.appcompat:appcompat:${rootProject.ext.appcompatVersion}"
     implementation "com.google.android.material:material:${rootProject.ext.materialVersion}"
-    implementation "androidx.constraintlayout:constraintlayout:${rootProject.ext.constraintlayoutVersion}"
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
     androidTestImplementation "androidx.test.ext:junit:${rootProject.ext.testJunitVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espressocoreVersion}"
-    if (isLocal.toBoolean()) {
-        implementation project(path: ':common')
-    }
 }

@@ -24,3 +24,22 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+//统一管理依赖库版本
+ext{
+    //Android SDK的版本
+    compileSdkVersion = 30
+    minSdkVersion = 21
+    targetSdkVersion = 30
+    buildToolsVersion = '30.0.3'
+    //Android官方库版本
+    appcompatVersion = '1.3.0'
+    materialVersion = '1.3.0'
+    constraintlayoutVersion = '2.0.4'
+    junitVersion = '4.13.2'
+    testJunitVersion = '1.1.2'
+    espressocoreVersion = '3.3.0'
+    //Kotlin版本
+    corektxVersion = '1.5.0'
+    //其它第三方库
+}

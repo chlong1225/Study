@@ -2,8 +2,8 @@ package com.demo.study
 
 import android.os.Bundle
 import android.widget.Button
+import com.chl.common.utils.LogUtil
 import com.demo.study.databinding.ActivityMainBinding
-import com.demo.study.utils.LogUtil
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 

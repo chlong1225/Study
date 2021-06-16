@@ -1,3 +1,4 @@
+include ':common'
 include ':algorithm'
 include ':app'
 rootProject.name = "Study"

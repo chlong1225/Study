@@ -3,7 +3,7 @@ package com.demo.study
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.demo.study.utils.LogUtil
+import com.chl.common.utils.LogUtil
 
 /**
  * create by chenglong on 6/7/21
