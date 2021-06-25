@@ -17,10 +17,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         })
         getViewBinding().btnSet.setOnClickListener {
-            LogUtil.e("AAAA","onClick : set")
+            LogUtil.e("AAAA","onClick : set : $it")
             SetActivity.openSelf(this@MainActivity)
         }
-        getViewBinding().btnData.setOnClickListener({ v: View -> DataActivity.openSelf(this@MainActivity) })
+        getViewBinding().btnData.setOnClickListener({ DataActivity.openSelf(this@MainActivity) })
     }
 
     override fun buildViewBinding(): ActivityMainBinding {

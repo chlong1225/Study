@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase
  * create by chenglong on 6/25/21
  * description :
  */
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 1,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
