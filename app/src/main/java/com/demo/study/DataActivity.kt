@@ -27,13 +27,13 @@ class DataActivity : BaseActivity<ActivityDataBinding>() {
         super.onCreate(savedInstanceState)
         val userDao = AppDatabase.getInstance(this).userDao()
         getViewBinding().btnInsert.setOnClickListener {
-            userDao.add(User(120, "haha1", 20,"测试1"))
-            userDao.add(User(121, "haha2", 21,"测试2"))
-            userDao.add(User(122, "haha3", 20,"测试3"))
-            userDao.add(User(117, "haha4", 21,"测试4"))
-            userDao.add(User(116, "haha5", 19,"测试5"))
-            userDao.add(User(125, "haha6", 20,"测试6"))
-            userDao.add(User(124, "haha7", 20,"测试7"))
+            userDao.add(User(120, "haha1", 20,"aa","测试1"))
+            userDao.add(User(121, "haha2", 21,"bb","测试2"))
+            userDao.add(User(122, "haha3", 20,"vv","测试3"))
+            userDao.add(User(117, "haha4", 21,"cc","测试4"))
+            userDao.add(User(116, "haha5", 19,"axa","测试5"))
+            userDao.add(User(125, "haha6", 20,"aza","测试6"))
+            userDao.add(User(124, "haha7", 20,"aaa","测试7"))
         }
         getViewBinding().btnQueryAge.setOnClickListener {
             val datas = userDao.queryByAge(20)
@@ -55,7 +55,7 @@ class DataActivity : BaseActivity<ActivityDataBinding>() {
             }
         }
         getViewBinding().btnDeleteUser.setOnClickListener {
-            userDao.deleteByUser(User(124, "aaa", 34,"测试"))
+            userDao.deleteByUser(User(124, "aaa", 34,"dd","测试"))
             val datas = userDao.queryAll()
             datas.forEach {
                 LogUtil.d(TAG,"deleteByUser = ${it}")
