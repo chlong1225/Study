@@ -20,7 +20,10 @@ class KotlinActivity : BaseActivity<ActivityKotlinBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_kotlin)
+    }
+
+    override fun buildViewBinding(): ActivityKotlinBinding {
+        return ActivityKotlinBinding.inflate(layoutInflater)
     }
 
 }

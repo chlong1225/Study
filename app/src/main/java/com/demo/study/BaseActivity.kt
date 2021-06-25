@@ -9,7 +9,9 @@ import com.chl.common.utils.LogUtil
  * create by chenglong on 6/7/21
  * description :
  */
-open class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
+abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
+
+    lateinit var mViewBinding: VB
 
     companion object {
         const val TAG = "BaseActivity"
@@ -18,7 +20,11 @@ open class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LogUtil.e(TAG, "onCreate: " + this.javaClass.name)
+        mViewBinding = buildViewBinding();
+        setContentView(mViewBinding.root)
     }
+
+    abstract fun buildViewBinding(): VB
 
     override fun onStart() {
         super.onStart()
@@ -44,5 +50,9 @@ open class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         LogUtil.e(TAG, "onDestroy: " + this.javaClass.name)
+    }
+
+    fun getViewBinding():VB{
+        return mViewBinding
     }
 }

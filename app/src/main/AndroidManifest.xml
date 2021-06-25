@@ -24,6 +24,9 @@
         <activity android:name=".SetActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".DataActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

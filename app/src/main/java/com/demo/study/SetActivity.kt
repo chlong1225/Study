@@ -20,6 +20,9 @@ class SetActivity : BaseActivity<ActivitySetBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_set)
+    }
+
+    override fun buildViewBinding(): ActivitySetBinding {
+        return ActivitySetBinding.inflate(layoutInflater)
     }
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".DataActivity">
+
+    <Button
+        android:id="@+id/btn_insert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="insert"/>
+
+    <Button
+        android:id="@+id/btn_query_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_insert"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="queryByAge"/>
+
+    <Button
+        android:id="@+id/btn_query_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_query_age"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="queryAll"/>
+
+    <Button
+        android:id="@+id/btn_delete_uid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_query_all"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="deleteByUid"/>
+
+    <Button
+        android:id="@+id/btn_delete_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_delete_uid"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="deleteByUser"/>
+
+    <Button
+        android:id="@+id/btn_delete_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_delete_user"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="deleteAll"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

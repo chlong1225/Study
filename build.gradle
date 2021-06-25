@@ -41,5 +41,6 @@ ext{
     espressocoreVersion = '3.3.0'
     //Kotlin版本
     corektxVersion = '1.5.0'
+    roomVersion = '2.3.0'
     //其它第三方库
 }
