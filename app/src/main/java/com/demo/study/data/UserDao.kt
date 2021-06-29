@@ -16,14 +16,14 @@ interface UserDao {
     fun add(user: User)
 
     //ASC ： 升序 ； DESC ： 降序
-    @Query("SELECT * FROM user WHERE age = :age ORDER BY uid DESC")
+    @Query("SELECT * FROM user WHERE age = :age ORDER BY userId DESC limit(2)")
     fun queryByAge(age: Int): List<User>
 
     //默认以主键升序进行排列
     @Query("SELECT * FROM user")
     fun queryAll(): List<User>
 
-    @Query("delete from user where uid = :uid")
+    @Query("delete from user where userId = :uid")
     fun deleteByUid(uid: Int)
 
     //删除主键相同的数据，其它属性对应的值不会进行对比

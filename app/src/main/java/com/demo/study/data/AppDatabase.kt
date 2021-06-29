@@ -11,10 +11,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * create by chenglong on 6/25/21
  * description :
  */
-@Database(entities = [User::class], version = 2, exportSchema = false)
+@Database(entities = [User::class,TokenBean::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun tokenDao(): TokenDao
 
     companion object {
 
