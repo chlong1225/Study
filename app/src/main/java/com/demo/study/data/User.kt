@@ -13,7 +13,7 @@ import androidx.room.PrimaryKey
 data class User(
     //一个字段可以使用多个注解
     @PrimaryKey
-    @ColumnInfo(name = "userId")
+//    @ColumnInfo(name = "userId")
     var uid: Int,
     //使用变量名为字段时，不需要添加ColumnInfo注解
     var name: String,
