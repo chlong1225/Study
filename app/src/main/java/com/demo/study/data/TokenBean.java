@@ -14,6 +14,7 @@ public class TokenBean {
     private int id;
     private String productId;
     private String token;
+    private long time;
 
     public int getId() {
         return id;
@@ -39,12 +40,21 @@ public class TokenBean {
         this.token = token;
     }
 
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     @Override
     public String toString() {
         return "TokenBean{" +
                 "id=" + id +
                 ", productId='" + productId + '\'' +
                 ", token='" + token + '\'' +
+                ", time=" + time +
                 '}';
     }
 }

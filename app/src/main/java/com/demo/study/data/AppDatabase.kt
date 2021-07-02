@@ -25,13 +25,13 @@ abstract class AppDatabase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("delete from user")
                 //添加字段时必须加上默认值与 not null
-                database.execSQL("alter table user add column description TEXT default '' not null")
+                database.execSQL("alter table user add column description integer default 0 not null")
             }
         }
 
         val migration_2_3 = object : Migration(2,3){
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("CREATE TABLE IF NOT EXISTS `token` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` TEXT, `token` TEXT)")
+                database.execSQL("CREATE TABLE IF NOT EXISTS `token` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` TEXT, `token` TEXT, `time` INTEGER NOT NULL)")
             }
 
         }
