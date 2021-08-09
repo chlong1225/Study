@@ -22,12 +22,27 @@ android {
         viewBinding = true
     }
 
+    signingConfigs {
+        release {
+            //加载签名资源
+            def properties = new Properties()
+            properties.load(new FileInputStream(rootProject.file("keystore.properties")))
+
+            storeFile file(properties.getProperty("storeFile"))
+            keyAlias properties.getProperty('keyAlias')
+            keyPassword properties.getProperty('keyPassword')
+            storePassword properties.getProperty('storePassword')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
