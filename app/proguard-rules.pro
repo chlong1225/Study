@@ -101,9 +101,31 @@
 
 # ---------------------------------------------------------------------- 常见第三方库的混淆规则 ---------------------------------------------------------------------
 
-#----------devcommon----------
-## common
-##### EventBus
+#----------官方库未提供混淆规则----------
+#支付宝支付
+#google支付
+#okhttp4.9.0
+#Room2.3.0（已验证可以正常使用）
+#阿里一键登陆2.10.1。混淆keep规则已经写入aar包，不再需要单独配置。
+#fastjson
+#google登陆，crash，分析
+#Facebook
+#Twitter
+#领英
+#Line
+
+#----------微信登陆，分享，支付----------
+-keep class com.tencent.mm.opensdk.** {
+    *;
+}
+-keep class com.tencent.wxop.** {
+    *;
+}
+-keep class com.tencent.mm.sdk.** {
+    *;
+}
+
+#----------EventBus3.2.0----------
 -keepattributes *Annotation*
 -keepclassmembers class * {
     @org.greenrobot.eventbus.Subscribe <methods>;
@@ -115,7 +137,22 @@
     <init>(java.lang.Throwable);
 }
 
-##### Retrofit2
+#----------Glide4.12.0----------
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class * extends com.bumptech.glide.module.AppGlideModule {
+ <init>(...);
+}
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+-keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
+  *** rewind();
+}
+# for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+#----------Retrofit2----------
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
 # EnclosingMethod is required to use InnerClasses.
 -keepattributes Signature, InnerClasses, EnclosingMethod
@@ -158,12 +195,10 @@
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
-##### okhttp4.9.0
-
-##### Rxjava3，RxAndroid
+#----------Rxjava3，RxAndroid----------
 -dontwarn java.util.concurrent.Flow*
 
-##### Gson
+#----------gson----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
 -keepattributes Signature
@@ -194,24 +229,7 @@
 -keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
 -keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
-##### bugly
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
-
-#####
--keep class com.stl.common.utils.BLActivityCompatOUtils
--keep class com.stl.common.utils.BLActivityLifecycleUtils
--keep class android.app.ActivityThread
--keep class com.stl.common.utils.BLUriUtils
-
-#ui
--keep class com.stl.common.ui.toast.STLToastUtils
--keep class android.app.AppOpsManager
-
-#permission
--keep class com.stl.common.permission.AOPRequestPermission
-
-#xutils
+#----------xutils----------
 -keepattributes Signature,*Annotation*
 -keep public class org.xutils.** {
     public protected *;
@@ -228,42 +246,30 @@
     @org.xutils.view.annotation.Event <methods>;
 }
 
-#----------STLAnySDK----------
-## 微信登陆与分享
--keep class com.tencent.mm.opensdk.** {
-    *;
-}
--keep class com.tencent.wxop.** {
-    *;
-}
--keep class com.tencent.mm.sdk.** {
-    *;
+#----------bugly----------
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+
+#----------友盟----------
+-keep class com.umeng.** {*;}
+
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
 }
 
-#google登陆
-#Facebook登陆，分享
-#Twitter登陆，分享
-#领英登陆，分享
-#Line分享
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
 
-####
--keep class com.stl.any.mgr.STLAnyAppManager
--keep class com.stl.any.app.STLAnyAppBase{*;}
--keep class * extends com.stl.any.app.STLAnyAppBase{*;}
--keep class com.stl.any.STLAnySDK
--keep class com.stl.any.base.STLSdkBase
--keep class * extends com.stl.any.base.STLSdkBase
--keep class com.stl.any.bean.STLAnyUserInfo{*;}
--keep class com.stl.any.param.STLSdkParam{*;}
--keep class * extends com.stl.any.param.STLSdkParam{*;}
--keep class com.stl.any.param.SdkParamWrapper{*;}
--keep class com.stl.any.param.SdkParamItem{*;}
--keep class com.stl.any.token.CheckTokenReturnModel{*;}
--keep class com.stl.any.token.UserInfoParams{*;}
--keep class com.stl.sdks.wechat.WeChatLoginExtras{*;}
+#SDK 9.2.4及以上版本自带oaid采集模块，不再需要开发者再手动引用oaid库，所以可以不添加这些混淆
+-keep class com.zui.**{*;}
+-keep class com.miui.**{*;}
+-keep class com.heytap.**{*;}
+-keep class a.**{*;}
+-keep class com.vivo.**{*;}
 
-#----------STLAnalysis----------
-##### Talkingdata
+#----------talkingData----------
 -dontwarn com.tendcloud.tenddata.**
 -keep class com.tendcloud.** {*;}
 -keep public class com.tendcloud.tenddata.** { public protected *;}
@@ -273,18 +279,7 @@ public void *(***);
 -keep class com.talkingdata.sdk.TalkingDataSDK {public *;}
 -keep class com.apptalkingdata.** {*;}
 
-##### bugly (devcommon中已经添加)
-
-##### firebase
-
-#####
--keep class com.stl.lib_stlanalysis.analysis.AnalysisFactory
--keep class * implements com.stl.lib_stlanalysis.analysis.IAnalysis
--keep class com.stl.lib_stlanalysis.crash.CrashReportFactory
--keep class * implements com.stl.lib_stlanalysis.crash.ICrashReport
-
-#----------pushlib----------
-##### 极光推送
+#----------极光推送----------
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }
 -keep class * extends cn.jpush.android.helpers.JPushMessageReceiver { *; }
@@ -332,7 +327,16 @@ public void *(***);
 
 #FCM 无
 
-##### MobPush
+#----------Mob分享，推送----------
+#shareSdk
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
+-keep class com.mob.**{*;}
+-keep class com.bytedance.**{*;}
+-dontwarn cn.sharesdk.**
+-dontwarn com.sina.**
+-dontwarn com.mob.**
+#push
 -keep class com.mob.**{*;}
 -dontwarn com.mob.**
 
@@ -346,70 +350,9 @@ public void *(***);
 -dontwarn com.meizu.**
 -dontwarn com.xiaomi.**
 
-#####
--keep class com.stl.nimpush.StlFcmTokenService
--keep class cn.jpush.android.service.PluginFCMMessagingService
--keep class com.stl.nimpush.StlMiPushMessageReceiver
--keep class cn.jpush.android.service.PluginXiaomiPlatformsReceiver
--keep class com.mob.pushsdk.plugins.xiaomi.PushXiaoMiRevicer
--keep class com.stl.nimpush.StlHuaweiPushMessageService
--keep class cn.jpush.android.service.PluginHuaweiPlatformsService
--keep class com.mob.pushsdk.plugins.huawei.HuaweiPushService
--keep class com.stl.nimpush.StlMzPushMessageReceiver
--keep class cn.jpush.android.service.PluginMeizuPlatformsReceiver
--keep class com.mob.pushsdk.plugins.meizu.PushMeiZuRevicer
--keep class * extends com.stl.push.interfaces.PushAbstract{*;}
--keep class * implements com.stl.push.interfaces.OsPush{*;}
--keep class com.stl.push.entity**{*;}
--keep class com.stl.push.constant.StlPushConstant{*;}
--keep class com.stl.push.StlOpenClickActivity{*;}
--keep class com.stl.push.helper.PushMessageReceiverHelper{*;}
--keep class com.stl.push.helper.PushActionHelper{*;}
--keep enum com.stl.push.constant.StlPushType{*;}
--keep class com.stl.jpush.StlOpenMessage{*;}
-
-
-#----------Glide4.12.0----------
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep class * extends com.bumptech.glide.module.AppGlideModule {
- <init>(...);
-}
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
--keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
-  *** rewind();
-}
-# for DexGuard only
-#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
-
-#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-#----------支付功能----------
-# 微信支付（STLAnySDK中已经配置过）
-# 支付宝支付
-# google支付
-
-# Room2.3.0
-# 阿里一键登陆2.10.1。混淆keep规则已经写入aar包，不再需要单独配置。
-# fastjson
-
-# ImmersionBar沉浸式状态栏
--keep class com.gyf.immersionbar.* {*;}
--dontwarn com.gyf.immersionbar.**
-
-# Lottie动画库
--keep class com.airbnb.lottie.samples.** { *; }
-
-# FileDownloader
--dontwarn okhttp3.*
--dontwarn okio.**
-
-# ijkplayer
+#----------ijkplayer----------
 -keep class tv.danmaku.ijk.media.player.** {*;}
 -keep class tv.danmaku.ijk.media.player.IjkMediaPlayer{*;}
 -keep class tv.danmaku.ijk.media.player.ffmpeg.FFmpegApi{*;}
 
 # -------------------------------------------------------------------------- 项目中混淆规则 ------------------------------------------------------------------------
-
