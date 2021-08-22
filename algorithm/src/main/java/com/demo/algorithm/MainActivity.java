@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.chl.common.utils.LogUtil;
 import com.demo.algorithm.algo.ArrayQueue;
 import com.demo.algorithm.algo.ArrayStack;
+import com.demo.algorithm.algo.Calculation;
 import com.demo.algorithm.algo.CalculatorByStack;
 import com.demo.algorithm.algo.LinkedList;
 import com.demo.algorithm.algo.LinkedQueue;
@@ -37,7 +38,14 @@ public class MainActivity extends AppCompatActivity {
 
 //        testCalculator();
 
-        testQueue();
+//        testQueue();
+
+        LogUtil.e("AAAA", "multiply 0 = " + Calculation.multiplyBy3(0));
+        LogUtil.e("AAAA", "multiply -3 = " + Calculation.multiplyBy3(-3));
+        LogUtil.e("AAAA", "multiply 3 = " + Calculation.multiplyBy3(3));
+        LogUtil.e("AAAA", "divide 0 = " + Calculation.divideBy3(0));
+        LogUtil.e("AAAA", "divide -10 = " + Calculation.divideBy3(-10));
+        LogUtil.e("AAAA", "divide 10 = " + Calculation.divideBy3(10));
 
     }
 
