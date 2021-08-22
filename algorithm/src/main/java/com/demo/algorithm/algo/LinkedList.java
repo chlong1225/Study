@@ -1,7 +1,7 @@
 package com.demo.algorithm.algo;
 
 
-import android.util.Log;
+import com.chl.common.utils.LogUtil;
 
 
 /**
@@ -264,17 +264,17 @@ public class LinkedList {
     
     public void printAll(Node head) {
         if (head == null) {
-            Log.e(TAG, "printAll: 链表为空");
+            LogUtil.e(TAG, "printAll: 链表为空");
             return;
         }
         int count = 0;
         Node p = head;
         while (p != null) {
-            Log.e(TAG, "printAll: data = " + p.data);
+            LogUtil.e(TAG, "printAll: data = " + p.data);
             p = p.next;
             count++;
         }
-        Log.e(TAG, "printAll: count = " + count);
+        LogUtil.e(TAG, "printAll: count = " + count);
 
     }
 

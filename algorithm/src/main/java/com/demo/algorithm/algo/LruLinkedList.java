@@ -1,6 +1,6 @@
 package com.demo.algorithm.algo;
 
-import android.util.Log;
+import com.chl.common.utils.LogUtil;
 
 /**
  * Created by w on 2021/4/26.
@@ -77,12 +77,12 @@ public class LruLinkedList {
 
     public void printAll() {
         if (head == null) {
-            Log.e(TAG, "printAll: 链表为空");
+            LogUtil.e(TAG, "printAll: 链表为空");
             return;
         }
         SNode p = head;
         while (p != null) {
-            Log.e(TAG, "printAll: data = " + p.data.toString());
+            LogUtil.e(TAG, "printAll: data = " + p.data.toString());
             p = p.next;
         }
     }

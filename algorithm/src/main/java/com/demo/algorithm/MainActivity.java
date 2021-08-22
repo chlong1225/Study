@@ -1,10 +1,10 @@
 package com.demo.algorithm;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.chl.common.utils.LogUtil;
 import com.demo.algorithm.algo.ArrayQueue;
 import com.demo.algorithm.algo.ArrayStack;
 import com.demo.algorithm.algo.CalculatorByStack;
@@ -50,21 +50,21 @@ public class MainActivity extends AppCompatActivity {
         arrayQueue.enqueue("a");
         arrayQueue.enqueue("b");
         int size = arrayQueue.size();
-        Log.e(TAG, "testQueue: " + size + " ;; " + dequeue);
+        LogUtil.e(TAG, "testQueue: " + size + " ;; " + dequeue);
         for (int i = 0; i < size; i++) {
-            Log.e(TAG, "testQueue: " + arrayQueue.dequeue());
+            LogUtil.e(TAG, "testQueue: " + arrayQueue.dequeue());
         }
-        Log.e(TAG, "testQueue: -----------------------------");
+        LogUtil.e(TAG, "testQueue: -----------------------------");
         LinkedQueue linkedQueue = new LinkedQueue();
         for (int i = 0; i < 10; i++) {
             linkedQueue.enqueue("" + i);
         }
         int size1 = linkedQueue.size();
-        Log.e(TAG, "testQueue: size1 = " + size1);
+        LogUtil.e(TAG, "testQueue: size1 = " + size1);
         for (int i = 0; i < size1; i++) {
-            Log.e(TAG, "testQueue: " + linkedQueue.dequeue());
+            LogUtil.e(TAG, "testQueue: " + linkedQueue.dequeue());
         }
-        Log.e(TAG, "testQueue: size2 = " + linkedQueue.size());
+        LogUtil.e(TAG, "testQueue: size2 = " + linkedQueue.size());
     }
 
     private void testCalculator() {
@@ -74,33 +74,33 @@ public class MainActivity extends AppCompatActivity {
         int calculator1 = CalculatorByStack.calculator(expression1);
         int calculator2 = CalculatorByStack.calculator(expression2);
         int calculator3 = CalculatorByStack.calculator(expression3);
-        Log.e(TAG, "testCalculator: calculator1 = " + calculator1 + " ;; calculator2 = " + calculator2 + " ;; calculator3 = " + calculator3);
+        LogUtil.e(TAG, "testCalculator: calculator1 = " + calculator1 + " ;; calculator2 = " + calculator2 + " ;; calculator3 = " + calculator3);
     }
 
     private void testStack() {
         ArrayStack stack = new ArrayStack();
         String pop = stack.pop();
-        Log.e(TAG, "testStack: pop = " + pop);
+        LogUtil.e(TAG, "testStack: pop = " + pop);
         for (int i = 0; i < 10; i++) {
-            Log.e(TAG, "testStack: push = " + i);
+            LogUtil.e(TAG, "testStack: push = " + i);
             stack.push("" + i);
         }
-        Log.e(TAG, "testStack: push = a");
+        LogUtil.e(TAG, "testStack: push = a");
         stack.push("a");
         for (int i = 0; i < 11; i++) {
             String pop1 = stack.pop();
-            Log.e(TAG, "testStack: pop1 = " + pop1);
+            LogUtil.e(TAG, "testStack: pop1 = " + pop1);
         }
-        Log.e(TAG, "testStack: ---------------------");
+        LogUtil.e(TAG, "testStack: ---------------------");
         LinkedStack linkedStack = new LinkedStack();
         String pop2 = linkedStack.pop();
-        Log.e(TAG, "testStack: pop2 = " + pop2);
+        LogUtil.e(TAG, "testStack: pop2 = " + pop2);
         for (int i = 0; i < 10; i++) {
             linkedStack.push("" + i * i);
         }
         for (int i = 0; i < 10; i++) {
             String pop3 = linkedStack.pop();
-            Log.e(TAG, "testStack: pop3 = " + pop3);
+            LogUtil.e(TAG, "testStack: pop3 = " + pop3);
         }
     }
 
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         list2.add("b");
         list2.add("c");
         String center2 = list2.quaryCenter().getData();
-        Log.e(TAG, "testCenter: " + ring1 + " ;; " + ring2 + " ;; " + center1 + " ;; " + center2);
+        LogUtil.e(TAG, "testCenter: " + ring1 + " ;; " + ring2 + " ;; " + center1 + " ;; " + center2);
     }
 
     private void testReverseStr() {
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         list3.add("b");
         list3.add("c");
         boolean reverseStr3 = list3.isReverseStr();
-        Log.e(TAG, "testReverseStr: " + reverseStr1 + " ;; " + reverseStr2 + " ;; " + reverseStr3);
+        LogUtil.e(TAG, "testReverseStr: " + reverseStr1 + " ;; " + reverseStr2 + " ;; " + reverseStr3);
 
     }
 
@@ -175,13 +175,13 @@ public class MainActivity extends AppCompatActivity {
             list.add("" + i);
         }
         list.printAll();
-        Log.e("LinkedList", "testDelete: 0");
+        LogUtil.e("LinkedList", "testDelete: 0");
         list.deleteByValue("0");
         list.printAll();
-        Log.e("LinkedList", "testDelete: 5");
+        LogUtil.e("LinkedList", "testDelete: 5");
         list.deleteByValue("5");
         list.printAll();
-        Log.e("LinkedList", "testDelete: 10");
+        LogUtil.e("LinkedList", "testDelete: 10");
         list.deleteByValue("10");
         list.printAll();
         list.deleteNode(2);
@@ -193,18 +193,18 @@ public class MainActivity extends AppCompatActivity {
     private void testLru() {
         LruLinkedList list = new LruLinkedList();
         list.printAll();
-        Log.e("LruLinkedList", "testLru: 开始添加数据");
+        LogUtil.e("LruLinkedList", "testLru: 开始添加数据");
         for (int i = 0; i < 10; i++) {
             list.add("" + i);
         }
         list.printAll();
-        Log.e("LruLinkedList", "testLru: 添加重复数据5");
+        LogUtil.e("LruLinkedList", "testLru: 添加重复数据5");
         list.add("5");
         list.printAll();
-        Log.e("LruLinkedList", "testLru: 超出长度");
+        LogUtil.e("LruLinkedList", "testLru: 超出长度");
         list.add("10");
         list.printAll();
-        Log.e("LruLinkedList", "testLru: 添加重复数据10");
+        LogUtil.e("LruLinkedList", "testLru: 添加重复数据10");
         list.add("10");
         list.printAll();
     }
