@@ -55,6 +55,17 @@ public class MainActivity extends AppCompatActivity {
         LogUtil.e("AAAA", "位运算异或 = " + (10 ^ 2));
         LogUtil.e("AAAA", "位运算非 = " + (~10));
 
+        int a = 100;
+        Integer box1 = a;
+        Integer box2 = a;
+        LogUtil.e("AAAA", "result1 = " + (box1 == box2));
+        LogUtil.e("AAAA", "result2 = " + (box1.equals(box2)));
+        int b = 1000;
+        Integer box3 = b;
+        Integer box4 = b;
+        LogUtil.e("AAAA", "result3 = " + (box3 == box4));
+        LogUtil.e("AAAA", "result4 = " + (box3.equals(box4)));
+
     }
 
     private void testQueue() {
