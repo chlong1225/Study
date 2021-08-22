@@ -47,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
         LogUtil.e("AAAA", "divide -10 = " + Calculation.divideBy3(-10));
         LogUtil.e("AAAA", "divide 10 = " + Calculation.divideBy3(10));
 
+        LogUtil.e("AAAA", "位运算左移 = " + (10 << 2));
+        LogUtil.e("AAAA", "位运算右移 = " + (10 >> 2));
+        LogUtil.e("AAAA", "位运算无符号右移 = " + (10 >>> 2));
+        LogUtil.e("AAAA", "位运算与 = " + (10 & 2));
+        LogUtil.e("AAAA", "位运算或 = " + (10 | 2));
+        LogUtil.e("AAAA", "位运算异或 = " + (10 ^ 2));
+        LogUtil.e("AAAA", "位运算非 = " + (~10));
+
     }
 
     private void testQueue() {
