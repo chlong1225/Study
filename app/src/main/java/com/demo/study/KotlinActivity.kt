@@ -27,6 +27,10 @@ class KotlinActivity : BaseActivity<ActivityKotlinBinding>() {
         test()
     }
 
+    private fun getLength(str: String?): Int {
+        return str?.length ?: 0
+    }
+
     private fun test() {
 //        LogUtil.e(TAG, "位运算左移 = " + (10 shl 2))
 //        LogUtil.e(TAG, "位运算右移 = " + (10 shr 2))
