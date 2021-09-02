@@ -42,11 +42,6 @@ public class MainActivity extends AppCompatActivity {
 //        testCalculator();
 
 //        testQueue();
-
-        int[] datas = {2,6,3,8,10};
-        int sum = 20;
-        int[] result = TwoNumSum.twoSum(datas, sum);
-        LogUtil.e("AAAA", Arrays.toString(result));
     }
 
     private void testQueue() {
