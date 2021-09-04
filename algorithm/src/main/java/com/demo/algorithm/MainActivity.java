@@ -14,8 +14,6 @@ import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
 
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
