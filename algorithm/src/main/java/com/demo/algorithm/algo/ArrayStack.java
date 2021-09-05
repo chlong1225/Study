@@ -37,6 +37,7 @@ public class ArrayStack implements Stack{
     /**
      * 入栈操作
      */
+    @Override
     public void push(String data) {
         if (count == capacity) {
             expansion();
@@ -59,6 +60,7 @@ public class ArrayStack implements Stack{
      * 出栈操作
      * @return :
      */
+    @Override
     public String pop() {
         if (count == 0) {
             return "";

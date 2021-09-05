@@ -7,13 +7,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.chl.common.utils.LogUtil;
 import com.demo.algorithm.algo.ArrayQueue;
 import com.demo.algorithm.algo.ArrayStack;
-import com.demo.algorithm.algo.Calculation;
 import com.demo.algorithm.algo.CalculatorByStack;
 import com.demo.algorithm.algo.LinkedList;
 import com.demo.algorithm.algo.LinkedQueue;
 import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,33 +40,6 @@ public class MainActivity extends AppCompatActivity {
 //        testCalculator();
 
 //        testQueue();
-
-        LogUtil.e("AAAA", "multiply 0 = " + Calculation.multiplyBy3(0));
-        LogUtil.e("AAAA", "multiply -3 = " + Calculation.multiplyBy3(-3));
-        LogUtil.e("AAAA", "multiply 3 = " + Calculation.multiplyBy3(3));
-        LogUtil.e("AAAA", "divide 0 = " + Calculation.divideBy3(0));
-        LogUtil.e("AAAA", "divide -10 = " + Calculation.divideBy3(-10));
-        LogUtil.e("AAAA", "divide 10 = " + Calculation.divideBy3(10));
-
-        LogUtil.e("AAAA", "位运算左移 = " + (10 << 2));
-        LogUtil.e("AAAA", "位运算右移 = " + (10 >> 2));
-        LogUtil.e("AAAA", "位运算无符号右移 = " + (10 >>> 2));
-        LogUtil.e("AAAA", "位运算与 = " + (10 & 2));
-        LogUtil.e("AAAA", "位运算或 = " + (10 | 2));
-        LogUtil.e("AAAA", "位运算异或 = " + (10 ^ 2));
-        LogUtil.e("AAAA", "位运算非 = " + (~10));
-
-        int a = 100;
-        Integer box1 = a;
-        Integer box2 = a;
-        LogUtil.e("AAAA", "result1 = " + (box1 == box2));
-        LogUtil.e("AAAA", "result2 = " + (box1.equals(box2)));
-        int b = 1000;
-        Integer box3 = b;
-        Integer box4 = b;
-        LogUtil.e("AAAA", "result3 = " + (box3 == box4));
-        LogUtil.e("AAAA", "result4 = " + (box3.equals(box4)));
-
     }
 
     private void testQueue() {
