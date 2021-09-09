@@ -72,4 +72,30 @@ public class YangHuiTriangle2 {
         return (int) result;
     }
 
+    public static List<Integer> getRow2(int rowIndex) {
+        if (rowIndex < 0) {
+            return null;
+        }
+        List<Integer> result = new ArrayList<>();
+        if (rowIndex == 0) {
+            result.add(1);
+            return result;
+        }
+        List<Integer> pre = new ArrayList<>();
+        pre.add(1);
+        for (int i = 1; i < rowIndex + 1; i++) {
+            result.clear();
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    result.add(1);
+                } else {
+                    result.add(pre.get(j - 1) + pre.get(j));
+                }
+            }
+            pre.clear();
+            pre.addAll(result);
+        }
+        return result;
+    }
+
 }
