@@ -13,6 +13,9 @@ import com.demo.algorithm.algo.LinkedQueue;
 import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
+import com.demo.algorithm.leetcode.YangHuiTriangle2;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +41,92 @@ public class MainActivity extends AppCompatActivity {
 //        testCalculator();
 
 //        testQueue();
+
+        compareTime();
+    }
+
+    private void compareTime() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long startTime = System.currentTimeMillis();
+                for (int i = 0; i < 1000; i++) {
+                    List<Integer> data0 = YangHuiTriangle2.getRow(0);
+                    List<Integer> data1 = YangHuiTriangle2.getRow(1);
+                    List<Integer> data2 = YangHuiTriangle2.getRow(2);
+                    List<Integer> data3 = YangHuiTriangle2.getRow(3);
+                    List<Integer> data4 = YangHuiTriangle2.getRow(4);
+                    List<Integer> data5 = YangHuiTriangle2.getRow(5);
+                    List<Integer> data6 = YangHuiTriangle2.getRow(6);
+                    List<Integer> data7 = YangHuiTriangle2.getRow(7);
+                    List<Integer> data8 = YangHuiTriangle2.getRow(8);
+                    List<Integer> data9 = YangHuiTriangle2.getRow(9);
+                    List<Integer> data10 = YangHuiTriangle2.getRow(10);
+                    List<Integer> data11 = YangHuiTriangle2.getRow(11);
+                    List<Integer> data12 = YangHuiTriangle2.getRow(12);
+                    List<Integer> data13 = YangHuiTriangle2.getRow(13);
+                    List<Integer> data14 = YangHuiTriangle2.getRow(14);
+                    List<Integer> data15 = YangHuiTriangle2.getRow(15);
+                    List<Integer> data16 = YangHuiTriangle2.getRow(16);
+                    List<Integer> data17 = YangHuiTriangle2.getRow(17);
+                    List<Integer> data18 = YangHuiTriangle2.getRow(18);
+                    List<Integer> data19 = YangHuiTriangle2.getRow(19);
+                    List<Integer> data20 = YangHuiTriangle2.getRow(20);
+                    List<Integer> data21 = YangHuiTriangle2.getRow(21);
+                    List<Integer> data22 = YangHuiTriangle2.getRow(22);
+                    List<Integer> data23 = YangHuiTriangle2.getRow(23);
+                    List<Integer> data24 = YangHuiTriangle2.getRow(24);
+                    List<Integer> data25 = YangHuiTriangle2.getRow(25);
+                    List<Integer> data26 = YangHuiTriangle2.getRow(26);
+                    List<Integer> data27 = YangHuiTriangle2.getRow(27);
+                    List<Integer> data28 = YangHuiTriangle2.getRow(28);
+                    List<Integer> data29 = YangHuiTriangle2.getRow(29);
+                    List<Integer> data30 = YangHuiTriangle2.getRow(30);
+                    List<Integer> data31 = YangHuiTriangle2.getRow(31);
+                    List<Integer> data32 = YangHuiTriangle2.getRow(32);
+                    List<Integer> data33 = YangHuiTriangle2.getRow(33);
+                }
+                LogUtil.e("AAAA", "time1 = " + (System.currentTimeMillis() - startTime));
+                long startTime2 = System.currentTimeMillis();
+                for (int i = 0; i < 1000; i++) {
+                    List<Integer> data0 = YangHuiTriangle2.getRow2(0);
+                    List<Integer> data1 = YangHuiTriangle2.getRow2(1);
+                    List<Integer> data2 = YangHuiTriangle2.getRow2(2);
+                    List<Integer> data3 = YangHuiTriangle2.getRow2(3);
+                    List<Integer> data4 = YangHuiTriangle2.getRow2(4);
+                    List<Integer> data5 = YangHuiTriangle2.getRow2(5);
+                    List<Integer> data6 = YangHuiTriangle2.getRow2(6);
+                    List<Integer> data7 = YangHuiTriangle2.getRow2(7);
+                    List<Integer> data8 = YangHuiTriangle2.getRow2(8);
+                    List<Integer> data9 = YangHuiTriangle2.getRow2(9);
+                    List<Integer> data10 = YangHuiTriangle2.getRow2(10);
+                    List<Integer> data11 = YangHuiTriangle2.getRow2(11);
+                    List<Integer> data12 = YangHuiTriangle2.getRow2(12);
+                    List<Integer> data13 = YangHuiTriangle2.getRow2(13);
+                    List<Integer> data14 = YangHuiTriangle2.getRow2(14);
+                    List<Integer> data15 = YangHuiTriangle2.getRow2(15);
+                    List<Integer> data16 = YangHuiTriangle2.getRow2(16);
+                    List<Integer> data17 = YangHuiTriangle2.getRow2(17);
+                    List<Integer> data18 = YangHuiTriangle2.getRow2(18);
+                    List<Integer> data19 = YangHuiTriangle2.getRow2(19);
+                    List<Integer> data20 = YangHuiTriangle2.getRow2(20);
+                    List<Integer> data21 = YangHuiTriangle2.getRow2(21);
+                    List<Integer> data22 = YangHuiTriangle2.getRow2(22);
+                    List<Integer> data23 = YangHuiTriangle2.getRow2(23);
+                    List<Integer> data24 = YangHuiTriangle2.getRow2(24);
+                    List<Integer> data25 = YangHuiTriangle2.getRow2(25);
+                    List<Integer> data26 = YangHuiTriangle2.getRow2(26);
+                    List<Integer> data27 = YangHuiTriangle2.getRow2(27);
+                    List<Integer> data28 = YangHuiTriangle2.getRow2(28);
+                    List<Integer> data29 = YangHuiTriangle2.getRow2(29);
+                    List<Integer> data30 = YangHuiTriangle2.getRow2(30);
+                    List<Integer> data31 = YangHuiTriangle2.getRow2(31);
+                    List<Integer> data32 = YangHuiTriangle2.getRow2(32);
+                    List<Integer> data33 = YangHuiTriangle2.getRow2(33);
+                }
+                LogUtil.e("AAAA", "time2 = " + (System.currentTimeMillis() - startTime2));
+            }
+        }).start();
     }
 
     private void testQueue() {
