@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        testQueue();
 
-        compareTime();
+//        compareTime();
     }
 
     private void compareTime() {
