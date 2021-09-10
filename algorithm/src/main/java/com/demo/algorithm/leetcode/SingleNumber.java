@@ -46,4 +46,20 @@ public class SingleNumber {
         }
         return nums[middle];
     }
+
+    //位运算
+    public static int singleNumber2(int[] nums) {
+        if (nums == null || nums.length % 2 == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int result = nums[0];
+        int length = nums.length;
+        for (int i = 1; i < length; i++) {
+            result ^= nums[i];
+        }
+        return result;
+    }
 }
