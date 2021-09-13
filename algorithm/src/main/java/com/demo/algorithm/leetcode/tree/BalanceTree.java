@@ -1,7 +1,6 @@
 package com.demo.algorithm.leetcode.tree;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.demo.algorithm.leetcode.entity.TreeNode;
 
 /**
  * create by chenglong on 9/8/21

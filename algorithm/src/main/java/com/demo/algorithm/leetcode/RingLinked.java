@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode;
 
+import com.demo.algorithm.leetcode.entity.ListNode;
+
 /**
  * create by chenglong on 9/10/21
  * description : 环形链表

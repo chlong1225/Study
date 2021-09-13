@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode.tree;
 
+import com.demo.algorithm.leetcode.entity.TreeNode;
+
 /**
  * create by chenglong on 9/8/21
  * description : 将有序数组转换为二叉搜索树

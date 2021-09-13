@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode.tree;
 
+import com.demo.algorithm.leetcode.entity.TreeNode;
+
 /**
  * create by chenglong on 9/9/21
  * description : 路径求和

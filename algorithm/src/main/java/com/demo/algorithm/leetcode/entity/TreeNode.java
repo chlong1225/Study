@@ -1,4 +1,4 @@
-package com.demo.algorithm.leetcode.tree;
+package com.demo.algorithm.leetcode.entity;
 
 /**
  * create by chenglong on 9/7/21
