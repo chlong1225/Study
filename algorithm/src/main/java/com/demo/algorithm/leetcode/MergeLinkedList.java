@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode;
 
+import com.demo.algorithm.leetcode.entity.ListNode;
+
 /**
  * create by chenglong on 9/3/21
  * description : 合并两个有序链表
@@ -47,23 +49,5 @@ public class MergeLinkedList {
             return head.next;
         }
         return head.next;
-    }
-
-    public static class ListNode {
-        int val;
-        ListNode next;
-
-        public ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-
-        public void setNext(ListNode next) {
-            this.next = next;
-        }
     }
 }
