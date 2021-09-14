@@ -51,16 +51,16 @@ public class TwoSum {
 
     //二分查找
     private int findIndexByValue(int[] numbers, int start, int end, int value) {
-        if (value > numbers[end] || value < numbers[start]) {
-            return -1;
-        }
-        if (value == numbers[start]) {
-            return start;
-        }
-        if (value == numbers[end]) {
-            return end;
-        }
         while (start <= end) {
+            if (value > numbers[end] || value < numbers[start]) {
+                return -1;
+            }
+            if (value == numbers[start]) {
+                return start;
+            }
+            if (value == numbers[end]) {
+                return end;
+            }
             int middle = (start + end) / 2;
             if (value == numbers[middle]) {
                 return middle;
