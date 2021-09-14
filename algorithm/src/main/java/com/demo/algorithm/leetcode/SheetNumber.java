@@ -39,7 +39,7 @@ package com.demo.algorithm.leetcode;
  */
 public class SheetNumber {
 
-    //A～Z：65-90
+    //A～Z：65-90 ，26进制数的转换
     public int titleToNumber(String columnTitle) {
         if (columnTitle == null || columnTitle.length() == 0) {
             return -1;
@@ -48,19 +48,9 @@ public class SheetNumber {
         int result = 0;
         for (int i = 0; i < length; i++) {
             int tem = columnTitle.charAt(i) - 64;
-            result += getNumber(tem, length - 1 - i);
+            result = result * 26 + tem;
         }
         return result;
-    }
-
-    private int getNumber(int tem, int length) {
-        if (length == 0) {
-            return tem;
-        }
-        for (int i = 0; i < length; i++) {
-            tem *= 26;
-        }
-        return tem;
     }
 
 }
