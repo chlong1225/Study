@@ -50,4 +50,16 @@ public class TrailingZero {
         }
         return count0 + Math.min(count2, count5);
     }
+
+    public static int trailingZeroes2(int n) {
+        if (n < 5) {
+            return 0;
+        }
+        int count = 0;
+        while (n / 5 != 0) {
+            count += n / 5;
+            n /= 5;
+        }
+        return count;
+    }
 }
