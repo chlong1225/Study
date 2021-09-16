@@ -48,4 +48,28 @@ public class CountPrimes {
         }
         return true;
     }
+
+    //使用厄拉多塞筛法
+    public static int countPrimes2(int n) {
+        if (n < 3) {
+            return 0;
+        }
+        boolean[] isPrimes = new boolean[n];
+        isPrimes[0] = true;
+        isPrimes[1] = true;
+        for (int i = 2; i*i < n; i++) {
+            if (!isPrimes[i]) {
+                for (int j = i * i; j < n; j += i) {
+                    isPrimes[j] = true;
+                }
+            }
+        }
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            if (!isPrimes[i]) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
