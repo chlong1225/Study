@@ -13,7 +13,7 @@ import com.demo.algorithm.algo.LinkedQueue;
 import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
-import com.demo.algorithm.leetcode.YangHuiTriangle2;
+import com.demo.algorithm.leetcode.easy.YangHuiTriangle2;
 
 import java.util.List;
 
