@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.chl.common.utils.LogUtil
 import com.demo.study.databinding.ActivityMainBinding
-import com.demo.study.kotlin.*
+import com.demo.study.kotlin.Test
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
@@ -26,10 +26,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun test() {
-        val inlineTest1 = InlineTest1(Persion("AAAA"))
-        val inlineTest2 = InlineTest2(10);
-        val test1 = Test1(Persion("bbbb"))
-        val test2 = Test2(20)
+        Test().call()
+
     }
 
     override fun buildViewBinding(): ActivityMainBinding {
