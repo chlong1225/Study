@@ -108,6 +108,33 @@ public class CombinationSum {
         return result;
     }
 
+    public static List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        //1,先排序
+        Arrays.sort(candidates);
+        checkSum(candidates, 0, target, path, result);
+        return result;
+    }
+
+    private static void checkSum(int[] candidates, int index, int target, List<Integer> path, List<List<Integer>> result) {
+        int length = candidates.length;
+        for (int i = index; i < length; i++) {
+            if (candidates[i] == target) {
+                List<Integer> tem = new ArrayList<>();
+                tem.addAll(path);
+                tem.add(candidates[i]);
+                result.add(tem);
+            } else if (candidates[i] < target) {
+                path.add(candidates[i]);
+                checkSum(candidates, i, target - candidates[i], path, result);
+                path.remove(path.size() - 1);
+            } else {
+                break;
+            }
+        }
+    }
+
     private static boolean isSame(List<List<Integer>> allDatas, List<Integer> data) {
         Collections.sort(data);
         int length = data.size();
