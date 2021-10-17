@@ -41,7 +41,7 @@ package com.demo.algorithm.leetcode.hard;
  * p 可能为空，且只包含从 a-z 的小写字母，以及字符 . 和 *。
  * 保证每次出现字符 * 时，前面都匹配到有效的字符
  */
-public class MathStr {
+public class MatchStr {
 
     public static boolean isMatch(String s, String p) {
         int m = s.length();
