@@ -44,106 +44,33 @@ package com.demo.algorithm.leetcode.hard;
 public class MathStr {
 
     public static boolean isMatch(String s, String p) {
-        if (s == null || s.length() == 0) {
-            if (p == null || p.length() == 0) {
-                return true;
-            }
-            return isPEmpty(p, 0, p.length());
-        }
-        if (p == null || p.length() == 0) {
-            return false;
-        }
-        int length = s.length();
-        //倒着遍历匹配
-        int index = p.length() - 1;
-        char tem = s.charAt(length - 1);
-        int count = 0;
-        for (int i = length - 1; i >= 0; i--) {
-            if (s.charAt(i) == tem) {
-                count++;
-            } else {
-                int pre = mathChar(p, index, tem, count);
-                if (pre == -10) {
-                    return false;
-                } else if (pre == -1) {
-                    if (p.length() >= 2 && p.substring(0, 2).equals(".*")) {
-                        index = 1;
-                    } else {
-                        return false;
+        int m = s.length();
+        int n = p.length();
+        boolean[][] compares = new boolean[m + 1][n + 1];
+        compares[0][0] = true;
+        for (int i = 0; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p.charAt(j - 1) == '*') {
+                    compares[i][j] = compares[i][j - 2];
+                    if (mathChar(s, p, i, j - 1)) {
+                        compares[i][j] = compares[i][j] || compares[i - 1][j];
                     }
                 } else {
-                    index = pre;
+                    if (mathChar(s, p, i, j)) {
+                        compares[i][j] = compares[i - 1][j - 1];
+                    }
                 }
-                tem = s.charAt(i);
-                count = 1;
             }
         }
-        int pre = mathChar(p, index, tem, count);
-        if (pre == -10) {
-            return false;
-        }
-        if (pre == -1) {
-            return true;
-        }
-        return isPEmpty(p, 0, pre + 1);
+        return compares[m][n];
     }
 
-    private static int mathChar(String p, int index, char c, int count) {
-        char check;
-        boolean hasMore = false;
-        boolean hasNextMore = false;
-        boolean hasFind = false;
-        for (int i = index; i >= 0; i--) {
-            check = p.charAt(i);
-            if (check == '*') {
-                if (hasFind) {
-                    hasNextMore = true;
-                } else {
-                    hasMore = true;
-                }
-            } else {
-                if (check == c || check == '.') {
-                    if (hasMore) {
-                        hasFind = true;
-                    }
-                    count--;
-                    if (count == 0) {
-                        return i - 1;
-                    }
-                } else {
-                    if (hasMore) {
-                        if (hasFind) {
-                            return i;
-                        } else {
-                            hasMore = false;
-                            hasFind = false;
-                        }
-                    } else {
-                        return -10;
-                    }
-                }
-            }
+    //判断字符串s在indexS-1处与字符串P在indexP-1处是否匹配
+    private static boolean mathChar(String s, String p, int indexS, int indexP) {
+        if (indexS == 0) {
+            return false;
         }
-        if (hasMore && hasFind) {
-            return -1;
-        }
-        return -10;
-    }
-
-
-    //判断字符串规则是否能够表示空
-    private static boolean isPEmpty(String p, int startIndex, int endIndex) {
-        int count = 0;
-        for (int i = startIndex; i < endIndex; i++) {
-            if (p.charAt(i) == '*') {
-                if (count > 0) {
-                    count--;
-                }
-            } else {
-                count++;
-            }
-        }
-        return count == 0;
+        return (s.charAt(indexS - 1) == p.charAt(indexP - 1) || p.charAt(indexP - 1) == '.');
     }
 
 }
