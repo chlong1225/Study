@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.hard;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * create on 10/20/21
  * @author chenglong
@@ -29,6 +32,9 @@ public class MaxRectangleArea {
         int pre = -1;
         for (int i = 0; i < length; i++) {
             int tem = heights[i];
+            if (tem == 0) {
+                continue;
+            }
             if (tem == pre) {
                 continue;
             }
@@ -50,6 +56,45 @@ public class MaxRectangleArea {
             if (max < area) {
                 max = area;
             }
+            pre = tem;
+        }
+        return max;
+    }
+
+    public static int largestRectangleArea2(int[] heights) {
+        int length = heights.length;
+        if (length == 1) {
+            return heights[0];
+        }
+        int max = 0;
+        //1,前后添加哨兵节点
+        int[] newHeights = new int[length + 2];
+        for (int i = 0; i < length; i++) {
+            newHeights[i + 1] = heights[i];
+        }
+        heights = newHeights;
+        length = length + 2;
+        //2，使用单栈遍历
+        Deque<Integer> stack = new ArrayDeque<Integer>();
+        stack.add(0);
+        int pre = -1;
+        for (int i = 1; i < length; i++) {
+            int tem = heights[i];
+            if (pre == tem) {
+                stack.pop();
+                stack.push(i);
+                continue;
+            }
+            int before = stack.getFirst();
+            while (heights[before] > tem) {
+                int pop = stack.pop();
+                int area = heights[pop] * (i - stack.getFirst() - 1);
+                if (max < area) {
+                    max = area;
+                }
+                before = stack.getFirst();
+            }
+            stack.push(i);
             pre = tem;
         }
         return max;
