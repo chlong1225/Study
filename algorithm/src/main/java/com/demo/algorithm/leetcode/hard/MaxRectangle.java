@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.hard;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * Created by chl on 2021/10/22.
  * description : 最大矩形
@@ -35,6 +38,7 @@ package com.demo.algorithm.leetcode.hard;
  */
 public class MaxRectangle {
 
+    //以顶点为基准进行遍历
     public static int maximalRectangle(char[][] matrix) {
         //1,特殊条件的处理
         if (matrix == null) {
@@ -61,6 +65,89 @@ public class MaxRectangle {
                     }
                 }
             }
+        }
+        return max;
+    }
+
+    //以边为基准进行遍历
+    public static int maximalRectangle2(char[][] matrix) {
+        //1,特殊条件的处理
+        if (matrix == null) {
+            return 0;
+        }
+        //行数
+        int m = matrix.length;
+        if (m == 0) {
+            return 0;
+        }
+        //列数
+        int n = matrix[0].length;
+        if (n == 0) {
+            return 0;
+        }
+        //1,初始化第一列为基准的高度,收尾个添加0
+        int[] data = new int[m + 2];
+        for (int i = 0; i < m; i++) {
+            int count = 0;
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+            data[i + 1] = count;
+        }
+        int max = getMaxRectangleByHeight(data);
+        for (int i = 1; i < n; i++) {
+            updateHeights(data, matrix, i);
+            int result = getMaxRectangleByHeight(data);
+            if (result > max) {
+                max = result;
+            }
+        }
+        return max;
+    }
+
+    //更新高度信息
+    private static void updateHeights(int[] data, char[][] matrix, int row) {
+        int length = data.length;
+        int n = matrix[0].length;
+        for (int i = 1; i < length - 1; i++) {
+            data[i]--;
+            if (data[i] < 0) {
+                //重新计算高度
+                int count = 0;
+                for (int j = row; j < n; j++) {
+                    if (matrix[i - 1][j] == '1') {
+                        count++;
+                    } else {
+                        break;
+                    }
+                }
+                data[i] = count;
+            }
+        }
+    }
+
+    //以边为基准,获取高度计算最大面积
+    private static int getMaxRectangleByHeight(int[] heights) {
+        int lenght = heights.length;
+        Deque<Integer> stack = new ArrayDeque<Integer>();
+        stack.addLast(0);
+        int max = 0;
+        for (int i = 1; i < lenght; i++) {
+            while (heights[i] < heights[stack.getLast()]) {
+                int height = heights[stack.pollLast()];
+                int are = height * (i - stack.getLast() - 1);
+                if (are > max) {
+                    max = are;
+                }
+            }
+            if (heights[i] == heights[stack.getLast()]) {
+                stack.pollLast();
+            }
+            stack.addLast(i);
         }
         return max;
     }
