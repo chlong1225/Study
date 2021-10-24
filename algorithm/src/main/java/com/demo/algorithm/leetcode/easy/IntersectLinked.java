@@ -50,45 +50,27 @@ public class IntersectLinked {
         if (headA == null || headB == null) {
             return null;
         }
-        ListNode end1 = reverseLinked(headA);
-        ListNode end2 = reverseLinked(headB);
-        int reverseIndex = 0;
-        while (end1 != null && end2 != null) {
-            if (end1.val == end2.val) {
-                reverseIndex++;
-                end1 = end1.next;
-                end2 = end2.next;
+        ListNode p = headA;
+        ListNode q = headB;
+        //防止不相交时死循环
+        int count = 0;
+        while (p != q) {
+            if (p == null) {
+                p = headB;
+                count++;
+                if (count > 1) {
+                    return null;
+                }
             } else {
-                end1 = null;
+                p = p.next;
+            }
+            if (q == null) {
+                q = headA;
+            } else {
+                q = q.next;
             }
         }
-        if (reverseIndex == 0) {
-            return null;
-        }
-        ListNode result = headA;
-        ListNode fast = headA;
-        for (int i = 0; i < reverseIndex; i++) {
-            fast = fast.next;
-        }
-        while (fast != null) {
-            fast = fast.next;
-            result = result.next;
-        }
-        return result;
-    }
-
-    //反转链表同时保持原链表不变
-    private static ListNode reverseLinked(ListNode head) {
-        ListNode p = head;
-        ListNode tem;
-        ListNode result = null;
-        while (p != null) {
-            tem = result;
-            result = new ListNode(p.val);
-            p = p.next;
-            result.next = tem;
-        }
-        return result;
+        return p;
     }
 
 
