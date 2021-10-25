@@ -71,9 +71,9 @@ public class PermuteAll {
         return result;
     }
 
-    private void dfs(int[] nums, int index, List<Integer> path, boolean[] record, List<List<Integer>> result) {
+    private void dfs(int[] nums, int count, List<Integer> path, boolean[] record, List<List<Integer>> result) {
         int length = nums.length;
-        if (index == length) {
+        if (count == length) {
             result.add(new ArrayList<>(path));
             return;
         }
@@ -84,7 +84,7 @@ public class PermuteAll {
             int tem = nums[i];
             path.add(tem);
             record[i] = true;
-            dfs(nums, index + 1, path, record, result);
+            dfs(nums, count + 1, path, record, result);
             //状态回退
             path.remove(path.size() - 1);
             record[i] = false;
