@@ -28,6 +28,7 @@ import java.util.List;
  */
 public class PermuteAll {
 
+    //广度优先遍历
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
         int length = nums.length;
@@ -56,5 +57,37 @@ public class PermuteAll {
             next.clear();
         }
         return result;
+    }
+
+    //深度优先遍历
+    public List<List<Integer>> permute2(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        int length = nums.length;
+        //深度遍历的轨迹
+        List<Integer> path = new ArrayList<>();
+        //记录已经遍历的元素
+        boolean[] record = new boolean[length];
+        dfs(nums, 0, path, record, result);
+        return result;
+    }
+
+    private void dfs(int[] nums, int index, List<Integer> path, boolean[] record, List<List<Integer>> result) {
+        int length = nums.length;
+        if (index == length) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < length; i++) {
+            if (record[i]) {
+                continue;
+            }
+            int tem = nums[i];
+            path.add(tem);
+            record[i] = true;
+            dfs(nums, index + 1, path, record, result);
+            //状态回退
+            path.remove(path.size() - 1);
+            record[i] = false;
+        }
     }
 }
