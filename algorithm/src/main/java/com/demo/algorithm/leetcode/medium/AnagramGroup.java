@@ -1,7 +1,9 @@
 package com.demo.algorithm.leetcode.medium;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chl on 2021/10/25.
@@ -101,5 +103,44 @@ public class AnagramGroup {
             data[index]++;
         }
         return data;
+    }
+
+    //设计Hash算法便于比较
+    public List<List<String>> groupAnagrams2(String[] strs) {
+        List<List<String>> result = new ArrayList<>();
+        int length = strs.length;
+        if (length == 1) {
+            List<String> items = new ArrayList<>();
+            items.add(strs[0]);
+            result.add(items);
+            return result;
+        }
+        Map<Double, List<String>> map = new HashMap<>();
+        int[] hashNum = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+                31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+                73, 79, 83, 89, 97, 101};
+        for (int i = 0; i < length; i++) {
+            //使用double防止数据越界
+            double hash = 1;
+            String tem = strs[i];
+            int temLength = tem.length();
+            if (temLength > 0) {
+                for (int j = 0; j < temLength; j++) {
+                    //最核心:设计hash算法
+                    hash *= hashNum[tem.charAt(j) - 'a'];
+                }
+            }
+            List<String> list = map.get(hash);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            list.add(tem);
+            map.put(hash, list);
+        }
+        //遍历map
+        for (Double key : map.keySet()) {
+            result.add(map.get(key));
+        }
+        return result;
     }
 }
