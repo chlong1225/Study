@@ -26,7 +26,7 @@ package com.demo.algorithm.leetcode.medium;
  */
 public class JumpGame2 {
 
-    //使用贪心算法，遍历查找最近到达目前的位置，然后重置目标
+    //使用贪心算法，遍历查找最近到达目前的位置，然后重置目标。这个是反向遍历
     public int jump(int[] nums) {
         int length = nums.length;
         if (length == 1) {
@@ -41,6 +41,31 @@ public class JumpGame2 {
                     step++;
                     break;
                 }
+            }
+        }
+        return step;
+    }
+
+    //使用贪心算法，正向遍历。遍历查询跳转的下一步是能够达到最远的方案。如：{2,3,1,1,4}
+    public int jump2(int[] nums) {
+        int length = nums.length;
+        if (length == 1) {
+            return 0;
+        }
+        //执行的步数
+        int step = 0;
+        //能够跳转的最大位置
+        int maxRange = 0;
+        //两个maxRange范围内的位置所能跳转到的最大位置
+        int maxJump = 0;
+        //使用length-1限定，防止maxRange = length-1时需要再跳一步
+        for (int i = 0; i < length - 1; i++) {
+            //i == 0 时最大位置可以跳转到2，在1～2之间一步。
+            maxJump = Math.max(maxJump, i + nums[i]);
+            if (i == maxRange) {
+                //将1～2之间位置跳转到的最大位置作为下一个边界，则0～maxRange之间均可以step步到达
+                maxRange = maxJump;
+                step++;
             }
         }
         return step;
