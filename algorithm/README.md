@@ -43,21 +43,21 @@
 42，[接雨水](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/hard/CatchRain.java)</br>
 43，[字符串相乘](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/StrMultiply.java)</br>
 44，[通配符匹配](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/hard/MatchStr2.java)</br>
-45，[]()</br>
-46，[]()</br>
-47，[]()</br>
-48，[]()</br>
-49，[]()</br>
-50，[]()</br>
+45，[跳跃游戏II](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/JumpGame2.java)</br>
+46，[全排列](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/PermuteAll.java)</br>
+47，[全排列II](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/PermuteAll2.java)</br>
+48，[旋转图像](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/RotateArray.java)</br>
+49，[字母异位词分组](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/AnagramGroup.java)</br>
+50，[Pow(x, n)](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/Pow.java)</br>
 51，[N皇后](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/hard/NQueen.java)</br>
 52，[N皇后II](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/hard/NQueen2.java)</br>
 53，[最大子序和](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/easy/MaxSubsequence.java)</br>
-54，[]()</br>
-55，[]()</br>
+54，[螺旋矩阵](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/SpiralMatrix.java)</br>
+55，[跳跃游戏](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/JumpGame.java)</br>
 56，[]()</br>
 57，[]()</br>
 58，[最后一个单词的长度](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/easy/LastWordLength.java)</br>
-59，[]()</br>
+59，[螺旋矩阵II](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/medium/SpiralMatrix2.java)</br>
 60，[排列序列](https://github.com/longchengdesigncode/Study/blob/master/algorithm/src/main/java/com/demo/algorithm/leetcode/hard/Permutation.java)</br>
 61，[]()</br>
 
