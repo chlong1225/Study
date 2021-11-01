@@ -19,9 +19,10 @@ import java.util.Arrays;
  * 输入: candies = [1,1,2,3]
  * 输出: 2
  * 解析: 妹妹获得糖果[2,3],弟弟获得糖果[1,1]，妹妹有两种不同的糖果，弟弟只有一种。这样使得妹妹可以获得的糖果种类数最多。
- * 注意:
  *
- * 数组的长度为[2, 10,000]，并且确定为偶数。
+ * 注意:
+ * 1，数组的长度为[2, 10,000]，并且确定为偶数。
+ * 2，数组中数字的大小在范围[-100,000, 100,000]内。
  */
 public class SplitCandy {
 
@@ -40,6 +41,25 @@ public class SplitCandy {
             }
             count++;
             pre = candyType[i];
+        }
+        return Math.min(max, count);
+    }
+
+    //使用桶排序的思想获取不同数量，使用标记的空间换时间
+    public static int distributeCandies2(int[] candyType) {
+        int length = candyType.length;
+        if (length == 2) {
+            return 1;
+        }
+        int max = length / 2;
+        int count = 0;
+        boolean[] marks = new boolean[200001];
+        for (int i = 0; i < length; i++) {
+            int index = candyType[i] + 100000;
+            if (!marks[index]) {
+                marks[index] = true;
+                count++;
+            }
         }
         return Math.min(max, count);
     }
