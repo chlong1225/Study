@@ -42,14 +42,7 @@ import com.demo.algorithm.leetcode.entity.ListNode;
 public class DeleteNode {
 
     public static void deleteNode(ListNode node) {
-        ListNode p = node;
-        while (p.next != null) {
-            p.val = p.next.val;
-            if (p.next.next == null) {
-                p.next = null;
-            } else {
-                p = p.next;
-            }
-        }
+        node.val = node.next.val;
+        node.next = node.next.next;
     }
 }
