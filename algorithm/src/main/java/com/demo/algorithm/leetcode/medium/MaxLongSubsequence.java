@@ -1,7 +1,5 @@
 package com.demo.algorithm.leetcode.medium;
 
-import java.net.Inet4Address;
-
 /**
  * create on 11/5/21
  * @author chenglong
@@ -81,6 +79,8 @@ public class MaxLongSubsequence {
                 if (max < marks[index]) {
                     max = marks[index];
                 }
+            } else {
+                marks[index] = 1;
             }
         }
         return max;
