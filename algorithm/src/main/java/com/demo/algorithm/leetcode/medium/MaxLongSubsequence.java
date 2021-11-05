@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode.medium;
 
+import java.net.Inet4Address;
+
 /**
  * create on 11/5/21
  * @author chenglong
@@ -26,7 +28,7 @@ package com.demo.algorithm.leetcode.medium;
  *  
  * 提示：
  * 1 <= arr.length <= 105
- * -104 <= arr[i], difference <= 104
+ * -10^4 <= arr[i], difference <= 10^4
  */
 public class MaxLongSubsequence {
 
@@ -57,6 +59,28 @@ public class MaxLongSubsequence {
             }
             if (count > max) {
                 max = count;
+            }
+        }
+        return max;
+    }
+
+    //使用空间换时间
+    public static int longestSubsequence2(int[] arr, int difference) {
+        int max = 1;
+        int length = arr.length;
+        if (length == 1) {
+            return 1;
+        }
+        //根据范围-10^4 ～ 10^4
+        int[] marks = new int[20001];
+        for (int i = 0; i < length; i++) {
+            int index = arr[i] + 10000;
+            int pre = index - difference;
+            if (pre >= 0 && pre <= 20000) {
+                marks[index] = marks[pre] + 1;
+                if (max < marks[index]) {
+                    max = marks[index];
+                }
             }
         }
         return max;
