@@ -69,4 +69,47 @@ public class SortColors {
             }
         }
     }
+
+    public static void sortColors2(int[] nums) {
+        int length = nums.length;
+        if (length == 1) {
+            return;
+        }
+        //使用双指针进行操作
+        int index0 = 0;
+        int index1 = 0;
+        for (int i = 0; i < length; i++) {
+            if (nums[i] == 0) {
+                if (index0 == i) {
+                    index0++;
+                    if (index1 < index0) {
+                        index1 = index0;
+                    }
+                } else {
+                    nums[i] = nums[index0];
+                    nums[index0] = 0;
+                    index0++;
+                    if (index1 < index0) {
+                        index1 = index0;
+                    }
+                    if (index1 < i && nums[i] < nums[index1]) {
+                        int tem = nums[i];
+                        nums[i] = nums[index1];
+                        nums[index1] = tem;
+                        index1++;
+                    } else if (index1 == i && nums[i] == 1) {
+                        index1++;
+                    }
+                }
+            } else if (nums[i] == 1) {
+                if (index1 == i) {
+                    index1++;
+                } else {
+                    nums[i] = nums[index1];
+                    nums[index1] = 1;
+                    index1++;
+                }
+            }
+        }
+    }
 }
