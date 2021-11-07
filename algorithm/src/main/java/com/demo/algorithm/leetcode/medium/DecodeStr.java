@@ -72,10 +72,9 @@ public class DecodeStr {
         if (length == 2) {
             return a2;
         }
-        int[] result = new int[length + 1];
-        result[0] = 1;
-        result[1] = 1;
-        result[2] = a2;
+        int a = 1;
+        int b = a2;
+        int c = 0;
         for (int i = 2; i < length; i++) {
             int number = s.charAt(i) - '0';
             int pre = s.charAt(i - 1) - '0';
@@ -84,24 +83,27 @@ public class DecodeStr {
                     return 0;
                 } else {
                     if (pre * 10 + number <= 26) {
-                        result[i + 1] = result[i - 1];
+                        c = a;
                     } else {
                         return 0;
                     }
                 }
             } else {
                 if (pre == 0) {
-                    result[i + 1] = result[i];
+                    c = b;
                 } else {
                     if (pre * 10 + number <= 26) {
-                        result[i + 1] = result[i] + result[i - 1];
+                        c = a + b;
                     } else {
-                        result[i + 1] = result[i];
+                        c = b;
                     }
                 }
             }
+            //初始值重置
+            a = b;
+            b = c;
         }
-        return result[length];
+        return c;
     }
 
 }
