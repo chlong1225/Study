@@ -25,56 +25,45 @@ import java.util.List;
 public class TreeNum2 {
 
     public List<TreeNode> generateTrees(int n) {
-        List<TreeNode> result = new ArrayList<>();
         if (n <= 0) {
-            return result;
+            return null;
         }
-        if (n == 1) {
-            TreeNode root = new TreeNode(1);
-            result.add(root);
-            return result;
-        }
-        result = buildTree(1, n);
-        return result;
+        return buildTree(1, n);
     }
 
     private List<TreeNode> buildTree(int start, int end) {
-        if (start > end) {
-            return null;
-        }
         List<TreeNode> result = new ArrayList<>();
+        if (start > end) {
+            return result;
+        }
+        if (start == end) {
+            result.add(new TreeNode(start));
+            return result;
+        }
         for (int i = start; i <= end; i++) {
             List<TreeNode> lefts = buildTree(start, i - 1);
             List<TreeNode> rights = buildTree(i + 1, end);
-            if (lefts == null || lefts.size() == 0) {
-
-                if (rights == null || rights.size() == 0) {
+            if (lefts.size() == 0) {
+                for (int j = 0; j < rights.size(); j++) {
                     TreeNode root = new TreeNode(i);
                     root.left = null;
+                    root.right = rights.get(j);
+                    result.add(root);
+                }
+            } else if (rights.size() == 0) {
+                for (int j = 0; j < lefts.size(); j++) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = lefts.get(j);
                     root.right = null;
                     result.add(root);
-                } else {
-                    for (int j = 0; j < rights.size(); j++) {
-                        TreeNode root = new TreeNode(i);
-                        root.left = null;
-                        root.right = rights.get(j);
-                        result.add(root);
-                    }
                 }
             } else {
                 for (int j = 0; j < lefts.size(); j++) {
-                    if (rights == null || rights.size() == 0) {
+                    for (int k = 0; k < rights.size(); k++) {
                         TreeNode root = new TreeNode(i);
                         root.left = lefts.get(j);
-                        root.right = null;
+                        root.right = rights.get(k);
                         result.add(root);
-                    } else {
-                        for (int k = 0; k < rights.size(); k++) {
-                            TreeNode root = new TreeNode(i);
-                            root.left = lefts.get(j);
-                            root.right = rights.get(k);
-                            result.add(root);
-                        }
                     }
                 }
             }
