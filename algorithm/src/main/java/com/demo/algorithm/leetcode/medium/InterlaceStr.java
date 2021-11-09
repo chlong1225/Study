@@ -67,27 +67,30 @@ public class InterlaceStr {
         }
         //3，长度相同，s3中的字符包含s1，s2的字符，使用动态规划
         //3.1，定义边界条件
-        boolean[][] marks = new boolean[length1][length2];
+        boolean[][] marks = new boolean[length1 + 1][length2 + 1];
         marks[0][0] = true;
+        for (int i = 1; i <= length1; i++) {
+            marks[i][0] = s1.substring(0, i).equals(s3.substring(0, i));
+        }
+        for (int i = 1; i <= length2; i++) {
+            marks[0][i] = s2.substring(0, i).equals(s3.substring(0, i));
+        }
         //3.2，循环遍历所有的场景
-        for (int i = 0; i < length1; i++) {
-            for (int j = 0; j < length2; j++) {
+        for (int i = 1; i <= length1; i++) {
+            for (int j = 1; j <= length2; j++) {
                 //3.3，状态转移方程
                 int index = i + j - 1;
-                if (index < 0) {
+                if (s3.charAt(index) != s1.charAt(i - 1) && s3.charAt(index) != s2.charAt(j - 1)) {
                     continue;
                 }
-                if (s3.charAt(index) != s1.charAt(i) && s3.charAt(index) != s2.charAt(j)) {
-                    continue;
-                }
-                if (i > 0 && s3.charAt(index) == s1.charAt(i)) {
+                if (s3.charAt(index) == s1.charAt(i - 1)) {
                     marks[i][j] |= marks[i - 1][j];
                 }
-                if (j > 0 && s3.charAt(index) == s2.charAt(j)) {
+                if (s3.charAt(index) == s2.charAt(j - 1)) {
                     marks[i][j] |= marks[i][j - 1];
                 }
             }
         }
-        return marks[length1 - 1][length2 - 1];
+        return marks[length1][length2];
     }
 }
