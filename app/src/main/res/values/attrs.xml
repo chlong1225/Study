@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ElipsisTextView">
+        <!--收缩文本最大行数-->
+        <attr name="maxShrinkLines" format="integer"/>
+        <!--收缩文本右边的省略号-->
+        <attr name="ellipsizeHint" format="string"/>
+        <!--收缩文本右边的icon-->
+        <attr name="shink_icon" format="reference|integer"/>
+        <!--展示文本右边的icon-->
+        <attr name="expand_icon" format="reference|integer"/>
+    </declare-styleable>
+
+</resources>
