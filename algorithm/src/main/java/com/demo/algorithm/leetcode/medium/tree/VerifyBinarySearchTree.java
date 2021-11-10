@@ -1,4 +1,4 @@
-package com.demo.algorithm.leetcode.medium;
+package com.demo.algorithm.leetcode.medium.tree;
 
 import com.demo.algorithm.leetcode.entity.TreeNode;
 
@@ -44,7 +44,7 @@ public class VerifyBinarySearchTree {
         if (!dfs) {
             return false;
         }
-        if (datas.size() == 0) {
+        if (datas.isEmpty()) {
             datas.add(root.val);
         } else {
             if (datas.get(0) >= root.val) {
