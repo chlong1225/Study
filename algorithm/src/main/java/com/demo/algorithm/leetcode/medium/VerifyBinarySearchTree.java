@@ -55,4 +55,41 @@ public class VerifyBinarySearchTree {
         }
         return dfs(root.right, datas);
     }
+
+    public boolean isValidBST2(TreeNode root) {
+        return isValidLeft(root.left, root.val) && isValibRight(root.right, root.val);
+    }
+
+    //判断最右边的子树是否为二叉搜索树
+    private boolean isValibRight(TreeNode right, int min) {
+        if (right == null) {
+            return true;
+        }
+        if (right.val <= min) {
+            return false;
+        }
+        return isValibRight(right.right, right.val) && isValidMiddle(right.left, min, right.val);
+    }
+
+    //判断最左边的子树是否为二叉搜索树
+    private boolean isValidLeft(TreeNode left, int max) {
+        if (left == null) {
+            return true;
+        }
+        if (left.val >= max) {
+            return false;
+        }
+        return isValidLeft(left.left, left.val) && isValidMiddle(left.right, left.val, max);
+    }
+
+    //判断中间的子树是否二叉搜索树
+    private boolean isValidMiddle(TreeNode root, int min, int max) {
+        if (root == null) {
+            return true;
+        }
+        if (root.val <= min || root.val >= max) {
+            return false;
+        }
+        return isValidMiddle(root.left, min, root.val) && isValidMiddle(root.right, root.val, max);
+    }
 }
