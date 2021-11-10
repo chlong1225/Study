@@ -93,4 +93,56 @@ public class InterlaceStr {
         }
         return marks[length1][length2];
     }
+
+    public static boolean isInterleave2(String s1, String s2, String s3) {
+        //1，比较长度并处理特殊情况
+        int length1 = s1 == null ? 0 : s1.length();
+        int length2 = s2 == null ? 0 : s2.length();
+        int length3 = s3 == null ? 0 : s3.length();
+        if (length1 + length2 != length3) {
+            return false;
+        }
+        if (length1 == 0) {
+            if (s3 == null) {
+                return s2 == null;
+            }
+            return s3.equals(s2);
+        }
+        if (length2 == 0) {
+            return s3.equals(s1);
+        }
+        //2，判断s1，s2的字符在s3中是否都能够找到
+        int[] counts = new int[26];
+        for (int i = 0; i < length1; i++) {
+            counts[s1.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < length2; i++) {
+            counts[s2.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < length3; i++) {
+            int index = s3.charAt(i) - 'a';
+            if (counts[index] > 0) {
+                counts[index]--;
+            } else {
+                return false;
+            }
+        }
+        //3,使用递推迭代+标记的方式
+        int[][] marks = new int[s1.length() + 1][s2.length() + 1];
+        return findPath(0, 0, s1, s2, s3, marks);
+    }
+
+    private static boolean findPath(int index1, int index2, String s1, String s2, String s3,int[][] marks) {
+        if (marks[index1][index2] != 0) {
+            return marks[index1][index2] == 1;
+        }
+        if (index1 == s1.length() && index2 == s2.length()) {
+            return true;
+        }
+        boolean result = (index1 < s1.length() && s1.charAt(index1) == s3.charAt(index1 + index2)
+                && findPath(index1 + 1, index2, s1, s2, s3, marks)) || (index2 < s2.length()
+                && s2.charAt(index2) == s3.charAt(index1 + index2) && findPath(index1, index2 + 1, s1, s2, s3, marks));
+        marks[index1][index2] = result ? 1 : 2;
+        return result;
+    }
 }
