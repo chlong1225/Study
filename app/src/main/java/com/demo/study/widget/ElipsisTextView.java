@@ -34,8 +34,9 @@ import com.demo.study.R;
  * 2，使用setContent()代替setText()设置文本
  * 3，展示与收缩的点击事件封装在控件内部处理，禁止设置点击事件
  * 4，展开与收缩的icon填充范围：大小为行高的正方形
+ * 5，已添加对padding的处理
  */
-public class ElipsisTextView extends AppCompatTextView {
+public class ElipsisTextView extends AppCompatTextView implements ViewTreeObserver.OnGlobalLayoutListener {
 
     private static final String TAG = ElipsisTextView.class.getSimpleName();
 
@@ -100,15 +101,7 @@ public class ElipsisTextView extends AppCompatTextView {
             mShinkBitmap = BitmapFactory.decodeResource(getResources(), mShinkImageId);
             mExpandBitmap = BitmapFactory.decodeResource(getResources(), mExpandImageId);
         }
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                calculateText();
-                showText();
-                getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-            }
-        });
+        getViewTreeObserver().addOnGlobalLayoutListener(this);
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,11 +119,26 @@ public class ElipsisTextView extends AppCompatTextView {
     }
 
     @Override
+    public void onGlobalLayout() {
+        LogUtil.e(TAG,"onGlobalLayout width = " + getWidth() + " ;; contentWidth = " + getContentWidth());
+        if (getWidth() == 0) {
+            return;
+        }
+        calculateText(getContentWidth());
+        showText();
+        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+    }
+
+    private int getContentWidth() {
+        return getWidth() - getPaddingStart() - getPaddingEnd();
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         LogUtil.e(TAG, "onDraw : lineCount = " + getLineCount() + " ;; lineHeight = " + getLineHeight() + " ;; " + getHeight());
         if (isNeedShrink) {
-            Rect rect = new Rect(getWidth() - getLineHeight(), getHeight() - getLineHeight(), getWidth(), getHeight());
+            Rect rect = new Rect(getWidth() - getLineHeight() - getPaddingEnd(), getHeight() - getLineHeight() - getPaddingBottom(), getWidth() - getPaddingEnd(), getHeight() - getPaddingBottom());
             if (isShrink) {
                 canvas.drawBitmap(mShinkBitmap, null, rect, null);
             } else {
@@ -145,7 +153,30 @@ public class ElipsisTextView extends AppCompatTextView {
      */
     public void setContent(String content) {
         mOriginalText = content;
-        calculateText();
+        //部分场景调用时View的宽高获取为0，使用post异步执行
+        if (getWidth() == 0) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    calculateText(getContentWidth());
+                    showText();
+                }
+            });
+        } else {
+            calculateText(getContentWidth());
+            showText();
+        }
+    }
+
+    /**
+     * 设置文本+固定宽度。临时解决横竖屏切换时出现的问题
+     * @param content ：
+     * @param width ： 文本控件的宽度
+     */
+    public void setContent(String content, int width) {
+        mOriginalText = content;
+        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        calculateText(width);
         showText();
     }
 
@@ -161,7 +192,7 @@ public class ElipsisTextView extends AppCompatTextView {
                 setLayoutParams(params);
             }
         }
-        setText(mOriginalText, BufferType.SPANNABLE);
+        setText(mOriginalText, BufferType.NORMAL);
     }
 
     //显示收缩的文案
@@ -171,7 +202,8 @@ public class ElipsisTextView extends AppCompatTextView {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             setLayoutParams(params);
         }
-        setText(mCropText, BufferType.SPANNABLE);
+        LogUtil.e(TAG,"showShrink = " + params.height + ";; " + getHeight());
+        setText(mCropText, BufferType.NORMAL);
     }
 
     //计算文本后显示文本
@@ -182,25 +214,31 @@ public class ElipsisTextView extends AppCompatTextView {
             } else {
                 showExpand();
             }
+        } else {
+            ViewGroup.LayoutParams params = getLayoutParams();
+            if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                setLayoutParams(params);
+            }
+            setText(mOriginalText, BufferType.NORMAL);
         }
     }
 
     //计算文本，判断是否需要收缩与展开。需要时计算收缩显示的文本，展开时高度
-    private void calculateText() {
+    private void calculateText(int width) {
         //控件修改内容后，getLayout获取的是上一次的layout，必须自己创建
-        DynamicLayout layout = new DynamicLayout(mOriginalText, getPaint(), getWidth(), Layout.Alignment.ALIGN_NORMAL, getLayout().getSpacingMultiplier(), getLayout().getSpacingAdd(), false);
+        DynamicLayout layout = new DynamicLayout(mOriginalText, getPaint(), width, Layout.Alignment.ALIGN_NORMAL,
+                getLineSpacingMultiplier(), (getLayout() == null ? 0 : getLayout().getSpacingAdd()), false);
         int count = layout.getLineCount();
-
-        double lineHeight1 = Math.ceil(getPaint().getFontMetricsInt().descent - getPaint().getFontMetricsInt().ascent);
-
-        double height1 = Math.ceil(getPaint().getFontMetrics().bottom - getPaint().getFontMetrics().top);
-
-        int lineTop = getLayout().getLineTop(getLayout().getLineCount());
-
-        LogUtil.e(TAG, "calculateText : lineCount = " + getLineCount() + " ;; lineHeight = " + getLineHeight() + " ;; " + count);
+        //单行纯文本的高度
+        double textHeight = Math.ceil(getPaint().getFontMetricsInt().descent - getPaint().getFontMetricsInt().ascent);
+        //单行比较接近
+        double oneHeight = Math.ceil(getPaint().getFontMetrics().bottom - getPaint().getFontMetrics().top);
+        double space = oneHeight - textHeight;
+        LogUtil.e(TAG, "calculateText : lineCount = " + getLineCount() + " ;; lineHeight = " + getLineHeight() + " ;; " + count + " ;; width = " +
+                width + " ;; MeasuredWidth = " + getMeasuredWidth() + " ;; " +  getLayoutParams().width);
         if (count <= maxLinesOnShrink) {
             isNeedShrink = false;
-            setText(mOriginalText, BufferType.SPANNABLE);
             return;
         } else {
             isNeedShrink = true;
@@ -211,7 +249,7 @@ public class ElipsisTextView extends AppCompatTextView {
         //需要裁剪的宽度
         float cropWidth = StaticLayout.getDesiredWidth(mEllipsisText, getPaint()) + getLineHeight();
         //当前行可以使用的最大宽度
-        float maxWidth = getWidth() - cropWidth;
+        float maxWidth = width - cropWidth;
         endIndex -= mEllipsisText.length();
         float compareWidth = StaticLayout.getDesiredWidth(mOriginalText, startIndex, endIndex, getPaint());
         if (compareWidth < maxWidth) {
@@ -235,11 +273,11 @@ public class ElipsisTextView extends AppCompatTextView {
         endIndex = layout.getLineEnd(count - 1);
         //展开后最后一行文本的宽度
         float lastWidth = StaticLayout.getDesiredWidth(mOriginalText, startIndex, endIndex, getPaint());
-        maxWidth = getWidth() - getLineHeight();
+        maxWidth = width - getLineHeight();
         if (lastWidth > maxWidth) {
-            //icon在最后一行放置不下
+            //icon在最后一行放置不下，需要重起一行，此时需要计算高度，设置高度。无法使用wrap_content模式
             isExpandNextLine = true;
-            mExpandHeight = getLineHeight() * (count + 1);
+            mExpandHeight = getLineHeight() * count + (int) ((count - 1) * space) + getLineHeight();
         } else {
             isExpandNextLine = false;
         }
