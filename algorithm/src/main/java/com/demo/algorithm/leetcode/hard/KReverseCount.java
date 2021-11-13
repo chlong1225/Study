@@ -75,4 +75,44 @@ public class KReverseCount {
         }
         return marks[n][k];
     }
+
+    public static int kInversePairs2(int n, int k) {
+        int mod = 1000000007;
+        if (n == 1) {
+            return k == 0 ? 1 : 0;
+        }
+        //1,n个整数最大的逆序数量
+        int max = n * (n - 1) / 2;
+        if (k > max) {
+            return 0;
+        }
+        //2,经分析逆序数量具有对称性,同时处理特殊场景
+        if (k > max - k) {
+            k = max - k;
+        }
+        if (k == 0) {
+            return 1;
+        }
+        if (k == 1) {
+            return n - 1;
+        }
+        //动态规划方程:f(n)(k) = f(n-1)(k)+f(n-1)(k-1)+...+f(n-1)(k+1-n),总计n个求和。如果k+1-n<0。累计求和到f(n-1)(0)
+        //优化方程:f(n)(k) - f(n)(k-1) = f(n-1)(k)-f(n-1)(k-n)。需要考虑k<n的情况
+        int[][] marks = new int[2][k + 1];
+        marks[0][0] = 1;
+        marks[1][0] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j <= k; j++) {
+                int pre = (i - 1) & 1;
+                int cur = i & 1;
+                marks[cur][j] = marks[cur][j - 1] + marks[pre][j] - (j >= i ? marks[pre][j - i] : 0);
+                if (marks[cur][j] > mod) {
+                    marks[cur][j] %= mod;
+                } else if (marks[cur][j] < 0) {
+                    marks[cur][j] += mod;
+                }
+            }
+        }
+        return marks[n & 1][k];
+    }
 }

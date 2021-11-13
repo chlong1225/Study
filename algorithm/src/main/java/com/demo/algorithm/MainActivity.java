@@ -25,24 +25,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        testAlgorithm();
+    }
 
-//        testLru();
-
-//        testDelete();
-
-//        testReverseStr();
-
-//        testCenter();
-
-//        testMerge();
-
-//        testStack();
-
-//        testCalculator();
-
-//        testQueue();
-
-//        compareTime();
+    private void testAlgorithm() {
+        testLru();
+        testDelete();
+        testReverseStr();
+        testCenter();
+        testMerge();
+        testStack();
+        testCalculator();
+        testQueue();
+        compareTime();
     }
 
     private void compareTime() {
