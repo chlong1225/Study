@@ -65,7 +65,6 @@ public class GuestNum2 {
         marks = new int[n + 1][n + 1];
         dfs(1, n);
         return marks[1][n];
-
     }
 
     private int dfs(int start, int end) {
@@ -86,5 +85,33 @@ public class GuestNum2 {
         }
         marks[start][end] = result;
         return result;
+    }
+
+    public int getMoneyAmount2(int n) {
+        if (n == 1) {
+            return 0;
+        }
+        if (n == 2) {
+            return 1;
+        }
+        //使用动态规划
+        int[][] marks = new int[n + 1][n + 1];
+        for (int i = 1; i < n; i++) {
+            //i代表区间的间隔
+            for (int j = 1; j <= n - i; j++) {
+                int end = j + i;
+                int result = 0;
+                for (int k = j; k < end; k++) {
+                    int cur = Math.max(marks[j][k - 1], marks[k + 1][end]) + k;
+                    if (k == j) {
+                        result = cur;
+                    } else {
+                        result = Math.min(result, cur);
+                    }
+                }
+                marks[j][end] = result;
+            }
+        }
+        return marks[1][n];
     }
 }
