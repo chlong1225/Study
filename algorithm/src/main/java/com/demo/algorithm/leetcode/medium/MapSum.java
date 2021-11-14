@@ -1,9 +1,5 @@
 package com.demo.algorithm.leetcode.medium;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Created by chl on 2021/11/14.
  * description : 键值映射
@@ -34,39 +30,60 @@ import java.util.Set;
  */
 public class MapSum {
 
-    private Map<String, Integer> map = new HashMap<>();
+    private TrieTree root;
 
     public MapSum() {
-        map.clear();
+        root = new TrieTree();
     }
 
     public void insert(String key, int val) {
-        map.put(key, val);
+        int length = key.length();
+        TrieTree node = root;
+        for (int i = 0; i < length; i++) {
+            int index = key.charAt(i) - 'a';
+            if (node.next[index] == null) {
+                node.next[index] = new TrieTree();
+            }
+            node = node.next[index];
+        }
+        node.vale = val;
     }
 
     public int sum(String prefix) {
-        int sum = 0;
-        Set<String> keySets = map.keySet();
-        for (String key : keySets) {
-            if (isSame(prefix, key)) {
-                sum += map.get(key);
+        TrieTree node = root;
+        int length = prefix.length();
+        //1,找到前缀对应的节点
+        for (int i = 0; i < length; i++) {
+            int index = prefix.charAt(i) - 'a';
+            node = node.next[index];
+            if (node == null) {
+                //找不到前缀对应的节点,
+                return 0;
+            }
+        }
+        //2,统计节点下的值
+        return total(node);
+    }
+
+    private int total(TrieTree node) {
+        int sum = node.vale;
+        for (int i = 0; i < 26; i++) {
+            TrieTree tem = node.next[i];
+            if (tem != null) {
+                sum += total(tem);
             }
         }
         return sum;
     }
 
-    private boolean isSame(String prefix, String key) {
-        int length = key.length();
-        int compare = prefix.length();
-        if (length < compare) {
-            return false;
+    //字典树结构
+    private static class TrieTree{
+
+        TrieTree[] next;
+        int vale;
+
+        public TrieTree() {
+            next = new TrieTree[26];
         }
-        boolean result = true;
-        for (int i = 0; i < compare; i++) {
-            if (key.charAt(i) != prefix.charAt(i)) {
-                return false;
-            }
-        }
-        return result;
     }
 }
