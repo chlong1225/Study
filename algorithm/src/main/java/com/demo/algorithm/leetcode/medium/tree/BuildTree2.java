@@ -24,6 +24,7 @@ public class BuildTree2 {
     private int[] mInorder;
     private int[] mPostorder;
     private int mPosIndex;
+    private int mMiddleIndex;
 
     public TreeNode buildTree(int[] inorder, int[] postorder) {
         if (inorder == null || inorder.length == 0) {
@@ -33,41 +34,28 @@ public class BuildTree2 {
         mPostorder = postorder;
         int length = mPostorder.length;
         mPosIndex = length - 1;
+        mMiddleIndex = length - 1;
         TreeNode root = new TreeNode(mPostorder[mPosIndex--]);
-        int middle = 0;
-        for (int i = 0; i < length; i++) {
-            if (inorder[i] == root.val) {
-                middle = i;
-                break;
-            }
-        }
-        root.right = buildTree(middle + 1, length - 1);
-        root.left = buildTree(0, middle - 1);
+        root.right = buildTree(root.val);
+        root.left = buildTree(Integer.MIN_VALUE);
         return root;
     }
 
     /**
-     * @param middleStart : 中序遍历中的起始位置
-     * @param middleEnd : 中序遍历中的结束位置
+     * @param stop : 限定当前递归结束
      * @return : 构建子树
      */
-    private TreeNode buildTree(int middleStart, int middleEnd) {
-        if (middleStart > middleEnd) {
-            return null;
-        }
+    private TreeNode buildTree(int stop) {
         if (mPosIndex < 0) {
             return null;
         }
-        TreeNode root = new TreeNode(mPostorder[mPosIndex--]);
-        int middle = 0;
-        for (int i = middleStart; i <= middleEnd; i++) {
-            if (mInorder[i] == root.val) {
-                middle = i;
-                break;
-            }
+        if (stop == mInorder[mMiddleIndex]) {
+            mMiddleIndex--;
+            return null;
         }
-        root.right = buildTree(middle + 1, middleEnd);
-        root.left = buildTree(middleStart, middle - 1);
+        TreeNode root = new TreeNode(mPostorder[mPosIndex--]);
+        root.right = buildTree(root.val);
+        root.left = buildTree(stop);
         return root;
     }
 }
