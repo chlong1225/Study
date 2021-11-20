@@ -1,5 +1,10 @@
 package com.demo.algorithm.leetcode.easy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by chl on 2021/11/20.
  * description : 最长的和谐子序列
@@ -27,7 +32,7 @@ package com.demo.algorithm.leetcode.easy;
  */
 public class MaxHs {
 
-    public static int findLHS(int[] nums) {
+    public int findLHS(int[] nums) {
         int max = 0;
         int length = nums.length;
         if (length == 1) {
@@ -61,5 +66,32 @@ public class MaxHs {
         return max;
     }
 
-
+    //使用hash统计优化
+    public int findLHS2(int[] nums) {
+        int max = 0;
+        int length = nums.length;
+        if (length == 0) {
+            return 0;
+        }
+        //存放不同的数
+        List<Integer> dates = new ArrayList<>();
+        //存放不同数对应出现的次数
+        Map<Integer, Integer> counts = new HashMap<>();
+        for (int i = 0; i < length; i++) {
+            if (counts.get(nums[i]) == null) {
+                counts.put(nums[i], 1);
+                dates.add(nums[i]);
+            } else {
+                counts.put(nums[i], counts.get(nums[i]) + 1);
+            }
+        }
+        int size = dates.size();
+        for (int i = 0; i < size; i++) {
+            if (counts.get(dates.get(i) + 1) == null) {
+                continue;
+            }
+            max = Math.max(max, counts.get(dates.get(i)) + counts.get(dates.get(i) + 1));
+        }
+        return max;
+    }
 }
