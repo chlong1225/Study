@@ -14,7 +14,9 @@ import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
 import com.demo.algorithm.leetcode.easy.YangHuiTriangle2;
+import com.demo.algorithm.leetcode.hard.WordSolitaire;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +28,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        testAlgorithm();
+
+        List<String> words = new ArrayList<>();
+        words.add("ymann");
+        words.add("yycrj");
+        words.add("oecij");
+        words.add("ymcnj");
+        words.add("yzcrj");
+        words.add("yycij");
+        words.add("xecij");
+        words.add("yecij");
+        words.add("ymanj");
+        words.add("yzcnj");
+        words.add("ymain");
+       /* words.add("lot");
+        words.add("log");
+        words.add("hit");
+        words.add("cog");*/
+        int a1 = WordSolitaire.ladderLength("ymain", "oecij", words);
+        int a = 10;
     }
 
     private void testAlgorithm() {
