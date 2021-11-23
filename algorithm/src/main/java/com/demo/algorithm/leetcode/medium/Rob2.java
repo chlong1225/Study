@@ -41,11 +41,11 @@ public class Rob2 {
             return Math.max(Math.max(nums[0], nums[1]), nums[2]);
         }
         //拆分两种情况：1，第一家打劫，最后一家忽略；2，第一家忽略，最后一家可以被打劫
-        //1，第一家打劫，最后一家忽略。初始化条件
+        //1，第一家打劫，第二家忽略，最后一家忽略。初始化条件
         int preUnRob = nums[0];
         int preRob = nums[0];
-        int unRob = nums[0];
-        int rob = nums[0];
+        int unRob = preUnRob;
+        int rob = preRob;
         for (int i = 2; i < length - 1; i++) {
             int num = nums[i];
             unRob = Math.max(preUnRob, preRob);
@@ -56,11 +56,11 @@ public class Rob2 {
             }
         }
         int max = Math.max(unRob, rob);
-        //2,第一家忽略，最后一家打劫
+        //2,第一家忽略，第二家开始都可以打劫
         preUnRob = 0;
         preRob = nums[1];
-        unRob = 0;
-        rob = nums[1];
+        unRob = preUnRob;
+        rob = preRob;
         for (int i = 2; i < length; i++) {
             int num = nums[i];
             unRob = Math.max(preUnRob, preRob);
