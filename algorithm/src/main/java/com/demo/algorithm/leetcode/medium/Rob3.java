@@ -39,17 +39,19 @@ import java.util.Map;
  */
 public class Rob3 {
 
-    //用于标记,防止去重
-    Map<TreeNode, int[]> marks = new HashMap<>();
+    //用于标记当前节点偷的最大金额
+    Map<TreeNode, Integer> markRobs = new HashMap<>();
+    //用于标记当前节点不偷的最大金额
+    Map<TreeNode, Integer> markUnRobs = new HashMap<>();
 
     public int rob(TreeNode root) {
         //当前房屋只有两种状态,偷/不偷
         if (root == null) {
             return 0;
         }
-        marks.clear();
-        int result = Math.max(getUnRob(root), getRob(root) + root.val);
-        return result;
+        markRobs.clear();
+        markUnRobs.clear();
+        return Math.max(getUnRob(root), getRob(root) + root.val);
     }
 
     //root偷时子树的最大金额
@@ -57,38 +59,17 @@ public class Rob3 {
         if (root == null) {
             return 0;
         }
-        if (marks.get(root) != null) {
-            int[] data = marks.get(root);
-            if (data[1] != 0) {
-                return data[1];
-            }
+        if (markRobs.get(root) != null) {
+            return markRobs.get(root);
         }
         int result = 0;
         if (root.left != null) {
-            if (root.left.left != null) {
-                result += Math.max(getUnRob(root.left.left), getRob(root.left.left) + root.left.left.val);
-            }
-            if (root.left.right != null) {
-                result += Math.max(getUnRob(root.left.right), getRob(root.left.right) + root.left.right.val);
-            }
+            result += getUnRob(root.left);
         }
         if (root.right != null) {
-            if (root.right.left != null) {
-                result += Math.max(getUnRob(root.right.left), getRob(root.right.left) + root.right.left.val);
-            }
-            if (root.right.right != null) {
-                result += Math.max(getUnRob(root.right.right), getRob(root.right.right) + root.right.right.val);
-            }
+            result += getUnRob(root.right);
         }
-        if (marks.get(root) == null) {
-            int[] data = new int[2];
-            data[1] = result;
-            marks.put(root, data);
-        } else {
-            int[] data = marks.get(root);
-            data[1] = result;
-            marks.put(root, data);
-        }
+        markRobs.put(root, result);
         return result;
     }
 
@@ -97,11 +78,8 @@ public class Rob3 {
         if (root == null) {
             return 0;
         }
-        if (marks.get(root) != null) {
-            int[] data = marks.get(root);
-            if (data[0] != 0) {
-                return data[0];
-            }
+        if (markUnRobs.get(root) != null) {
+            return markUnRobs.get(root);
         }
         int left = 0;
         int right = 0;
@@ -111,15 +89,7 @@ public class Rob3 {
         if (root.right != null) {
             right = Math.max(getUnRob(root.right), getRob(root.right) + root.right.val);
         }
-        if (marks.get(root) == null) {
-            int[] data = new int[2];
-            data[0] = left + right;
-            marks.put(root, data);
-        } else {
-            int[] data = marks.get(root);
-            data[0] = left + right;
-            marks.put(root, data);
-        }
+        markUnRobs.put(root, left + right);
         return left + right;
     }
 }
