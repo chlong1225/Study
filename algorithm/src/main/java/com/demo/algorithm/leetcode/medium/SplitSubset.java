@@ -73,4 +73,58 @@ public class SplitSubset {
         }
         return marks[(length - 1) & 1][sum];
     }
+
+    public boolean canPartition2(int[] nums) {
+        int length = nums.length;
+        //1,特殊场景只有一个数据时无法拆分
+        if (length == 1) {
+            return false;
+        }
+        //2,求和并找最大值
+        int max = nums[0];
+        int sum = nums[0];
+        for (int i = 1; i < length; i++) {
+            if (max < nums[i]) {
+                max = nums[i];
+            }
+            sum += nums[i];
+        }
+        //3,再次判断特殊场景
+        if ((sum & 1) == 1) {
+            //奇数无法拆分
+            return false;
+        }
+        sum = sum >> 1;
+        if (max > sum) {
+            //最大值超过一半,剩余的值组合也无法分割
+            return false;
+        }
+        if (max == sum) {
+            //刚好直接分成两个子集
+            return true;
+        }
+        /**
+         * 4，优化为一维数组
+         * i：代表对应求和值。j最大sum。长度定义：sum+1
+         * 每个数字对应两种场景：添加，不添加
+         */
+        boolean[] marks = new boolean[sum + 1];
+        //4.1,初始化默认都为false。求和为0的可以都不选为true
+        marks[0] = true;
+        for (int i = 0; i < length; i++) {
+            int num = nums[i];
+            for (int j = sum; j >= num; j--) {
+                marks[j] = marks[j] || marks[j - num];
+                if (j == sum) {
+                    if (marks[j]) {
+                        return true;
+                    }
+                    if (i == length - 1) {
+                        return marks[j];
+                    }
+                }
+            }
+        }
+        return marks[sum];
+    }
 }
