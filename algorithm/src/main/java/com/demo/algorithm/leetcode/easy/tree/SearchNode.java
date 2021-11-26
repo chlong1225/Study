@@ -58,4 +58,26 @@ public class SearchNode {
         }
         return null;
     }
+
+    public TreeNode searchBST2(TreeNode root, int val) {
+        if (root == null) {
+            return null;
+        }
+        //使用深度优先dfs
+        return dfs(root, val);
+    }
+
+    //借助二叉搜索树数的特点：左子树节点小于根结点； 右子树节点大于根结点
+    private TreeNode dfs(TreeNode root, int val) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == val) {
+            return root;
+        }
+        if (root.val > val) {
+            return dfs(root.left, val);
+        }
+        return dfs(root.right, val);
+    }
 }
