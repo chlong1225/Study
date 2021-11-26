@@ -91,4 +91,56 @@ public class TargetSum {
         index--;
         return dfs(add, min, max, index) + dfs(reduce, min, max, index);
     }
+
+    //转换为使用动态规划的01背包问题
+    public int findTargetSumWays2(int[] nums, int target) {
+        int length = nums.length;
+        int sum = 0;
+        for (int i = 0; i < length; i++) {
+            sum += nums[i];
+        }
+        /**
+         * 问题转换:
+         * 表达式中负数和为neg,正数和为:sum-neg
+         * target = (sum -neg) - neg
+         * 转换成求取neg值.从nums中取部分数据和为neg
+         */
+        if (sum < target) {
+            return 0;
+        }
+        if (sum == target) {
+            int result = 1;
+            for (int i = 0; i < length; i++) {
+                if (nums[i] == 0) {
+                    result *= 2;
+                }
+            }
+            return result;
+        }
+        if (((sum - target) & 1) == 1) {
+            //sum - target 为奇数，则neg找不到
+            return 0;
+        }
+        //新的目标，从nums中找到若干数字和，转换为标准的0,1背包问题
+        target = (sum - target) >> 1;
+        //1，定义动态规划数组
+        int[] marks = new int[target + 1];
+        //都不取时和为0
+        marks[0] = 1;
+        for (int i = 0; i < length; i++) {
+            int num = nums[i];
+            if (num > target) {
+                continue;
+            }
+            for (int j = target; j >= num; j--) {
+                int findIndex = j - num;
+                marks[j] += marks[findIndex];
+                //最后一轮只需要计算target位置的即可,后面的没有必要计算
+                if (i == length - 1 && j == target) {
+                    break;
+                }
+            }
+        }
+        return marks[target];
+    }
 }
