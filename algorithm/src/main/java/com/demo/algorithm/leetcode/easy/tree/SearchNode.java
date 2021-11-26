@@ -80,4 +80,15 @@ public class SearchNode {
         }
         return dfs(root.right, val);
     }
+
+    //根据二叉搜索树的特点，使用二分查找的方式
+    public TreeNode searchBST3(TreeNode root, int val) {
+        while (root != null) {
+            if (root.val == val) {
+                return root;
+            }
+            root = root.val > val ? root.left : root.right;
+        }
+        return null;
+    }
 }
