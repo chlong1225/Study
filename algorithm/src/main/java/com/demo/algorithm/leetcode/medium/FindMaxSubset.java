@@ -19,17 +19,11 @@ package com.demo.algorithm.leetcode.medium;
  * 输出：2
  * 解释：最大的子集是 {"0", "1"} ，所以答案是 2 。
  *  
- *
  * 提示：
- *
  * 1 <= strs.length <= 600
  * 1 <= strs[i].length <= 100
  * strs[i] 仅由 '0' 和 '1' 组成
  * 1 <= m, n <= 100
- *
- * 来源：力扣（LeetCode）
- * 链接：https://leetcode-cn.com/problems/ones-and-zeroes
- * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  */
 public class FindMaxSubset {
 
