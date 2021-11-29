@@ -1,7 +1,9 @@
 package com.demo.algorithm;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.chl.common.utils.LogUtil;
@@ -14,6 +16,7 @@ import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
 import com.demo.algorithm.leetcode.easy.YangHuiTriangle2;
+import com.demo.algorithm.leetcode.hard.KMinFraction;
 
 import java.util.List;
 
@@ -21,11 +24,28 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        testAlgorithm();
+
+        KMinFraction kMinFraction = new KMinFraction();
+        int[] a1 = kMinFraction.kthSmallestPrimeFraction(new int[]{1, 13, 17, 59}, 1);
+        int[] b1 = kMinFraction.kthSmallestPrimeFraction2(new int[]{1, 13, 17, 59}, 1);
+        int[] a2 = kMinFraction.kthSmallestPrimeFraction(new int[]{1, 13, 17, 59}, 2);
+        int[] b2 = kMinFraction.kthSmallestPrimeFraction2(new int[]{1, 13, 17, 59}, 2);
+        int[] a3 = kMinFraction.kthSmallestPrimeFraction(new int[]{1, 13, 17, 59}, 3);
+        int[] b3 = kMinFraction.kthSmallestPrimeFraction2(new int[]{1, 13, 17, 59}, 3);
+        int[] a4 = kMinFraction.kthSmallestPrimeFraction(new int[]{1, 13, 17, 59}, 4);
+        int[] b4 = kMinFraction.kthSmallestPrimeFraction2(new int[]{1, 13, 17, 59}, 4);
+        int[] a5 = kMinFraction.kthSmallestPrimeFraction(new int[]{1, 13, 17, 59}, 5);
+        int[] b5 = kMinFraction.kthSmallestPrimeFraction2(new int[]{1, 13, 17, 59}, 5);
+        int[] a6 = kMinFraction.kthSmallestPrimeFraction(new int[]{1, 13, 17, 59}, 6);
+        int[] b6 = kMinFraction.kthSmallestPrimeFraction2(new int[]{1, 13, 17, 59}, 6);
+        int[] a20 = kMinFraction.kthSmallestPrimeFraction2(new int[]{1, 2, 3, 5}, 3);
+        int a = 10;
     }
 
     private void testAlgorithm() {

@@ -1,7 +1,12 @@
 package com.demo.algorithm.leetcode.hard;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * create on 11/29/21
@@ -33,6 +38,7 @@ import java.util.List;
  */
 public class KMinFraction {
 
+    //此方案超出时间限制
     public int[] kthSmallestPrimeFraction(int[] arr, int k) {
         int length = arr.length;
         //最多分数数量,不在取值范围时返回：{0,0}
@@ -82,4 +88,23 @@ public class KMinFraction {
         return fractions[k - 1];
     }
 
+    //使用多路归并
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public int[] kthSmallestPrimeFraction2(int[] arr, int k) {
+        int length = arr.length;
+
+        PriorityQueue<int[]> datas = new PriorityQueue<>((o1, o2) -> arr[o1[0]] * arr[o2[1]] - arr[o1[1]] * arr[o2[0]]);
+
+        for (int i = 1; i < length; i++) {
+            datas.offer(new int[]{0, i});
+        }
+        while (--k > 0) {
+            int[] poll = datas.poll();
+            if (poll[0] + 1 < poll[1]) {
+                datas.offer(new int[]{poll[0] + 1, poll[1]});
+            }
+        }
+        int[] poll = datas.poll();
+        return new int[]{arr[poll[0]], arr[poll[1]]};
+    }
 }
