@@ -53,4 +53,55 @@ public class SqrNum {
         }
         return marks[n];
     }
+
+
+    //使用四平方和定理：任意正整数最多为四个正整数的平方和。则结果只能为1,2,3,4
+    public int numSquares2(int n) {
+        //1，判断是完全平方数返回1
+        if (isSqr(n)) {
+            return 1;
+        }
+        //2，根据四平方和定理判断是否为4个
+        if (isAnswer4(n)) {
+            return 4;
+        }
+        //3,判断是否为两个平方和
+        int num = 1;
+        while (num * num < n) {
+            int tem = n - num * num;
+            if (isSqr(tem)) {
+                return 2;
+            }
+            num++;
+        }
+        return 3;
+    }
+
+    private boolean isAnswer4(int n) {
+        while (n % 4 == 0) {
+            n /= 4;
+        }
+        return n % 8 == 7;
+    }
+
+    //判读n是否为完全平方数
+    public static boolean isSqr(int n) {
+        if (n == 1) {
+            return true;
+        }
+        int min = 1;
+        int max = n;
+        int middle;
+        while (min <= max) {
+            middle = (min + max) >> 1;
+            if (middle * middle == n) {
+                return true;
+            } else if (middle * middle < n) {
+                min = middle + 1;
+            } else {
+                max = middle - 1;
+            }
+        }
+        return false;
+    }
 }
