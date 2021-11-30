@@ -107,4 +107,45 @@ public class KMinFraction {
         int[] poll = datas.poll();
         return new int[]{arr[poll[0]], arr[poll[1]]};
     }
+
+    //使用双指针+二分查找
+    public int[] kthSmallestPrimeFraction3(int[] arr, int k) {
+        int length = arr.length;
+        //定义最小,最大值0,1
+        double min = 0;
+        double max = 1;
+        while (min < max) {
+            double middle = (min + max) / 2;
+            //记录当前遍历时最大值
+            int x = 0;
+            int y = 1;
+            //记录比middle小的数量
+            int count = 0;
+            for (int i = 1; i < length; i++) {
+                for (int j = 0; j < i; j++) {
+                    //对应分数: arr[j]/arr[i]。i固定时，j增长时分数变大。当前j大于middle，后续就不需要再比较
+                    if (arr[j] * 1.0 / arr[i] <= middle) {
+                        //当前分数小于middle
+                        count++;
+                        if (x * arr[i] < y * arr[j]) {
+                            x = arr[j];
+                            y = arr[i];
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            //统计完后进行比较
+            if (count == k) {
+                return new int[]{x, y};
+            }
+            if (count > k) {
+                max = middle;
+            } else {
+                min = middle;
+            }
+        }
+        return null;
+    }
 }
