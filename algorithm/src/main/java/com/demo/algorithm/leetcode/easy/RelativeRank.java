@@ -37,7 +37,7 @@ import java.util.function.ToLongFunction;
  * n == score.length
  * 1 <= n <= 104
  * 0 <= score[i] <= 106
- * score 中的所有值 互不相同
+ * score 中的所有值互不相同
  */
 public class RelativeRank {
 
@@ -68,6 +68,56 @@ public class RelativeRank {
             rank++;
         }
         return result;
+    }
+
+    //使用桶排序的思想(空间相对比较大，空间换时间)
+    public String[] findRelativeRanks2(int[] score) {
+        int length = score.length;
+        String[] result = new String[length];
+        //1，获取最大值，决定桶的大小
+        int max = score[0];
+        for (int i = 1; i < length; i++) {
+            if (score[i] > max) {
+                max = score[i];
+            }
+        }
+        //index：对应分数。ranks[index]：对应score中的位置
+        int[] ranks = new int[max + 1];
+        //2，遍历使用桶排序
+        for (int i = 0; i < length; i++) {
+            if (i == 0) {
+                ranks[score[i]] = -1;
+            } else {
+                ranks[score[i]] = i;
+            }
+        }
+        //3，通过排序后的ranks获取名称信息
+        int rank = 1;
+        for (int i = max; i >= 0; i--) {
+            if (ranks[i] != 0) {
+                if (ranks[i] == -1) {
+                    //此时位置为0
+                    result[0] = getRank(rank);
+                } else {
+                    result[ranks[i]] = getRank(rank);
+                }
+                rank++;
+            }
+        }
+        return result;
+    }
+
+    private String getRank(int rank) {
+        if (rank == 1) {
+            return "Gold Medal";
+        }
+        if (rank == 2) {
+            return "Silver Medal";
+        }
+        if (rank == 3) {
+            return "Bronze Medal";
+        }
+        return "" + rank;
     }
 
 }
