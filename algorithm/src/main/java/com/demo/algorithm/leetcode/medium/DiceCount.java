@@ -68,9 +68,6 @@ public class DiceCount {
                     }
                 }
                 marks[j] = sum;
-
-
-
             }
         }
         return marks[target];
