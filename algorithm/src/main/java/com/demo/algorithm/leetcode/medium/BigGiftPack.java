@@ -1,9 +1,7 @@
 package com.demo.algorithm.leetcode.medium;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by chl on 2021/12/1.
@@ -42,9 +40,6 @@ import java.util.Map;
  */
 public class BigGiftPack {
 
-    private Map<Integer, Integer> marks = new HashMap<>();
-
-    //使用记忆化搜索
     public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
         //1，检查是否有礼包没有优惠
         List<List<Integer>> newSpecial = new ArrayList<>();
@@ -59,18 +54,13 @@ public class BigGiftPack {
                 newSpecial.add(data);
             }
         }
-        marks.clear();
         //2，深度遍历dfs
-        return dfs(price, newSpecial, needs);
+        return dfs(price, newSpecial, 0, needs);
     }
 
 
-    private int dfs(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
-        int key = getKey(needs);
-        if (marks.get(key) != null) {
-            return marks.get(key);
-        }
-        if (special.size() == 0) {
+    private int dfs(List<Integer> price, List<List<Integer>> special, int index, List<Integer> needs) {
+        if (special.size() == index) {
             //礼包都用完了,此时价格固定了
             int sum = 0;
             for (int i = 0; i < needs.size(); i++) {
@@ -79,7 +69,7 @@ public class BigGiftPack {
             return sum;
         }
         //拿最后一个礼包
-        List<Integer> data = special.get(special.size() - 1);
+        List<Integer> data = special.get(index);
         //最大能够买data礼包的数量
         int count = 100;
         for (int i = 0; i < data.size() - 1; i++) {
@@ -91,32 +81,18 @@ public class BigGiftPack {
             }
         }
         //所有的情况是：data礼包可以购买0~count次。默认比较的是不购买礼包
-        special.remove(data);
-        int result = dfs(price, special, needs);
-        special.add(data);
+        int result = dfs(price, special, index + 1, needs);
         for (int i = 1; i <= count; i++) {
             //购买i+1个礼包
             List<Integer> newNeeds = new ArrayList<>();
             for (int j = 0; j < needs.size(); j++) {
                 newNeeds.add(needs.get(j) - i * data.get(j));
             }
-            special.remove(data);
-            int tem = dfs(price, special, newNeeds) + i * data.get(data.size() - 1);
-            special.add(data);
+            int tem = dfs(price, special, index + 1, newNeeds) + i * data.get(data.size() - 1);
             if (tem < result) {
                 result = tem;
             }
         }
-        marks.put(key, result);
         return result;
-    }
-
-    //通过11进制将needs转出int作为key
-    private int getKey(List<Integer> needs) {
-        int key = needs.get(0);
-        for (int i = 1; i < needs.size(); i++) {
-            key = key * 11 + needs.get(i);
-        }
-        return key;
     }
 }
