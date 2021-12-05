@@ -95,6 +95,7 @@ public class SuperPow {
                 result %= MOD;
             }
         }
+        marks.put(key, result);
         return result;
     }
 }
