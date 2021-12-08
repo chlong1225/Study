@@ -19,7 +19,7 @@ package com.demo.algorithm.leetcode.hard;
  * 输出：[0,2,4]
  *  
  * 提示：
- * 1 <= nums.length <= 2 * 104
+ * 1 <= nums.length <= 2 * 10^4
  * 1 <= nums[i] < 216
  * 1 <= k <= floor(nums.length / 3)
  */
@@ -32,7 +32,7 @@ public class MaxThreeInterval {
             return null;
         }
         //1，对区间进行求和
-        length -= k;
+        length -= (k - 1);
         int[] sums = new int[length];
         int pre = 0;
         for (int i = 0; i < k; i++) {
@@ -48,7 +48,7 @@ public class MaxThreeInterval {
         result[1] = k;
         result[2] = 2 * k;
         int max = sums[0] + sums[k] + sums[2 * k];
-        for (int i = 1; i < length - 2 * k; i++) {
+        for (int i = 0; i < length - 2 * k; i++) {
             for (int j = i + k; j < length - k; j++) {
                 for (int l = j + k; l < length; l++) {
                     int tem = sums[i] + sums[j] + sums[l];
