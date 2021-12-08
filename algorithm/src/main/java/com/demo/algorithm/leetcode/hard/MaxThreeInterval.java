@@ -63,4 +63,62 @@ public class MaxThreeInterval {
         }
         return result;
     }
+
+    //使用动态规划
+    public int[] maxSumOfThreeSubarrays2(int[] nums, int k) {
+        int length = nums.length;
+        if (length < 3 * k) {
+            return null;
+        }
+        //1，对区间进行求和
+        length -= (k - 1);
+        int[] sums = new int[length];
+        int pre = 0;
+        for (int i = 0; i < k; i++) {
+            pre += nums[i];
+        }
+        sums[0] = pre;
+        for (int i = 1; i < length; i++) {
+            pre = pre - nums[i - 1] + nums[k - 1 + i];
+            sums[i] = pre;
+        }
+        /**
+         * 2，问题转换为在sums中求三个数的最大和并且三个数的间隔至少为k.
+         * 定义状态数组:marks[i][j]
+         * i：当前选取的个数
+         * j:最后选取数字的位置
+         * marks[i][j]: 在j位置选取i个数字的最大值:两种获取方式:当前位置的值+上一次j-k位置的最大值;不取时前一个位置的最大值
+         * 状态转移方程: marks[i][j] = Math.max(marks[i][j-1],marks[i-1][j-k]+sums[j])
+         */
+        //count:求和数字的数量,这里为3
+        int count = 3;
+        int[][] marks = new int[count + 1][length];
+        //初始化marks的值
+        marks[1][0] = sums[0];
+        for (int i = 1; i < length - (count - 1) * k; i++) {
+            marks[1][i] = Math.max(marks[1][i - 1], sums[i]);
+        }
+        for (int i = 2; i <= count; i++) {
+            for (int j = (i - 1) * k; j < length - (count - i) * k; j++) {
+                marks[i][j] = Math.max(marks[i][j - 1], marks[i - 1][j - k] + sums[j]);
+            }
+        }
+        //最大值 = marks[count][length-1]
+        int[] result = new int[count];
+        int end = length - 1;
+        int index = end;
+        for (int i = count; i >= 1; i--) {
+            for (int j = end - 1; j >= 0; j--) {
+                if (marks[i][end] == marks[i][j]) {
+                    index = j;
+                } else {
+                    result[i - 1] = index;
+                    index -= k;
+                    end = index;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 }
