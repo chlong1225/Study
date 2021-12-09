@@ -45,4 +45,38 @@ public class RepeatDna {
         }
         return result;
     }
+
+    //自定义hash算法+滑动窗口
+    public List<String> findRepeatedDnaSequences2(String s) {
+        List<String> result = new ArrayList<>();
+        int length = s.length();
+        int count = 10;
+        if (length <= count) {
+            return result;
+        }
+        //使用4进制计算hash值。A，C，G，T分别对于0，1，2，3
+        Map<Character, Integer> datas = new HashMap<>();
+        datas.put('A', 0);
+        datas.put('C', 1);
+        datas.put('G', 2);
+        datas.put('T', 3);
+        Map<Integer, Integer> marks = new HashMap<>();
+        int hash = 0;
+        for (int i = 0; i < count; i++) {
+            hash = (hash << 2) + datas.get(s.charAt(i));
+        }
+        marks.put(hash, 1);
+        for (int i = count; i < length; i++) {
+            hash = ((hash << 2) + datas.get(s.charAt(i))) & ((1 << 20) - 1);
+            if (marks.get(hash) == null) {
+                marks.put(hash, 1);
+            } else {
+                if (marks.get(hash) == 1) {
+                    result.add(s.substring(i - count + 1, i + 1));
+                }
+                marks.put(hash, marks.get(hash) + 1);
+            }
+        }
+        return result;
+    }
 }
