@@ -121,4 +121,71 @@ public class MaxThreeInterval {
         }
         return result;
     }
+
+    //使用滑动窗口的方式
+    public int[] maxSumOfThreeSubarrays3(int[] nums, int k) {
+        int length = nums.length;
+        if (length < 3 * k) {
+            return null;
+        }
+        /**
+         * sum1：区间1的总和
+         * maxSum1：区间1的最大值
+         * sum2：区间2的总和
+         * maxSum2：区间1,2的最大和
+         * sum3：区间3的总和
+         * sumTotal：三个区间的最大和
+         * maxSum1Index：区间1最大值时的起始位置
+         * maxSum2Index1：区间1,2和最大时区间1的起始位置
+         * maxSum2Index2：区间1,2和最大时区间2的起始位置
+         */
+        int sum1 = 0;
+        int maxSum1 = 0;
+        int sum2 = 0;
+        int maxSum2 = 0;
+        int sum3 = 0;
+        int sumTotal = 0;
+        int maxSum1Index = 0;
+        int maxSum2Index1 = 0;
+        int maxSum2Index2 = k;
+        int[] result = new int[3];
+        //1，初始化result,sum
+        result[1] = k;
+        result[2] = 2 * k;
+        for (int i = 0; i < k; i++) {
+            sum1 += nums[i];
+            sum2 += nums[i + k];
+            sum3 += nums[i + 2 * k];
+        }
+        maxSum1 = sum1;
+        maxSum2 = sum1 + sum2;
+        sumTotal = maxSum2 + sum3;
+        //2,窗口开始滑动
+        for (int i = 3 * k; i < length; i++) {
+            //1，滑动窗口更新区间值
+            sum1 += nums[i - 2 * k];
+            sum1 -= nums[i - 3 * k];
+            sum2 += nums[i - k];
+            sum2 -= nums[i - 2 * k];
+            sum3 += nums[i];
+            sum3 -= nums[i - k];
+            //2，进行对比替换
+            if (sum1 > maxSum1) {
+                maxSum1 = sum1;
+                maxSum1Index = i - 3 * k + 1;
+            }
+            if (maxSum1 + sum2 > maxSum2) {
+                maxSum2 = maxSum1 + sum2;
+                maxSum2Index1 = maxSum1Index;
+                maxSum2Index2 = i - 2 * k + 1;
+            }
+            if (maxSum2 + sum3 > sumTotal) {
+                sumTotal = maxSum2 + sum3;
+                result[0] = maxSum2Index1;
+                result[1] = maxSum2Index2;
+                result[2] = i - k + 1;
+            }
+        }
+        return result;
+    }
 }
