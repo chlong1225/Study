@@ -54,4 +54,24 @@ public class TreeToLink {
         dfs(root.left, datas);
         dfs(root.right, datas);
     }
+
+    public void flatten2(TreeNode root) {
+        TreeNode cur = root;
+        while (cur != null) {
+            //左节点存在
+            if (cur.left != null) {
+                TreeNode pre = cur.left;
+                //查找左子树最右边的节点pre。pre的右节点为当前节点的右节点。
+                while (pre.right != null) {
+                    pre = pre.right;
+                }
+                pre.right = cur.right;
+                //当前节点的左节点为null，右节点为之前的左节点
+                cur.right = cur.left;
+                cur.left = null;
+            }
+            //当前的左节点已经为null，下一个遍历为右节点
+            cur = cur.right;
+        }
+    }
 }
