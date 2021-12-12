@@ -56,21 +56,15 @@ public class SuperPow {
         }
         //2,缩小a的范围
         a %= MOD;
-        //3,遍历b列表进行拆分
+        //3,遍历列表b
         int result = 1;
-        for (int i = 0; i < length; i++) {
-            int num = b[i];
-            if (num != 0) {
-                //有多少个^10
-                int count = length - 1 - i;
-                int tem = pow(a, num);
-                for (int j = 0; j < count; j++) {
-                    tem = pow(tem, 10);
-                }
-                result *= tem;
-                if (result > MOD) {
-                    result %= MOD;
-                }
+        for (int i = length - 1; i >= 0; i--) {
+            result *= pow(a, b[i]);
+            if (result >= MOD) {
+                result %= MOD;
+            }
+            if (i > 0) {
+                a = pow(a, 10);
             }
         }
         return result;
@@ -88,11 +82,21 @@ public class SuperPow {
         if (marks.get(key) != null) {
             return marks.get(key);
         }
-        int result = a;
-        for (int i = 1; i < num; i++) {
-            result *= a;
-            if (result > MOD) {
-                result %= MOD;
+        //使用二分法计算
+        int result = 1;
+        while (num > 0) {
+            if (num % 2 == 1) {
+                result *= a;
+                if (result >= MOD) {
+                    result %= MOD;
+                }
+                num--;
+            } else {
+                a *= a;
+                if (a >= MOD) {
+                    a %= MOD;
+                }
+                num = num >> 1;
             }
         }
         marks.put(key, result);
