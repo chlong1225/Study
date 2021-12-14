@@ -1,7 +1,9 @@
 package com.demo.algorithm.leetcode.medium;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by chl on 2021/12/14.
@@ -36,9 +38,11 @@ public class CourseSchedule {
     private int[] marks;
     private boolean result = true;
 
+    //使用深度遍历dfs
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         int length = prerequisites.length;
         edges = new ArrayList<>(numCourses);
+        //marks记录当前顶点遍历的状态
         marks = new int[numCourses];
         for (int i = 0; i < numCourses; i++) {
             edges.add(new ArrayList<>());
@@ -58,7 +62,7 @@ public class CourseSchedule {
     }
 
     private void dfs(int courseId) {
-        //1：代表当前正在搜索
+        //1：代表当前顶点正在搜索
         marks[courseId] = 1;
         List<Integer> datas = edges.get(courseId);
         int size = datas.size();
@@ -73,7 +77,44 @@ public class CourseSchedule {
                 return;
             }
         }
-        //2：代表当前节点已经搜索完成
+        //2：代表当前顶点已经搜索完成
         marks[courseId] = 2;
+    }
+
+    //使用广度优先遍历bfs
+    public boolean canFinish2(int numCourses, int[][] prerequisites) {
+        int length = prerequisites.length;
+        edges = new ArrayList<>(numCourses);
+        marks = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            edges.add(new ArrayList<>());
+        }
+        for (int i = 0; i < length; i++) {
+            edges.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            //marks记录课程prerequisites[i][0]执行前需要完成的前置课程数量
+            marks[prerequisites[i][0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (marks[i] == 0) {
+                //前置课程为0,可以直接学习
+                queue.offer(i);
+            }
+        }
+        int count = 0;
+        while (!queue.isEmpty()) {
+            count++;
+            //直接学习的课程id
+            int courseId = queue.poll();
+            List<Integer> datas = edges.get(courseId);
+            int size = datas.size();
+            for (int i = 0; i < size; i++) {
+                marks[datas.get(i)]--;
+                if (marks[datas.get(i)] <= 0) {
+                    queue.offer(datas.get(i));
+                }
+            }
+        }
+        return count == numCourses;
     }
 }
