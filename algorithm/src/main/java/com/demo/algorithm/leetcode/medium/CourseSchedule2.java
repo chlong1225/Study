@@ -41,13 +41,14 @@ public class CourseSchedule2 {
 
     private List<List<Integer>> edges;
     private int[] marks;
+    private boolean isFind = true;
 
     //使用广度优先遍历bfs
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         if (numCourses == 1) {
             return new int[]{0};
         }
-        //1,构建图的数据，顶点之间相互记录
+        //1,构建图的数据，顶点之间相互关系
         marks = new int[numCourses];
         edges = new ArrayList<>(numCourses);
         for (int i = 0; i < numCourses; i++) {
@@ -89,5 +90,63 @@ public class CourseSchedule2 {
             }
         }
         return count == numCourses ? result : new int[]{};
+    }
+
+    //使用深度优先遍历dfs
+    public int[] findOrder2(int numCourses, int[][] prerequisites) {
+        if (numCourses == 1) {
+            return new int[]{0};
+        }
+        //1,构建图的数据，顶点之间相互关系
+        //marks：记录顶点遍历的状态
+        marks = new int[numCourses];
+        edges = new ArrayList<>(numCourses);
+        for (int i = 0; i < numCourses; i++) {
+            edges.add(new ArrayList<>());
+        }
+        int length = prerequisites.length;
+        for (int i = 0; i < length; i++) {
+            //记录以prerequisites[i][1]为前置课程的课程
+            edges.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        List<Integer> datas = new ArrayList<>();
+        //2，遍历课程
+        for (int i = 0; i < numCourses; i++) {
+            if (marks[i] == 0) {
+                dfs(i, datas);
+            }
+            if (!isFind) {
+                return new int[]{};
+            }
+        }
+        int[] result = new int[numCourses];
+        int size = datas.size();
+        for (int i = 0; i < size; i++) {
+            result[i] = datas.get(size - 1 - i);
+        }
+        return result;
+    }
+
+    private void dfs(int courseId, List<Integer> result) {
+        //正在搜索
+        marks[courseId] = 1;
+        List<Integer> datas = edges.get(courseId);
+        int size = datas.size();
+        for (int i = 0; i < size; i++) {
+            int tem = datas.get(i);
+            if (marks[tem] == 0) {
+                dfs(tem, result);
+                if (!isFind) {
+                    return;
+                }
+            } else if (marks[tem] == 1) {
+                //之前tem正在搜索，此时代表图中有环形
+                isFind = false;
+                return;
+            }
+        }
+        //搜索结束
+        result.add(courseId);
+        marks[courseId] = 2;
     }
 }
