@@ -47,4 +47,8 @@ public class ExchangeLiquor {
         return sum;
     }
 
+    public int numWaterBottles2(int numBottles, int numExchange) {
+        int exchange = numBottles / (numExchange - 1);
+        return numBottles % (numExchange - 1) == 0 ? numBottles + exchange - 1 : numBottles + exchange;
+    }
 }

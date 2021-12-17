@@ -13,6 +13,7 @@ import com.demo.algorithm.algo.LinkedQueue;
 import com.demo.algorithm.algo.LinkedStack;
 import com.demo.algorithm.algo.LruLinkedList;
 import com.demo.algorithm.algo.Node;
+import com.demo.algorithm.leetcode.medium.NoisyAndRich;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        testAlgorithm();
+        NoisyAndRich noisyAndRich = new NoisyAndRich();
+        int[][] rich = {{1, 0}, {2, 1}, {3, 1}, {3, 7}, {4, 3}, {5, 3}, {6, 3}};
+        int[] quiet = {3, 2, 5, 4, 6, 1, 7, 0};
+//        int[] a1 = noisyAndRich.loudAndRich(rich, quiet);
+        int a = 10;
     }
 
     private void testAlgorithm() {
