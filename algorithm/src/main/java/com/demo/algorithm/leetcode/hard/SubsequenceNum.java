@@ -35,6 +35,38 @@ package com.demo.algorithm.leetcode.hard;
 public class SubsequenceNum {
 
     public int numDistinct(String s, String t) {
-        return 0;
+        int n = s.length();
+        int m = t.length();
+        //1，t字符串的长度大于s字符串时，不可能存在子串，返回0
+        if (n < m) {
+            return 0;
+        }
+        //2，s字符串与t字符串长度相同时，字符串相同时为1，否则0
+        if (m == n) {
+            return s.equals(t) ? 1 : 0;
+        }
+        //3，s字符串长度大于t字符串
+        /**
+         * 对应字符串匹配问题.当前字符选取,不选取两种场景,可以使用动态规划.
+         * marks[i][j]: i:选取t中的字符串数量 ; j:选取s中字符串的数量 ; marks[i][j]:子串的数量
+         * 状态转移方程: 当前位置的子串数量 = marks[i][j-1](s不选择j字符时) + mark[i-1][j-1](s使用j字符时)
+         * 使用j字符转移时,只有s的j字符与t的i字符相同时转移有效
+         */
+        int[][] marks = new int[m + 1][n + 1];
+        //初始化状态: t字符串为空时,s字符串任意长度时均有一个空子串
+        for (int i = 0; i <= n; i++) {
+            marks[0][i] = 1;
+        }
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                //不使用字符s.charAt[j-1]时,转移到前一个位置
+                marks[i][j] = marks[i][j - 1];
+                //使用字符s.chatAt[j-1].
+                if (s.charAt(j - 1) == t.charAt(i - 1)) {
+                    marks[i][j] += marks[i - 1][j - 1];
+                }
+            }
+        }
+        return marks[m][n];
     }
 }
