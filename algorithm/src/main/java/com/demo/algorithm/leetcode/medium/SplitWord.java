@@ -37,6 +37,7 @@ public class SplitWord {
 
     private Map<Integer, Boolean> marks = new HashMap<>();
 
+    //使用记忆化的dfs搜索
     public boolean wordBreak(String s, List<String> wordDict) {
         marks.clear();
         return dfs(0, s, wordDict);
@@ -66,5 +67,34 @@ public class SplitWord {
         }
         marks.put(index, result);
         return result;
+    }
+
+    //使用动态规划
+    public boolean wordBreak2(String s, List<String> wordDict) {
+        int length = s.length();
+        int size = wordDict.size();
+        /**
+         * 使用动态规划:
+         * marks[i]: i:字符的数量,marks[i]:i个字符是否可以被拆分
+         * marks[i] = marks[i-k],此时字符(i-k,i)能够在字典中找到. marks[i]为fase,需要遍历查找字典.
+         * 初始化条件:marks[0] = true。
+         */
+        boolean[] marks = new boolean[length + 1];
+        marks[0] = true;
+        for (int i = 1; i <= length; i++) {
+            boolean result = false;
+            for (int j = 0; j < size; j++) {
+                if (result) {
+                    break;
+                }
+                String word = wordDict.get(j);
+                if (i >= word.length() && word.equals(s.substring(i - word.length(), i))) {
+                    result = marks[i - word.length()];
+                }
+                marks[i] = marks[i - 1];
+            }
+            marks[i] = result;
+        }
+        return marks[length];
     }
 }
