@@ -51,4 +51,39 @@ public class FindFourNum {
         }
         return count;
     }
+
+    //通过等式转换+遍历顺序优化获取特殊四元组
+    public int countQuadruplets2(int[] nums) {
+        int length = nums.length;
+        int count = 0;
+        int[] marks = new int[101];
+        /**
+         * 原理: a+b+c=d 转换为a+b = d-c
+         * 以b为边界拆分成两段。倒序遍历大于b的d,c的差值,并记录
+         * 正序遍历:获取a+b的值,然后在记录的差值中查询
+         */
+        for (int i = length - 3; i >= 0; i--) {
+            for (int j = i + 2; j < length; j++) {
+                /**
+                 * 这个地方只需要统计b+1与d的差值，c不需要遍历b到d之间
+                 * 比如: b = n-3，d = n-1，此时c只有n-2一种可能
+                 * b = n-4，d=n-2，此时c只有n-3。
+                 * 但：d正序遍历时：d = n-1，此时c = n-3或n-2,之前已经计算了d=n-1,c-n-2的场景
+                 * 故只需要计算c=n-3即可
+                 */
+                if (nums[j] - nums[i + 1] >= 2) {
+                    marks[nums[j] - nums[i + 1]]++;
+                }
+            }
+            for (int k = 0; k < i; k++) {
+                //计算a+b
+                int tem = nums[k] + nums[i];
+                if (tem <= 99) {
+                    //d-c的差值为tem的数量即:d-c=a+b的数量
+                    count += marks[tem];
+                }
+            }
+        }
+        return count;
+    }
 }
