@@ -63,4 +63,42 @@ public class RightAgeCount {
         }
         return count;
     }
+
+    //经分析数量远大于数据的范围，可以使用桶排序，同时计数
+    public int numFriendRequests2(int[] ages) {
+        int length = ages.length;
+        //1,使用桶排序,同时计数
+        int[] datas = new int[121];
+        for (int i = 0; i < length; i++) {
+            datas[ages[i]]++;
+        }
+        //2,遍历统计。分析三个条件：x>=y时,需要满足:y>0.5x+7
+        int count = 0;
+        for (int i = 120; i >= 1; i--) {
+            if (datas[i] > 0) {
+                //分析两种情况x = y ; x>y
+                if (datas[i] > 1) {
+                    //有相同的年龄
+                    count += getNum(i, datas[i]);
+                }
+                int min = (int) (0.5 * i + 7);
+                int sum = 0;
+                for (int j = i - 1; j > min; j--) {
+                    if (datas[j] > 0) {
+                        sum += datas[j];
+                    }
+                }
+                sum *= datas[i];
+                count += sum;
+            }
+        }
+        return count;
+    }
+
+    private int getNum(int age, int count) {
+        if (age <= 14) {
+            return 0;
+        }
+        return count * (count - 1);
+    }
 }
