@@ -95,6 +95,41 @@ public class RightAgeCount {
         return count;
     }
 
+    //桶排序+前缀统计
+    public int numFriendRequests3(int[] ages) {
+        int length = ages.length;
+        //1,使用桶排序,同时计数
+        int[] datas = new int[121];
+        for (int i = 0; i < length; i++) {
+            datas[ages[i]]++;
+        }
+        //2，前缀统计：统计大于等于当前i的数量
+        int[] preCounts = new int[121];
+        for (int i = 120; i >= 1; i--) {
+            if (i == 120) {
+                preCounts[i] = datas[i];
+            } else {
+                preCounts[i] = preCounts[i + 1] + datas[i];
+            }
+        }
+        int count = 0;
+        for (int i = 120; i >= 1; i--) {
+            if (datas[i] > 0) {
+                //分析两种情况x = y ; x>y
+                if (datas[i] > 1) {
+                    //有相同的年龄
+                    count += getNum(i, datas[i]);
+                }
+                int min = (int) (0.5 * i + 7) + 1;
+                if (min >= i) {
+                    continue;
+                }
+                count += (preCounts[min] - preCounts[i])*datas[i];
+            }
+        }
+        return count;
+    }
+
     private int getNum(int age, int count) {
         if (age <= 14) {
             return 0;
