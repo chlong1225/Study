@@ -26,7 +26,7 @@ import java.util.List;
  * 输出：["catdog"]
  *
  * 提示：
- * 1 <= words.length <= 104
+ * 1 <= words.length <= 10^4
  * 0 <= words[i].length <= 1000
  * words[i] 仅由小写字母组成
  * 0 <= sum(words[i].length) <= 105
