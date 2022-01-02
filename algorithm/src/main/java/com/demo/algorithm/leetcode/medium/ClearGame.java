@@ -66,4 +66,29 @@ public class ClearGame {
         }
         return 0;
     }
+
+    public int lastRemaining2(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        return fromLeft(n);
+    }
+
+    private int fromLeft(int n) {
+        if (n == 1) {
+            return n;
+        }
+        return 2 * fromRight(n >> 1);
+    }
+
+    private int fromRight(int n) {
+        if (n == 1) {
+            return n;
+        }
+        if (n % 2 == 0) {
+            return (fromLeft(n >> 1) << 1) - 1;
+        } else {
+            return fromLeft(n >> 1) << 1;
+        }
+    }
 }
