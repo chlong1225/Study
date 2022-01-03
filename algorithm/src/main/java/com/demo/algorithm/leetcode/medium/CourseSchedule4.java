@@ -152,4 +152,39 @@ public class CourseSchedule4 {
         return result;
     }
 
+    public List<Boolean> checkIfPrerequisite3(int numCourses, int[][] prerequisites, int[][] queries) {
+        int length = prerequisites.length;
+        int n = queries.length;
+        List<Boolean> result = new ArrayList<>(n);
+        //1，处理没有先修课程对的特殊场景
+        if (length == 0) {
+            //没有先修课程对时,课程相互独立
+            for (int i = 0; i < n; i++) {
+                result.add(false);
+            }
+            return result;
+        }
+        //2，使用二维数组统计课程关系信息
+        boolean[][] marks = new boolean[numCourses][numCourses];
+        for (int i = 0; i < length; i++) {
+            //a先修课程,b后修课程
+            int a = prerequisites[i][0];
+            int b = prerequisites[i][1];
+            marks[a][b] = true;
+            //1,循环遍历已有关系进行传递
+            for (int j = 0; j < numCourses; j++) {
+                if (marks[j][a]) {
+                    marks[j][b] = true;
+                }
+                if (marks[b][j]) {
+                    marks[a][j] = true;
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            result.add(marks[queries[i][0]][queries[i][1]]);
+        }
+        return result;
+    }
+
 }
