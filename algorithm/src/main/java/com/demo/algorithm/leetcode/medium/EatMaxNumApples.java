@@ -36,8 +36,8 @@ import java.util.PriorityQueue;
  * 提示：
  * apples.length == n
  * days.length == n
- * 1 <= n <= 2 * 104
- * 0 <= apples[i], days[i] <= 2 * 104
+ * 1 <= n <= 2 * 10^4
+ * 0 <= apples[i], days[i] <= 2 * 10^4
  * 只有在 apples[i] = 0 时，days[i] = 0 才成立
  */
 public class EatMaxNumApples {
@@ -98,6 +98,42 @@ public class EatMaxNumApples {
                     //苹果不够,吃完当前苹果
                     count += tem[1];
                     index += tem[1];
+                }
+            }
+        }
+        return count;
+    }
+
+    public int eatenApples2(int[] apples, int[] days) {
+        int length = apples.length;
+        //1，记录有效苹果数量
+        int[] datas = new int[40001];
+        int count = 0;
+        //minDay记录当前最近有效期内的苹果，再之前的有效苹果被舍弃
+        int minDay = 0;
+        //记录当前最远有效期内的苹果。可查询范围：minDay~maxDay
+        int maxDay = 0;
+        for (int i = 0; i < 40000; i++) {
+            if (minDay <= i) {
+                //重置min,清除已经过期的苹果
+                minDay = i + 1;
+            }
+            if (i < length && apples[i] > 0) {
+                //苹果有效的截止日期
+                int cur = i + days[i];
+                datas[cur] = apples[i];
+                maxDay = Math.max(maxDay, cur);
+                minDay = Math.min(minDay, cur);
+            }
+            while (datas[minDay] == 0 && minDay <= maxDay) {
+                minDay++;
+            }
+            if (minDay <= maxDay) {
+                datas[minDay]--;
+                count++;
+            } else {
+                if (i > length) {
+                    return count;
                 }
             }
         }
