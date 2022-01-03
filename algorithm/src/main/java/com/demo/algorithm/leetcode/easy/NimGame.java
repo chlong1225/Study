@@ -53,4 +53,9 @@ public class NimGame {
         }
         return marks[n - 1];
     }
+
+    //通过找规律
+    public boolean canWinNim2(int n) {
+        return n % 4 != 0;
+    }
 }
