@@ -40,4 +40,20 @@ public class OthersProduct {
         }
         return result;
     }
+
+    public int[] productExceptSelf2(int[] nums) {
+        int length = nums.length;
+        //记录i之后数据的乘积
+        int[] result = new int[length];
+        result[0] = 1;
+        for (int i = 1; i < length; i++) {
+            result[i] = nums[i - 1] * result[i - 1];
+        }
+        int right = 1;
+        for (int i = length - 1; i >= 0; i--) {
+            result[i] = result[i] * right;
+            right *= nums[i];
+        }
+        return result;
+    }
 }
