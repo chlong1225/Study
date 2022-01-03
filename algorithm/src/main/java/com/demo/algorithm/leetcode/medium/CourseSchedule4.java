@@ -2,6 +2,7 @@ package com.demo.algorithm.leetcode.medium;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +97,57 @@ public class CourseSchedule4 {
                 next.clear();
             }
             result.add(isFind);
+        }
+        return result;
+    }
+
+    public List<Boolean> checkIfPrerequisite2(int numCourses, int[][] prerequisites, int[][] queries) {
+        int length = prerequisites.length;
+        int n = queries.length;
+        List<Boolean> result = new ArrayList<>(n);
+        //1，处理没有先修课程对的特殊场景
+        if (length == 0) {
+            //没有先修课程对时,课程相互独立
+            for (int i = 0; i < n; i++) {
+                result.add(false);
+            }
+            return result;
+        }
+        //2,将课程对信息构建图
+        List<HashSet<Integer>> edges = new ArrayList<>(numCourses);
+        for (int i = 0; i < numCourses; i++) {
+            edges.add(new HashSet<>());
+        }
+        for (int i = 0; i < length; i++) {
+            edges.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        //3，统计以当前课程为先修课程的课程
+        for (int i = 0; i < numCourses; i++) {
+            HashSet<Integer> afterCourses = edges.get(i);
+            List<Integer> datas = new ArrayList<>(afterCourses);
+            List<Integer> next = new ArrayList<>();
+            while (!datas.isEmpty()) {
+                int size = datas.size();
+                for (int j = 0; j < size; j++) {
+                    List<Integer> tem = new ArrayList<>(edges.get(datas.get(j)));
+                    int temSize = tem.size();
+                    for (int k = 0; k < temSize; k++) {
+                        if (!afterCourses.contains(tem.get(k))) {
+                            afterCourses.add(tem.get(k));
+                            next.add(tem.get(k));
+                        }
+                    }
+                }
+                datas.clear();
+                datas.addAll(next);
+                next.clear();
+            }
+        }
+        //3,遍历判断
+        for (int i = 0; i < n; i++) {
+            int compare = queries[i][1];
+            HashSet<Integer> datas = edges.get(queries[i][0]);
+            result.add(datas.contains(compare));
         }
         return result;
     }
