@@ -2,6 +2,7 @@ package com.demo.algorithm.leetcode.medium;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Stack;
 
 /**
  * Created by chl on 2021/10/31.
@@ -83,6 +84,49 @@ public class SimplifyPath {
             return "/";
         }
         StringBuilder builder = new StringBuilder();
+        while (!stack.isEmpty()) {
+            builder.append("/");
+            builder.append(stack.pollFirst());
+        }
+        return builder.toString();
+    }
+
+    public static String simplifyPath2(String path) {
+        int length = path.length();
+        Deque<String> stack = new ArrayDeque<>();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            if (path.charAt(i) == '/') {
+                if (builder.length() > 0) {
+                    //需要对当前的路径进行处理
+                    if (".".equals(builder.toString())) {
+                    } else if ("..".equals(builder.toString())) {
+                        if (!stack.isEmpty()) {
+                            stack.removeLast();
+                        }
+                    } else {
+                        stack.addLast(builder.toString());
+                    }
+                    builder.delete(0, builder.length());
+                }
+            } else {
+                builder.append(path.charAt(i));
+            }
+        }
+        if (builder.length() > 0) {
+            if (".".equals(builder.toString())) {
+            } else if ("..".equals(builder.toString())) {
+                if (!stack.isEmpty()) {
+                    stack.removeLast();
+                }
+            } else {
+                stack.addLast(builder.toString());
+            }
+            builder.delete(0, builder.length());
+        }
+        if (stack.isEmpty()) {
+            return "/";
+        }
         while (!stack.isEmpty()) {
             builder.append("/");
             builder.append(stack.pollFirst());
