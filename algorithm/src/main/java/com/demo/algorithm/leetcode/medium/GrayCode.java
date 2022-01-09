@@ -63,28 +63,23 @@ public class GrayCode {
     }
 
     public static List<Integer> grayCode2(int n) {
-        List<Integer> result = new ArrayList<>();
         if (n < 1 || n > 16) {
-            return result;
+            return new ArrayList<>();
         }
-        List<Integer> pre = new ArrayList<>();
-        pre.add(0);
-        pre.add(1);
+        //防止底层数组多次扩容
+        int count = 1 << n;
+        List<Integer> result = new ArrayList<>(count);
+        result.add(0);
+        result.add(1);
         if (n == 1) {
-            return pre;
+            return result;
         }
         int add = 1;
         for (int i = 2; i <= n; i++) {
-            int size = pre.size();
+            int size = result.size();
             add <<= 1;
-            result.clear();
-            result.addAll(pre);
             for (int j = size - 1; j >= 0; j--) {
-                result.add(pre.get(j) | add);
-            }
-            if (i < n) {
-                pre.clear();
-                pre.addAll(result);
+                result.add(result.get(j) | add);
             }
         }
         return result;
