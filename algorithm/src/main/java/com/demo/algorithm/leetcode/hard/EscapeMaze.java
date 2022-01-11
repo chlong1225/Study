@@ -1,9 +1,9 @@
 package com.demo.algorithm.leetcode.hard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by chl on 2022/1/11.
@@ -59,13 +59,13 @@ public class EscapeMaze {
         //2，最大节点访问数
         int max = length * (length - 1);
         //3，将blocked数据转换为hash，便于查找
-        Map<Long, Integer> blocks = new HashMap<>();
+        Set<Long> blocks = new HashSet<>();
         for (int i = 0; i < length; i++) {
-            blocks.put(blocked[i][0] * MOD + blocked[i][1], 1);
+            blocks.add(blocked[i][0] * MOD + blocked[i][1]);
         }
         //4，将source作为起点进行搜索
         //记录节点source已经被搜索过的位置
-        Map<Long, Integer> marks1 = new HashMap<>();
+        Set<Long> marks1 = new HashSet<>();
         long find = target[0] * MOD + target[1];
         int count = 0;
         List<int[]> points = new ArrayList<>();
@@ -86,15 +86,16 @@ public class EscapeMaze {
                             //搜索过程中找到了targe节点,直接返回true
                             return true;
                         }
-                        if (blocks.get(tem) == null && marks1.get(tem) == null) {
-                            //如果tem不是障碍物并且没有被访问
-                            marks1.put(tem, 1);
-                            next.add(new int[]{dx, dy});
-                            count++;
-                            if (count >= max) {
-                                //如果访问节点的数量大于等于max,代表source节点不可能被包围，结束搜索访问。改为搜索校验targe节点
-                                break out;
-                            }
+                        if (blocks.contains(tem) || marks1.contains(tem)) {
+                            continue;
+                        }
+                        //如果tem不是障碍物并且没有被访问
+                        marks1.add(tem);
+                        next.add(new int[]{dx, dy});
+                        count++;
+                        if (count >= max) {
+                            //如果访问节点的数量大于等于max,代表source节点不可能被包围，结束搜索访问。改为搜索校验targe节点
+                            break out;
                         }
                     }
                 }
@@ -108,8 +109,8 @@ public class EscapeMaze {
             return false;
         }
         //6，搜索访问节点targe
-        marks1.put(source[0] * MOD + source[1], 1);
-        Map<Long, Integer> marks2 = new HashMap<>();
+        marks1.add(source[0] * MOD + source[1]);
+        Set<Long> marks2 = new HashSet<>();
         count = 0;
         next.clear();
         points.clear();
@@ -123,18 +124,19 @@ public class EscapeMaze {
                     int dy = poin[1] + addPoint[j][1];
                     if (dx >= 0 && dx < MOD && dy >= 0 && dy < MOD) {
                         long tem = dx * MOD + dy;
-                        if (marks1.get(tem) != null) {
+                        if (marks1.contains(tem)) {
                             //访问的节点在source访问时被标记，肯定存在路径可以到达
                             return true;
                         }
-                        if (blocks.get(tem) == null && marks2.get(tem) == null) {
-                            //如果tem不是障碍物并且没有被访问
-                            marks2.put(tem, 1);
-                            next.add(new int[]{dx, dy});
-                            count++;
-                            if (count >= max) {
-                                return true;
-                            }
+                        if (blocks.contains(tem) || marks2.contains(tem)) {
+                            continue;
+                        }
+                        //如果tem不是障碍物并且没有被访问
+                        marks2.add(tem);
+                        next.add(new int[]{dx, dy});
+                        count++;
+                        if (count >= max) {
+                            return true;
                         }
                     }
                 }
