@@ -62,4 +62,42 @@ public class IncrementThirdStr {
         }
         return false;
     }
+
+    public boolean increasingTriplet2(int[] nums) {
+        /**
+         * 以空间换时间的方式。记录当前位置数据左边最小，右边最大值。
+         * 时间复杂度：O(n)，空间复杂度：O(n)
+         */
+        int length = nums.length;
+        if (length < 3) {
+            return false;
+        }
+        //遍历左边最小值
+        int[] mins = new int[length];
+        int min = nums[0];
+        mins[0] = min;
+        for (int i = 1; i < length; i++) {
+            if (nums[i] < min) {
+                min = nums[i];
+            }
+            mins[i] = min;
+        }
+        //遍历右边最大值
+        int[] maxs = new int[length];
+        int max = nums[length - 1];
+        maxs[length - 1] = max;
+        for (int i = length - 2; i >= 0; i--) {
+            if (nums[i] > max) {
+                max = nums[i];
+            }
+            maxs[i] = max;
+        }
+        //遍历判断是否存在符合条件的数据
+        for (int i = 1; i < length - 1; i++) {
+            if (mins[i] < nums[i] && nums[i] < maxs[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
