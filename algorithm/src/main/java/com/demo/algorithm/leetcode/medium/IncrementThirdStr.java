@@ -100,4 +100,37 @@ public class IncrementThirdStr {
         }
         return false;
     }
+
+    //使用贪心算法
+    public boolean increasingTriplet3(int[] nums) {
+        int length = nums.length;
+        if (length < 3) {
+            return false;
+        }
+        int first = nums[0];
+        int second = -1;
+        for (int i = 1; i < length; i++) {
+            if (nums[i] > first) {
+                //如果second没有赋值，则没有出现比first更大的，此时直接给second赋值
+                if (second == -1) {
+                    second = nums[i];
+                } else {
+                    if (nums[i] > second) {
+                        /**
+                         * 此时first，second，num[i]刚好可以构建递增序列。
+                         * 最小first可能已经重置到了second之后，但只要second赋值了，在之前肯定存在比second更小的first
+                         */
+                        return true;
+                    } else {
+                        //second在大于first的前提条件下，尽可能取更小值，便于查找比second大的值
+                        second = nums[i];
+                    }
+                }
+            } else {
+                //递增首位重置最小
+                first = nums[i];
+            }
+        }
+        return false;
+    }
 }
