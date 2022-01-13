@@ -108,11 +108,11 @@ public class IncrementThirdStr {
             return false;
         }
         int first = nums[0];
-        int second = -1;
+        int second = Integer.MIN_VALUE;
         for (int i = 1; i < length; i++) {
             if (nums[i] > first) {
                 //如果second没有赋值，则没有出现比first更大的，此时直接给second赋值
-                if (second == -1) {
+                if (second == Integer.MIN_VALUE) {
                     second = nums[i];
                 } else {
                     if (nums[i] > second) {
