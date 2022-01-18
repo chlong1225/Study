@@ -41,6 +41,15 @@ import java.util.Set;
 public class EscapeMaze {
 
     private static final long MOD = 1000000;
+    /**
+     * 定义查找状态，分别对应：
+     * FIND_SUCCESS：搜索成功
+     * FIND_MORE：搜索超过指定数量
+     * FIND_FAIL：搜索失败
+     */
+    private static final int FIND_SUCCESS = 0;
+    private static final int FIND_MORE = 1;
+    private static final int FIND_FAIL = 2;
 
     public boolean isEscapePossible(int[][] blocked, int[] source, int[] target) {
         /**
@@ -64,87 +73,71 @@ public class EscapeMaze {
             blocks.add(blocked[i][0] * MOD + blocked[i][1]);
         }
         //4，将source作为起点进行搜索
-        //记录节点source已经被搜索过的位置
+        Set<Long> compare = new HashSet<>();
+        compare.add(target[0] * MOD + target[1]);
+        //记录节点source搜索过的位置
         Set<Long> marks1 = new HashSet<>();
-        long find = target[0] * MOD + target[1];
-        int count = 0;
-        List<int[]> points = new ArrayList<>();
-        List<int[]> next = new ArrayList<>();
-        points.add(source);
-        //分别对应左上右下坐标的偏移
-        int[][] addPoint = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
-        out:while (!points.isEmpty()) {
-            int size = points.size();
-            for (int i = 0; i < size; i++) {
-                int[] poin = points.get(i);
-                for (int j = 0; j < 4; j++) {
-                    int dx = poin[0] + addPoint[j][0];
-                    int dy = poin[1] + addPoint[j][1];
-                    if (dx >= 0 && dx < MOD && dy >= 0 && dy < MOD) {
-                        long tem = dx * MOD + dy;
-                        if (tem == find) {
-                            //搜索过程中找到了targe节点,直接返回true
-                            return true;
-                        }
-                        if (blocks.contains(tem) || marks1.contains(tem)) {
-                            continue;
-                        }
-                        //如果tem不是障碍物并且没有被访问
-                        marks1.add(tem);
-                        next.add(new int[]{dx, dy});
-                        count++;
-                        if (count >= max) {
-                            //如果访问节点的数量大于等于max,代表source节点不可能被包围，结束搜索访问。改为搜索校验targe节点
-                            break out;
-                        }
-                    }
-                }
-            }
-            points.clear();
-            points.addAll(next);
-            next.clear();
+        marks1.add(source[0] * MOD + source[1]);
+        int find1 = findPointCount(source, marks1, compare, max, blocks);
+        if (find1 == FIND_SUCCESS) {
+            return true;
         }
-        //5，搜索访问结束后，如果次数小于max，则节点source被包围，返回false
-        if (count < max) {
+        if (find1 == FIND_FAIL) {
             return false;
         }
-        //6，搜索访问节点targe
-        marks1.add(source[0] * MOD + source[1]);
         Set<Long> marks2 = new HashSet<>();
-        count = 0;
-        next.clear();
-        points.clear();
-        points.add(target);
-        while (!points.isEmpty()) {
-            int size = points.size();
+        marks2.add(target[0] * MOD + target[1]);
+        int find2 = findPointCount(target, marks2, marks1, max, blocks);
+        if (find2 == FIND_FAIL) {
+            return false;
+        }
+        return true;
+    }
+
+    private int findPointCount(int[] first, Set<Long> marks, Set<Long> compare, int maxCount, Set<Long> blocks) {
+        int count = 0;
+        //分别对应左上右下的坐标偏移
+        int[][] offset = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        //标准的广度优先bfs分层搜索
+        List<int[]> datas = new ArrayList<>();
+        datas.add(first);
+        List<int[]> next = new ArrayList<>();
+        while (!datas.isEmpty()) {
+            int size = datas.size();
             for (int i = 0; i < size; i++) {
-                int[] poin = points.get(i);
+                //搜索的出发点
+                int[] point = datas.get(i);
                 for (int j = 0; j < 4; j++) {
-                    int dx = poin[0] + addPoint[j][0];
-                    int dy = poin[1] + addPoint[j][1];
+                    int dx = point[0] + offset[j][0];
+                    int dy = point[1] + offset[j][1];
                     if (dx >= 0 && dx < MOD && dy >= 0 && dy < MOD) {
+                        //防止搜索超出网格边界
                         long tem = dx * MOD + dy;
-                        if (marks1.contains(tem)) {
-                            //访问的节点在source访问时被标记，肯定存在路径可以到达
-                            return true;
+                        if (compare.contains(tem)) {
+                            //当前搜索的节点在目标源中，则直接搜索成功
+                            return FIND_SUCCESS;
                         }
-                        if (blocks.contains(tem) || marks2.contains(tem)) {
+                        if (marks.contains(tem)) {
+                            //当前节点之前已经被搜索过了不处理
                             continue;
                         }
-                        //如果tem不是障碍物并且没有被访问
-                        marks2.add(tem);
+                        if (blocks.contains(tem)) {
+                            //当前搜索节点为障碍物不处理
+                            continue;
+                        }
+                        marks.add(tem);
                         next.add(new int[]{dx, dy});
                         count++;
-                        if (count >= max) {
-                            return true;
+                        if (count >= maxCount) {
+                            return FIND_MORE;
                         }
                     }
                 }
             }
-            points.clear();
-            points.addAll(next);
+            datas.clear();
+            datas.addAll(next);
             next.clear();
         }
-        return false;
+        return FIND_FAIL;
     }
 }
