@@ -1,7 +1,9 @@
 package com.demo.algorithm.leetcode.easy;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * create by chenglong on 9/16/21
@@ -48,6 +50,7 @@ public class SameNumber2 {
         return false;
     }
 
+    //使用hash表记录数据并查找重复
     public static boolean containsNearbyDuplicate2(int[] nums, int k) {
         int length = nums.length;
         if (length == 1) {
@@ -64,6 +67,24 @@ public class SameNumber2 {
                 return true;
             }
             marks.put(nums[i], i);
+        }
+        return false;
+    }
+
+    //使用hash表+滑动窗口。优化了空间复杂度
+    public static boolean containsNearbyDuplicate3(int[] nums, int k) {
+        int length = nums.length;
+        if (length == 1 || k == 0) {
+            return false;
+        }
+        Set<Integer> marks = new HashSet<>();
+        for (int i = 0; i < length; i++) {
+            if (!marks.add(nums[i])) {
+                return true;
+            }
+            if (i >= k) {
+                marks.remove(nums[i - k]);
+            }
         }
         return false;
     }
