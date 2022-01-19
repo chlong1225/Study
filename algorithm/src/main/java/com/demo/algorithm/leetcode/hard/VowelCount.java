@@ -94,4 +94,28 @@ public class VowelCount {
       }
       return count;
    }
+
+   //动态规划优化空间
+   public int countVowelPermutation2(int n) {
+      long a = 1;
+      long e = 1;
+      long i = 1;
+      long o = 1;
+      long u = 1;
+      //缓存记录e,i的值
+      long ee;
+      long ii;
+      for (int j = 2; j <= n; j++) {
+         //计算之前缓存旧的值
+         ee = e;
+         ii = i;
+         //根据条件依次计算
+         e = (a + i) % MOD;
+         a = (ee + i + u) % MOD;
+         u = (i + o) % MOD;
+         i = (ee + o) % MOD;
+         o = ii;
+      }
+      return (int) ((a + e + i + o + u) % MOD);
+   }
 }
