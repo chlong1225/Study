@@ -64,6 +64,15 @@ public class JumpGame4 {
                 tem.add(i);
                 datas.put(arr[i], tem);
             } else {
+                /**
+                 * 如果当前连续相同的值，只需要记录起始点。
+                 * 相同值之间的跳跃一致，但存在向前向后移动不一致。
+                 * 对于连续的值，最终有效的移动都会转移到起始点。
+                 * 其它位置的移动下一步都是跳跃，但跳跃可以覆盖
+                 */
+                if (i > 0 && i < length - 1 && arr[i - 1] == arr[i] && arr[i] == arr[i + 1]) {
+                    continue;
+                }
                 datas.get(arr[i]).add(i);
             }
         }
