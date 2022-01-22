@@ -31,44 +31,22 @@ public class MaxPathSum {
 
     public int maxPathSum(TreeNode root) {
         maxPath = root.val;
-        int left = dfs(root.left);
-        int right = dfs(root.right);
-        //不包含节点时的最大值
-        maxPath = Math.max(maxPath, left);
-        maxPath = Math.max(maxPath, right);
-        //包含当前节点最大值
-        if (left != Integer.MIN_VALUE) {
-            maxPath = Math.max(maxPath, root.val + left);
-        }
-        if (right != Integer.MIN_VALUE) {
-            maxPath = Math.max(maxPath, root.val + right);
-        }
-        if (left != Integer.MIN_VALUE && right != Integer.MIN_VALUE) {
-            maxPath = Math.max(maxPath, root.val + left + right);
-        }
+        //当前向下节点返回值小于0,直接废弃
+        int left = Math.max(dfs(root.left), 0);
+        int right = Math.max(dfs(root.right), 0);
+        maxPath = Math.max(maxPath, root.val + left + right);
         return maxPath;
     }
 
     //深度遍历包含当前节点的最大值
     private int dfs(TreeNode root) {
         if (root == null) {
-            return Integer.MIN_VALUE;
+            return 0;
         }
-        int left = dfs(root.left);
-        maxPath = Math.max(maxPath, left);
-        int right = dfs(root.right);
-        maxPath = Math.max(maxPath, right);
-        //防止int的取值范围越界.比如:Integer.MIN_VALUE+(负数)会变成较大的正数
-        if (left != Integer.MIN_VALUE && right != Integer.MIN_VALUE) {
-            maxPath = Math.max(maxPath, root.val + left + right);
-        }
-        int max = root.val;
-        if (left != Integer.MIN_VALUE) {
-            max = Math.max(max, root.val + left);
-        }
-        if (right != Integer.MIN_VALUE) {
-            max = Math.max(max, root.val + right);
-        }
-        return max;
+        int left = Math.max(dfs(root.left), 0);
+        int right = Math.max(dfs(root.right), 0);
+        //当前节点的最大值为：val+left+righ
+        maxPath = Math.max(maxPath, root.val + left + right);
+        return Math.max(root.val, Math.max(root.val + left, root.val + right));
     }
 }
