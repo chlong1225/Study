@@ -50,4 +50,12 @@ public class MatchNum {
         }
         return count;
     }
+
+    public int numberOfMatches2(int n) {
+        /**
+         * 使用数学找规律：最终的结果只有一只队伍获胜，有n-1只队伍被淘汰。
+         * 每场比赛都有一个队伍被淘汰，比赛次数转换为了淘汰队伍数量
+         */
+        return n - 1;
+    }
 }
