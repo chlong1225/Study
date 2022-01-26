@@ -59,7 +59,7 @@ class OkHttpManager {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val body = response.body!!.string()
+//                val body = response.body!!.string()
 //                val model = BLJsonUtils.fromJson(body, ReturnModel::class.java)
                 mHandler.post {
 //                    callBack.onSuccess(model)
