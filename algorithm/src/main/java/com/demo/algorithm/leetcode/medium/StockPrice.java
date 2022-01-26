@@ -45,7 +45,7 @@ import java.util.TreeMap;
  * stockPrice.minimum();     // 返回 2 ，最低价格时间戳为 4 ，价格为 2 。
  *
  * 提示：
- * 1 <= timestamp, price <= 109
+ * 1 <= timestamp, price <= 10^9
  * update，current，maximum和minimum总 调用次数不超过10^5。
  * current，maximum和minimum被调用时，update操作 至少已经被调用过 一次。
  */

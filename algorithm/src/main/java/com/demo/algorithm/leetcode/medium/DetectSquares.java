@@ -100,6 +100,10 @@ public class DetectSquares {
                     //三个点存在重合
                     continue;
                 }
+                //需要判断边长是否为正方形
+                if (Math.abs(dataX.get(i) - point[0]) != Math.abs(dataY.get(j) - point[1])) {
+                    continue;
+                }
                 //最后需要找到的点
                 int find = dataX.get(i) * MOD + dataY.get(j);
                 if (counts.get(find) != null) {
