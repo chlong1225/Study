@@ -44,4 +44,5 @@ dependencies {
     //网络请求库okhttpl
     implementation "com.squareup.okhttp3:okhttp:${rootProject.ext.okhttpVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.ext.okhttpVersion}"
+    implementation 'com.google.code.gson:gson:2.8.9'
 }

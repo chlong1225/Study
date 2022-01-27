@@ -2,6 +2,8 @@ package com.stl.commonlib.net
 
 import android.os.Handler
 import android.os.Looper
+import com.chl.common.json.BLJsonUtils
+import com.chl.common.net.ReturnModel
 import com.chl.common.utils.LogUtil
 import okhttp3.Call
 import okhttp3.Callback
@@ -59,10 +61,10 @@ class OkHttpManager {
             }
 
             override fun onResponse(call: Call, response: Response) {
-//                val body = response.body!!.string()
-//                val model = BLJsonUtils.fromJson(body, ReturnModel::class.java)
+                val body = response.body!!.string()
+                val model = BLJsonUtils.fromJson(body, ReturnModel::class.java)
                 mHandler.post {
-//                    callBack.onSuccess(model)
+                    callBack.onSuccess(model)
                     callBack.onCompleted()
                 }
             }
