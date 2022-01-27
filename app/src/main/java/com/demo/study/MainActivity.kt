@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import com.chl.common.utils.LogUtil
 import com.demo.study.databinding.ActivityMainBinding
-import com.demo.study.kotlin.Test
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
@@ -22,11 +21,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
         getViewBinding().btnData.setOnClickListener({ DataActivity.openSelf(this@MainActivity) })
 
-        test()
-    }
-
-    private fun test() {
-        Test().call()
+        getViewBinding().btnParseXml.setOnClickListener {
+            StringParse.parseXml(this, R.layout.xml_test)
+//            StringParse.parseXml(this, R.layout.xml_test2)
+        }
 
     }
 

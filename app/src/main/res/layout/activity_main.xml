@@ -42,4 +42,16 @@
         android:gravity="center"
         android:text="数据库"/>
 
+    <Button
+        android:id="@+id/btn_parse_xml"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_data"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="xml布局文件解析"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
