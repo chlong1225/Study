@@ -48,10 +48,10 @@ public class MapHeights {
         int[][] heights = new int[m][n];
         List<int[]> datas = new ArrayList<>();
         //初始化高度并且获取水域格子
+        int height = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (isWater[i][j] == 1) {
-                    heights[i][j] = 0;
                     datas.add(new int[]{i, j});
                 } else {
                     heights[i][j] = -1;
@@ -62,6 +62,7 @@ public class MapHeights {
         //分别对应当前位置的左上右下偏移
         int[][] offsets = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
         while (!datas.isEmpty()) {
+            height++;
             for (int i = 0; i < datas.size(); i++) {
                 int[] points = datas.get(i);
                 for (int j = 0; j < 4; j++) {
@@ -70,27 +71,8 @@ public class MapHeights {
                     if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
                         //防止偏移越界
                         if (heights[nx][ny] == -1) {
-                            //此时高度未赋值
-                            int preHeight = heights[points[0]][points[1]];
-                            if (preHeight == 0) {
-                                //如果被搜索的位置为水域，则周围必须是1
-                                heights[nx][ny] = 1;
-                                next.add(new int[]{nx, ny});
-                            } else {
-                                //此时最大值为preHeight+1，但需要检查(nx,ny)周围的点
-                                int max = preHeight + 1;
-                                for (int k = 0; k < 4; k++) {
-                                    int checkX = nx + offsets[k][0];
-                                    int checkY = ny + offsets[k][1];
-                                    if (checkX >= 0 && checkX < m && checkY >= 0 && checkY < n) {
-                                        if (heights[checkX][checkY] != -1) {
-                                            max = Math.min(heights[checkX][checkY] + 1, max);
-                                        }
-                                    }
-                                }
-                                heights[nx][ny] = max;
-                                next.add(new int[]{nx, ny});
-                            }
+                            heights[nx][ny] = height;
+                            next.add(new int[]{nx, ny});
                         }
                     }
                 }
