@@ -1,8 +1,5 @@
 package com.demo.algorithm.leetcode.easy;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by chl on 2022/2/4.
  * description : 可以形成最大正方形的矩形数目
@@ -34,19 +31,17 @@ public class RectanglesCount {
     public int countGoodRectangles(int[][] rectangles) {
         int length = rectangles.length;
         int max = 0;
-        Map<Integer, Integer> datas = new HashMap<>();
+        int count = 0;
         for (int i = 0; i < length; i++) {
             int size = Math.min(rectangles[i][0], rectangles[i][1]);
             if (max < size) {
                 max = size;
-            }
-            if (datas.get(size) == null) {
-                datas.put(size, 1);
-            } else {
-                datas.put(size, datas.get(size) + 1);
+                count = 1;
+            } else if (max == size) {
+                count++;
             }
         }
-        return datas.get(max);
+        return count;
     }
 
 }
