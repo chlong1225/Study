@@ -3,7 +3,6 @@ package com.demo.algorithm.leetcode.offer;
 /**
  * Created by chl on 2021/11/23.
  * description : 剑指Offer63. 股票的最大利润
- *
  * 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
  *
  * 示例 1:
@@ -16,7 +15,7 @@ package com.demo.algorithm.leetcode.offer;
  * 输入: [7,6,4,3,1]
  * 输出: 0
  * 解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
- *  
+ *
  * 限制：
  * 0 <= 数组长度 <= 10^5
  */
