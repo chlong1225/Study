@@ -51,12 +51,16 @@ public class EnclaveNum {
                 if (grid[i][j] == LAND) {
                     marks.clear();
                     boolean enclave = isEnclave(i, j, grid);
-                    //如果当前单元格为飞地,状态为3，不是飞地状态为-1
+                    //如果当前单元格为飞地,状态为3，不是飞地状态为-1。此时被标记访问的状态也相同
                     if (enclave) {
-                        grid[i][j] = ENCLAVE;
-                        count++;
+                        count += marks.size();
+                        for (int num : marks) {
+                            grid[num / MOD][num % MOD] = ENCLAVE;
+                        }
                     } else {
-                        grid[i][j] = UN_ENCLAVE;
+                        for (int num : marks) {
+                            grid[num / MOD][num % MOD] = UN_ENCLAVE;
+                        }
                     }
                 }
             }
