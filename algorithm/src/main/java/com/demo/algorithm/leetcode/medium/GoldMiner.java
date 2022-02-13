@@ -128,4 +128,43 @@ public class GoldMiner {
             findMax = count;
         }
     }
+
+    private int max = 0;
+
+    public int getMaximumGold2(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] > 0) {
+                    findGold(i, j, 0, grid);
+                }
+            }
+        }
+        return max;
+    }
+
+    private void findGold(int x, int y, int count, int[][] grid) {
+        count += grid[x][y];
+        if (count > max) {
+            max = count;
+        }
+        int save = grid[x][y];
+        //访问过的位置使用0标记
+        grid[x][y] = 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        for (int i = 0; i < 4; i++) {
+            int nx = x + offsets[i][0];
+            int ny = y + offsets[i][1];
+            if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                //防止开采越界
+                if (grid[nx][ny] > 0) {
+                    findGold(nx, ny, count, grid);
+                }
+            }
+        }
+        //状态回溯
+        grid[x][y] = save;
+    }
 }
