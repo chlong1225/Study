@@ -52,4 +52,18 @@ public class BalloonCount {
         count = Math.min(count, Math.min(l, o) >> 1);
         return count;
     }
+
+    public int maxNumberOfBalloons2(String text) {
+        int length = text.length();
+        if (length < 7) {
+            return 0;
+        }
+        int[] counts = new int[26];
+        for (int i = 0; i < length; i++) {
+            counts[text.charAt(i) - 'a']++;
+        }
+        int count = Math.min(Math.min(counts[0], counts[1]), counts['n' - 'a']);
+        count = Math.min(count, Math.min(counts['l' - 'a'], counts['o' - 'a']) >> 1);
+        return count;
+    }
 }
