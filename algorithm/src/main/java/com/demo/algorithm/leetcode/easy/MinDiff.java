@@ -32,7 +32,7 @@ import java.util.Arrays;
  *
  * 提示：
  * 1 <= k <= nums.length <= 1000
- * 0 <= nums[i] <= 105
+ * 0 <= nums[i] <= 10^5
  */
 public class MinDiff {
 
