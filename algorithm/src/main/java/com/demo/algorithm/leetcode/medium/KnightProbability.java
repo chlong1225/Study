@@ -1,7 +1,7 @@
 package com.demo.algorithm.leetcode.medium;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * create on 2022/2/17
@@ -32,6 +32,8 @@ import java.util.List;
  */
 public class KnightProbability {
 
+    private static final int MOD = 26;
+
     /**
      * 分别对应8个方向的偏移量
      */
@@ -41,37 +43,42 @@ public class KnightProbability {
         if (k == 0) {
             return 1;
         }
-        //统计执行k次操作过程中，离开棋盘的次数
-        int level = 0;
-        //统计执行k次操作后，留在棋盘的次数
-        int keep = 0;
-        //记录执行操作后留在棋盘的位置
-        List<int[]> positions = new ArrayList<>();
-        positions.add(new int[]{row, column});
-        List<int[]> next = new ArrayList<>();
-        for (int i = 0; i < k; i++) {
-            for (int j = 0; j < positions.size(); j++) {
-                int[] position = positions.get(j);
-                for (int l = 0; l < 8; l++) {
-                    int nx = position[0] + offsets[l][0];
-                    int ny = position[1] + offsets[l][1];
+        //记录执行操作后留在棋盘的位置. key = row*26+column ; value = 相同步数中出现的次数
+        Map<Integer, Double> positions = new HashMap<>();
+        positions.put(row * MOD + column, 1d);
+        Map<Integer, Double> next = new HashMap<>();
+        for (int step = 1; step <= k; step++) {
+            //1,遍历positions
+            for (int position : positions.keySet()) {
+                for (int i = 0; i < 8; i++) {
+                    int nx = position / MOD + offsets[i][0];
+                    int ny = position % MOD + offsets[i][1];
                     if (nx >= 0 && nx < n && ny >= 0 && ny < n) {
-                        //移动后还在棋盘上
-                        next.add(new int[]{nx, ny});
-                    } else {
-                        //离开棋盘
-                        level++;
+                        //2,移动后还在棋盘上
+                        int tem = nx * MOD + ny;
+                        if (next.get(tem) == null) {
+                            next.put(tem, positions.get(position) / 8);
+                        } else {
+                            next.put(tem, next.get(tem) + positions.get(position) / 8);
+                        }
                     }
                 }
             }
+            //数据源重置
             positions.clear();
-            positions.addAll(next);
+            positions.putAll(next);
             next.clear();
             if (positions.isEmpty()) {
                 break;
             }
         }
-        keep = positions.size();
-        return keep * 1.0d / (level + keep);
+        double sum = 0;
+        if (positions.isEmpty()) {
+            return 0;
+        }
+        for (double count : positions.values()) {
+            sum += count;
+        }
+        return sum;
     }
 }
