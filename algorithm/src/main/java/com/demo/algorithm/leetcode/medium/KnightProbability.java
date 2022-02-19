@@ -81,4 +81,35 @@ public class KnightProbability {
         }
         return sum;
     }
+
+    //使用深度dfs遍历+状态记忆
+    public double knightProbability2(int n, int k, int row, int column) {
+        if (k == 0) {
+            return 1;
+        }
+        double[][][] marks = new double[n][n][k + 1];
+        return dfs(row, column, n, k, marks);
+    }
+
+    private double dfs(int x, int y, int n, int k, double[][][] marks) {
+        if (x < 0 || x >= n || y < 0 || y >= n) {
+            //骑士已经离开棋盘
+            return 0;
+        }
+        if (k == 0) {
+            //最后一步还在棋盘上,当前概率为1
+            return 1;
+        }
+        if (marks[x][y][k] != 0) {
+            return marks[x][y][k];
+        }
+        double sum = 0;
+        for (int i = 0; i < 8; i++) {
+            int nx = x + offsets[i][0];
+            int ny = y + offsets[i][1];
+            sum += dfs(nx, ny, n, k - 1, marks) / 8.0;
+        }
+        marks[x][y][k] = sum;
+        return sum;
+    }
 }
