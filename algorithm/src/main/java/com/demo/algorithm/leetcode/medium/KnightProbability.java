@@ -112,4 +112,39 @@ public class KnightProbability {
         marks[x][y][k] = sum;
         return sum;
     }
+
+    //使用动态规划
+    public double knightProbability3(int n, int k, int row, int column) {
+        if (k == 0) {
+            return 1;
+        }
+        /**
+         * 由于下一步骑士的路径与上一步相关,故可以使用动态规划进行状态转移
+         * marks[row][column][k]: 当前位置(row,column)移动k次后留在棋盘的概率
+         * 初始条件: marks[row][column] = 1
+         */
+        double[][][] marks = new double[n][n][k + 1];
+        //1,初始化条件
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                marks[i][j][0] = 1;
+            }
+        }
+        //2,遍历次数
+        for (int step = 1; step <= k; step++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    for (int l = 0; l < 8; l++) {
+                        int prex = i - offsets[l][0];
+                        int prey = j - offsets[l][1];
+                        if (prex >= 0 && prex < n && prey >= 0 && prey < n) {
+                            //转移到当前的点之前一个点在棋盘上才有效
+                            marks[i][j][step] += marks[prex][prey][step - 1] / 8;
+                        }
+                    }
+                }
+            }
+        }
+        return marks[row][column][k];
+    }
 }
