@@ -86,4 +86,38 @@ public class WeakRole {
         return count;
     }
 
+    //将map统计改为桶排序
+    public int numberOfWeakCharacters2(int[][] properties) {
+        int maxAttacks = properties[0][0];
+        int length = properties.length;
+        //1，遍历获取最大攻击值，便于缩小桶的范围，不然可以设置最大桶10^5
+        for (int i = 1; i < length; i++) {
+            if (properties[i][0] > maxAttacks) {
+                maxAttacks = properties[i][0];
+            }
+        }
+        //2，创建桶，统计当前攻击值对应的最大防御
+        int[] maxDefs = new int[maxAttacks + 1];
+        for (int i = 0; i < length; i++) {
+            if (maxDefs[properties[i][0]] < properties[i][1]) {
+                maxDefs[properties[i][0]] = properties[i][1];
+            }
+        }
+        //3，倒着遍历攻击值，将当前攻击值的最大改为大于当前攻击值的最大防御值
+        int pre = 0;
+        for (int i = maxAttacks; i >= 0; i--) {
+            int curMaxDef = maxDefs[i];
+            maxDefs[i] = pre;
+            pre = Math.max(curMaxDef, pre);
+        }
+        int count = 0;
+        //4，判断当前是否为弱角色
+        for (int i = 0; i < length; i++) {
+            if (maxDefs[properties[i][0]] > properties[i][1]) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }
