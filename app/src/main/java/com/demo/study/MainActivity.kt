@@ -25,6 +25,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             StringParse.parseXml(this, R.layout.xml_test)
 //            StringParse.parseXml(this, R.layout.xml_test2)
         }
+        getViewBinding().btnStatusBar.setOnClickListener {
+            StatusBarActivity.openSelf(this@MainActivity)
+        }
 
     }
 

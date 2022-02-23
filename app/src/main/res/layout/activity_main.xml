@@ -54,4 +54,16 @@
         android:gravity="center"
         android:text="xml布局文件解析"/>
 
+    <Button
+        android:id="@+id/btn_status_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_parse_xml"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="状态栏"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
