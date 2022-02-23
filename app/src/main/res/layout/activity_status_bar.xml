@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff00ff"
-    android:fitsSystemWindows="true">
+    android:background="#ff00ff">
 
-    <com.google.android.material.appbar.CollapsingToolbarLayout
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon1"
-            android:fitsSystemWindows="true"/>
-
-    </com.google.android.material.appbar.CollapsingToolbarLayout>
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon1"/>
 
     <Button
+        android:id="@+id/btn_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
@@ -29,4 +21,4 @@
         android:gravity="center"
         android:text="按钮"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>
