@@ -29,32 +29,13 @@ public class PluralMultiply {
     public String complexNumberMultiply(String num1, String num2) {
         //1，将两个复数拆分为实数+虚数
         String[] split1 = num1.split("\\+");
-        int a = 0;
-        int b = 0;
-        if (split1[0].charAt(0) == '-') {
-            a = -Integer.parseInt(split1[0].substring(1));
-        } else {
-            a = Integer.parseInt(split1[0]);
-        }
-        if (split1[1].charAt(0) == '-') {
-            b = -Integer.parseInt(split1[1].substring(1, split1[1].length() - 1));
-        } else {
-            b = Integer.parseInt(split1[1].substring(0, split1[1].length() - 1));
-        }
+        int a = Integer.parseInt(split1[0]);
+        int b = Integer.parseInt(split1[1].substring(0, split1[1].length() - 1));
 
         String[] split2 = num2.split("\\+");
-        int c = 0;
-        int d = 0;
-        if (split2[0].charAt(0) == '-') {
-            c = -Integer.parseInt(split2[0].substring(1));
-        } else {
-            c = Integer.parseInt(split2[0]);
-        }
-        if (split2[1].charAt(0) == '-') {
-            d = -Integer.parseInt(split2[1].substring(1, split2[1].length() - 1));
-        } else {
-            d = Integer.parseInt(split2[1].substring(0, split2[1].length() - 1));
-        }
+        int c = Integer.parseInt(split2[0]);
+        int d = Integer.parseInt(split2[1].substring(0, split2[1].length() - 1));
+
         //2，利用乘法的计算规则：(a+bi)*(c+di) = (ac-bd)+(ad+bc)i
         int sum1 = (a * c) - (b * d);
         int sum2 = a * d + b * c;
