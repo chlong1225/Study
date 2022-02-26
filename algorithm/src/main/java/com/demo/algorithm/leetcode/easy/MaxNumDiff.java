@@ -47,4 +47,23 @@ public class MaxNumDiff {
         }
         return maxDiff == 0 ? -1 : maxDiff;
     }
+
+    //使用单调栈方式
+    public int maximumDifference2(int[] nums) {
+        int maxDiff = 0;
+        int length = nums.length;
+        //用于记录当前位置后的最大值。即i固定时，满足i<j的最大nums[j]
+        int maxNext = nums[length - 1];
+        for (int i = length - 2; i >= 0; i--) {
+            int diff = maxNext - nums[i];
+            if (diff > maxDiff) {
+                maxDiff = diff;
+            }
+            //更新从i~length-1的最大值
+            if (nums[i] > maxNext) {
+                maxNext = nums[i];
+            }
+        }
+        return maxDiff == 0 ? -1 : maxDiff;
+    }
 }
