@@ -135,4 +135,199 @@ public class GoodSubCount {
         }
         return sum;
     }
+
+    public int numberOfGoodSubsets2(int[] nums) {
+        //1，统计数字出现的次数
+        int[] counts = new int[31];
+        int length = nums.length;
+        for (int i = 0; i < length; i++) {
+            counts[nums[i]]++;
+        }
+        //2，数字进行分类并枚举
+        //2.1统计质数：2,3,5,7,11,13,17,19,23,29
+        long sum = 0;
+        long a = 1;
+        a = a * (counts[2] + 1) % MOD;
+        a = a * (counts[3] + 1) % MOD;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a--;
+        sum += a;
+        //2.2统计其它好数
+        //6
+        a = 1;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[6];
+        sum = (sum + a) % MOD;
+        //10
+        a = 1;
+        a = a * (counts[3] + 1) % MOD;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[10];
+        sum = (sum + a) % MOD;
+        //14
+        a = 1;
+        a = a * (counts[3] + 1) % MOD;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[14];
+        sum = (sum + a) % MOD;
+        //15
+        a = 1;
+        a = a * (counts[2] + 1) % MOD;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[15];
+        sum = (sum + a) % MOD;
+        //21
+        a = 1;
+        a = a * (counts[2] + 1) % MOD;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[21];
+        sum = (sum + a) % MOD;
+        //22
+        a = 1;
+        a = a * (counts[3] + 1) % MOD;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[22];
+        sum = (sum + a) % MOD;
+        //26
+        a = 1;
+        a = a * (counts[3] + 1) % MOD;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[26];
+        sum = (sum + a) % MOD;
+        //30
+        a = 1;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a *= counts[30];
+        sum = (sum + a) % MOD;
+        //两个好数组合: 10,21；14,15；15,22；15,26；21,22；21,26
+        //10,21
+        a = 1;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a = a * counts[10] % MOD;
+        a *= counts[21];
+        sum = (sum + a) % MOD;
+        //14,15
+        a = 1;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a = a * counts[14] % MOD;
+        a *= counts[15];
+        sum = (sum + a) % MOD;
+        //15,22
+        a = 1;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a = a * counts[15] % MOD;
+        a *= counts[22];
+        sum = (sum + a) % MOD;
+        //15,26
+        a = 1;
+        a = a * (counts[7] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a = a * counts[15] % MOD;
+        a *= counts[26];
+        sum = (sum + a) % MOD;
+        //21,22
+        a = 1;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[13] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a = a * counts[21] % MOD;
+        a *= counts[22];
+        sum = (sum + a) % MOD;
+        //21,26
+        a = 1;
+        a = a * (counts[5] + 1) % MOD;
+        a = a * (counts[11] + 1) % MOD;
+        a = a * (counts[17] + 1) % MOD;
+        a = a * (counts[19] + 1) % MOD;
+        a = a * (counts[23] + 1) % MOD;
+        a = a * (counts[29] + 1) % MOD;
+        a = a * counts[21] % MOD;
+        a *= counts[26];
+        sum = (sum + a) % MOD;
+        //枚举三个以上好数组合不存在
+        //2.3：统计数字1
+        for (int i = 0; i < counts[1]; i++) {
+            sum *= 2;
+            sum %= MOD;
+        }
+        return (int) sum;
+    }
 }
