@@ -68,4 +68,61 @@ public class SubArraysSum {
         }
         return sum;
     }
+
+    public long subArrayRanges2(int[] nums) {
+        int length = nums.length;
+        if (length == 1) {
+            return 0;
+        }
+        /**
+         * 分析：区间最大差值 = 区间最大值 - 区间最小值。所有的区间最大差值和可以转换为所有区间最大值和 - 所有区间最小值和
+         * 区间对应最大值，最大值也会一一对应区间。转成当前值最大区间数*当前值 = 当前值对应的所有区间最大值。最小值同理
+         * 考虑存在相等的数据，这里约定右边的大于左边
+         */
+        long sum = 0;
+        for (int i = 0; i < length; i++) {
+            int cur = nums[i];
+
+            //向两边查找当前值为最大值的边界
+            int left = i;
+            int right = i;
+            for (int j = left - 1; j >= 0; j--) {
+                if (nums[j] < cur) {
+                    left--;
+                } else {
+                    break;
+                }
+            }
+            for (int j = right + 1; j < length; j++) {
+                if (nums[j] <= cur) {
+                    right++;
+                } else {
+                    break;
+                }
+            }
+            //最大值和：子集数量：(right-i+1)*(i-left+1)-1。但最小的子集中同样存在-1,，故都可以省略
+            sum += ((long) cur * (i - left + 1) * (right - i + 1));
+
+            //向两边查找当前值为最小值的边界
+            left = i;
+            right = i;
+            for (int j = left - 1; j >= 0; j--) {
+                if (nums[j] > cur) {
+                    left--;
+                } else {
+                    break;
+                }
+            }
+            for (int j = right + 1; j < length; j++) {
+                if (nums[j] >= cur) {
+                    right++;
+                } else {
+                    break;
+                }
+            }
+            //最小值和
+            sum -= ((long) cur * (i - left + 1) * (right - i + 1));
+        }
+        return sum;
+    }
 }
