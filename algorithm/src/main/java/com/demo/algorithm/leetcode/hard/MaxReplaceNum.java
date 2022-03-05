@@ -108,4 +108,57 @@ public class MaxReplaceNum {
         counts[request[0]]++;
         counts[request[1]]--;
     }
+
+    public int maximumRequests2(int n, int[][] requests) {
+        /**
+         * 使用二进制枚举
+         */
+        //1，优化部分fromi与toi相同的请求
+        int same = 0;
+        int length = requests.length;
+        //需要处理的请求数量
+        int m = 0;
+        for (int i = 0; i < length; i++) {
+            if (requests[i][0] == requests[i][1]) {
+                same++;
+            } else {
+                m++;
+                //需要判断是否需要移动
+                if (i >= m) {
+                    requests[m - 1] = requests[i];
+                }
+            }
+        }
+        int max = 0;
+        //2,请求存在选与不选。m个请求最大枚举数量为2^m
+        for (int i = 0; i < 1 << m; i++) {
+            int count = checkRequest(i, m, n, requests);
+            if (count > max) {
+                max = count;
+            }
+        }
+        return same + max;
+    }
+
+    private int checkRequest(int num, int m, int n, int[][] requests) {
+        int[] counts = new int[n];
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            int tem = (num >> i) & 1;
+            if (tem == 1) {
+                //选中
+                count++;
+                counts[requests[i][0]]--;
+                counts[requests[i][1]]++;
+            }
+        }
+        boolean isZero = true;
+        for (int i = 0; i < n; i++) {
+            if (counts[i] != 0) {
+                isZero = false;
+                break;
+            }
+        }
+        return isZero ? count : 0;
+    }
 }
