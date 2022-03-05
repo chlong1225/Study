@@ -1,7 +1,9 @@
 package com.demo.algorithm.leetcode.medium;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by chl on 2022/2/10.
@@ -59,6 +61,70 @@ public class SimplestFractions {
     //获取a，b之间的最大公约数
     private int gcd(int a, int b) {
         return b != 0 ? gcd(b, a % b) : a;
+    }
+
+    public List<String> simplifiedFractions2(int n) {
+        List<String> result = new ArrayList<>();
+        if (n == 1) {
+            return result;
+        }
+        //1，添加分子为1的分数
+        for (int i = 2; i <= n; i++) {
+            result.add("1/" + i);
+        }
+        //2，获取从2~n-1的所有质数
+        boolean[] marks = new boolean[n];
+        for (int i = 2; i < n; i++) {
+            if (marks[i]) {
+                continue;
+            }
+            for (int j = 2 * i; j < n; j += i) {
+                marks[j] = true;
+            }
+        }
+        List<Integer> dates = new ArrayList<>();
+        for (int i = 2; i < n; i++) {
+            if (!marks[i]) {
+                dates.add(i);
+            }
+        }
+        //3，将分子拆分成不同的质数相乘，最后对分母进行打表
+        for (int i = 2; i < n; i++) {
+            List<Integer> items = split(i, dates);
+            boolean[] visit = new boolean[n + 1];
+            for (int j = 0; j < items.size(); j++) {
+                int tem = items.get(j);
+                for (int k = i + tem; k <= n; k += tem) {
+                    visit[k] = true;
+                }
+            }
+            for (int j = i + 1; j <= n; j++) {
+                if (!visit[j]) {
+                    StringBuilder builder = new StringBuilder();
+                    builder.append(i);
+                    builder.append("/");
+                    builder.append(j);
+                    result.add(builder.toString());
+                }
+            }
+        }
+        return result;
+    }
+
+    //将num拆分为不同的质数相乘
+    private List<Integer> split(int num, List<Integer> dates) {
+        Set<Integer> result = new HashSet<>();
+        while (num > 1) {
+            for (int i = 0; i < dates.size(); i++) {
+                int tem = dates.get(i);
+                //使用while防止num拆分中出现重复的质数tem。比如4 = 2*2
+                while (num % tem == 0) {
+                    result.add(tem);
+                    num /= tem;
+                }
+            }
+        }
+        return new ArrayList<>(result);
     }
 }
 
