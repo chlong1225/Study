@@ -1,9 +1,14 @@
 package com.demo.algorithm.leetcode.medium;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * create on 2022/1/14
@@ -76,6 +81,34 @@ public class FindKMinNum {
                 tem.add(datas[i][1]);
                 result.add(tem);
             }
+        }
+        return result;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<List<Integer>> kSmallestPairs2(int[] nums1, int[] nums2, int k) {
+        /**
+         * 由于nums1与nums2已经是有序的，可以使用多路归并的方式。由于从两个数组中分别选取元素。
+         * 最大筛选长度不能超过k。比如：nums1取0位，nums2最多取k个。数组有效长度可以进行裁剪。
+         */
+        int length1 = Math.min(nums1.length, k);
+        int length2 = Math.min(nums2.length, k);
+        //以nums2的位数为基准。初始添加：(0,0),(0,1)....(0,length2-1)，然后nums1的index依次增长
+        PriorityQueue<int[]> dates = new PriorityQueue<>((o1, o2) -> nums1[o1[0]] + nums2[o1[1]] - nums1[o2[0]] - nums2[o2[1]]);
+        for (int i = 0; i < length2; i++) {
+            dates.add(new int[]{0, i});
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        while (k > 0 && dates.size() > 0) {
+            int[] poll = dates.poll();
+            List<Integer> item = new ArrayList<>();
+            item.add(nums1[poll[0]]);
+            item.add(nums2[poll[1]]);
+            result.add(item);
+            if (poll[0] + 1 < length1) {
+                dates.offer(new int[]{poll[0] + 1, poll[1]});
+            }
+            k--;
         }
         return result;
     }
