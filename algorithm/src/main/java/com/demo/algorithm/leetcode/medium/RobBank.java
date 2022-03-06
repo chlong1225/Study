@@ -117,4 +117,62 @@ public class RobBank {
         }
         return -1;
     }
+
+    public List<Integer> goodDaysToRobBank2(int[] security, int time) {
+        /**
+         * 使用动态规划预处理数据
+         */
+        List<Integer> result = new ArrayList<>();
+        int length = security.length;
+        //1，处理特殊场景
+        if (time == 0) {
+            //time=0代表每天都适合打劫
+            for (int i = 0; i < length; i++) {
+                result.add(i);
+            }
+            return result;
+        }
+        if (length < 2 * time + 1) {
+            //无法找到前后长度为time的日志
+            return result;
+        }
+        //记录当前值左边连续大于或等于的数量
+        int[] left = new int[length];
+        for (int i = time - 1; i >= 0; i--) {
+            if (security[i + 1] <= security[i]) {
+                left[time]++;
+            } else {
+                break;
+            }
+        }
+        for (int i = time + 1; i < length - time; i++) {
+            if (security[i] <= security[i - 1]) {
+                left[i] = left[i - 1] + 1;
+            } else {
+                left[i] = 0;
+            }
+        }
+        //记录当前值右边连续大于或等于的数量
+        int[] right = new int[length];
+        for (int i = length - time; i < length; i++) {
+            if (security[i - 1] <= security[i]) {
+                right[length - time - 1]++;
+            } else {
+                break;
+            }
+        }
+        for (int i = length - time - 2; i >= time; i--) {
+            if (security[i] <= security[i + 1]) {
+                right[i] = right[i + 1] + 1;
+            } else {
+                right[i] = 0;
+            }
+        }
+        for (int i = time; i < length - time; i++) {
+            if (left[i] >= time && right[i] >= time) {
+                result.add(i);
+            }
+        }
+        return result;
+    }
 }
