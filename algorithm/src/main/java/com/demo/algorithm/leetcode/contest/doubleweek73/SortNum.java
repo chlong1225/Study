@@ -1,6 +1,7 @@
 package com.demo.algorithm.leetcode.contest.doubleweek73;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -81,4 +82,29 @@ public class SortNum {
         sum += (mapping[num] * modulus);
         return sum;
     }
+
+    public int[] sortJumbled2(int[] mapping, int[] nums) {
+        //记录映射关系，防止重复计算
+        Map<Integer, Integer> marks = new HashMap<>();
+        int length = nums.length;
+        //使用二维数据记录，空间换时间
+        int[][] dates = new int[length][2];
+        for (int i = 0; i < length; i++) {
+            int tem;
+            if (marks.get(nums[i]) == null) {
+                tem = replaceNum(nums[i], mapping);
+                marks.put(nums[i], tem);
+            } else {
+                tem = marks.get(nums[i]);
+            }
+            dates[i][0] = tem;
+            dates[i][1] = nums[i];
+        }
+        Arrays.sort(dates, (o1, o2) -> o1[0] - o2[0]);
+        for (int i = 0; i < length; i++) {
+            nums[i] = dates[i][1];
+        }
+        return nums;
+    }
+
 }
