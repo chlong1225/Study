@@ -57,4 +57,21 @@ public class MaxCountNum {
         return max;
     }
 
+    public int mostFrequent2(int[] nums, int key) {
+        int[] counts = new int[1001];
+        int length = nums.length;
+        int maxIndex = -1;
+        counts[nums[0]]++;
+        for (int i = 1; i < length; i++) {
+            counts[nums[i]]++;
+            if (nums[i - 1] == key) {
+                if (maxIndex == -1) {
+                    maxIndex = i;
+                } else if (counts[nums[i]] > counts[nums[maxIndex]]) {
+                    maxIndex = i;
+                }
+            }
+        }
+        return nums[maxIndex];
+    }
 }
