@@ -55,7 +55,7 @@ public class PlatesBetweenCandles {
             lefts[i] = left;
         }
         if (s.charAt(length - 1) == '*') {
-            lefts[left - 1] = left;
+            lefts[length - 1] = left;
         } else {
             lefts[length - 1] = length - 1;
         }
