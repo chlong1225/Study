@@ -54,7 +54,7 @@ public class PreOrder {
             while (dates.size() > 0) {
                 Node node = dates.get(dates.size() - 1);
                 result.add(node.val);
-                dates.remove(node);
+                dates.remove(dates.size() - 1);
                 if (node.children != null && node.children.size() > 0) {
                     for (int i = node.children.size() - 1; i >= 0; i--) {
                         dates.add(node.children.get(i));
