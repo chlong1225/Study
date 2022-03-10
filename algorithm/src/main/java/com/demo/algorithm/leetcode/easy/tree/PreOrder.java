@@ -46,6 +46,25 @@ public class PreOrder {
         }
     }
 
+    public List<Integer> preorder2(Node root) {
+        List<Integer> result = new ArrayList<>();
+        List<Node> dates = new ArrayList<>();
+        if (root != null) {
+            dates.add(root);
+            while (dates.size() > 0) {
+                Node node = dates.get(dates.size() - 1);
+                result.add(node.val);
+                dates.remove(node);
+                if (node.children != null && node.children.size() > 0) {
+                    for (int i = node.children.size() - 1; i >= 0; i--) {
+                        dates.add(node.children.get(i));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 
     class Node {
         public int val;
