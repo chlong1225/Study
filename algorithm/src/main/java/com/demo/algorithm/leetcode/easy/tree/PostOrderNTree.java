@@ -47,6 +47,29 @@ public class PostOrderNTree {
         result.add(root.val);
     }
 
+    public List<Integer> postorder2(Node root) {
+        List<Integer> result = new ArrayList<>();
+        List<Node> dates = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        dates.add(root);
+        while (dates.size() > 0) {
+            Node node = dates.get(dates.size() - 1);
+            List<Node> children = node.children;
+            if (children == null || children.size() == 0) {
+                result.add(node.val);
+                dates.remove(dates.size() - 1);
+            } else {
+                node.children = null;
+                for (int i = children.size() - 1; i >= 0; i--) {
+                    dates.add(children.get(i));
+                }
+            }
+        }
+        return result;
+    }
+
     class Node {
         public int val;
         public List<Node> children;
