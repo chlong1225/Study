@@ -2,6 +2,7 @@ package com.demo.algorithm.leetcode.easy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -32,9 +33,9 @@ public class LongWord {
         /**
          * 单词长度远远小于长度，可以使用桶分类
          */
-        List<List<String>> dates = new ArrayList<>(31);
+        List<HashSet<String>> dates = new ArrayList<>(31);
         for (int i = 0; i < 31; i++) {
-            dates.add(new ArrayList<>());
+            dates.add(new HashSet<>());
         }
         //1，根据数据长度进行分类
         int length = words.length;
@@ -42,23 +43,18 @@ public class LongWord {
             String tem = words[i];
             dates.get(tem.length()).add(tem);
         }
-        //2，对每个长度的单词进行排序
-        for (int i = 0; i < 31; i++) {
-            if (dates.get(i).size() > 1) {
-                Collections.sort(dates.get(i));
-            }
-        }
-        //3，查找满足条件的最长单词
+        //2，查找满足条件的最长单词
         if (dates.get(1).size() == 0) {
             return "";
         }
-        List<String> result = new ArrayList<>();
-        result.addAll(dates.get(1));
+        List<String> result = new ArrayList<>(dates.get(1));
+        Collections.sort(result);
         for (int i = 2; i < 31; i++) {
-            List<String> items = dates.get(i);
-            if (items.size() == 0) {
+            if (dates.get(i).size() == 0) {
                 break;
             }
+            List<String> items = new ArrayList<>(dates.get(i));
+            Collections.sort(items);
             List<String> next = new ArrayList<>();
             for (int j = 0; j < items.size(); j++) {
                 if (isContainer(items.get(j), result)) {
