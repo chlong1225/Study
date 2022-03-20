@@ -67,4 +67,33 @@ public class MaxStrByOr {
         }
         return sum;
     }
+
+    public int countMaxOrSubsets2(int[] nums) {
+        /**
+         * 分析：数组所有的数按位或可以取得最大值。如果重复数字对结果不会有变化，重复位也不会对结果有变化
+         * 可以转换为：查找按位或成指定大小的子集数量
+         */
+        int length = nums.length;
+        //1，获取最大值
+        int max = 0;
+        for (int i = 0; i < length; i++) {
+            max |= nums[i];
+        }
+        //2，查找按位或为max的子集数量
+        return dfs(0, 0, max, nums);
+    }
+
+    private int dfs(int index, int sum, int max, int[] nums) {
+        int length = nums.length;
+        if (sum == max) {
+            //当前位或到max时，后面都是重复的位，此时取或不取，结果一样。故数量为2的(length-index)次方
+            return 1 << (length - index);
+        }
+        int count = 0;
+        for (int i = index; i < length; i++) {
+            int tem = sum | nums[i];
+            count += dfs(i + 1, tem, max, nums);
+        }
+        return count;
+    }
 }
