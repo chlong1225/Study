@@ -32,6 +32,9 @@ import java.util.Map;
 public class MinIndexSum {
 
     public String[] findRestaurant(String[] list1, String[] list2) {
+        if (list1.length > list2.length) {
+            return findRestaurant(list2, list1);
+        }
         List<String> result = new ArrayList<>();
         Map<String, Integer> marks = new HashMap<>();
         int length = list1.length;
