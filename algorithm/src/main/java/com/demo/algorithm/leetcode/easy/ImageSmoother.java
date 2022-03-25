@@ -30,11 +30,6 @@ package com.demo.algorithm.leetcode.easy;
  * n == img[i].length
  * 1 <= m, n <= 200
  * 0 <= img[i][j] <= 255
- *
- *
- * 来源：力扣（LeetCode）
- * 链接：https://leetcode-cn.com/problems/image-smoother
- * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  */
 public class ImageSmoother {
 
@@ -66,5 +61,30 @@ public class ImageSmoother {
         }
         int count = (endX - startX + 1) * (endY - startY + 1);
         return sum / count;
+    }
+
+    //使用前缀的方式
+    public int[][] imageSmoother2(int[][] img) {
+        int m = img.length;
+        int n = img[0].length;
+        //预处理前缀和
+        int[][] marks = new int[m + 1][n + 1];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                marks[i][j] = marks[i - 1][j] + marks[i][j - 1] + img[i - 1][j - 1] - marks[i - 1][j - 1];
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int startX = Math.max(0, i - 1);
+                int endX = Math.min(m - 1, i + 1);
+                int startY = Math.max(0, j - 1);
+                int endY = Math.min(n - 1, j + 1);
+                int count = (endX - startX + 1) * (endY - startY + 1);
+                int sum = marks[endX + 1][endY + 1] - marks[startX][endY + 1] - marks[endX + 1][startY] + marks[startX][startY];
+                img[i][j] = sum / count;
+            }
+        }
+        return img;
     }
 }
