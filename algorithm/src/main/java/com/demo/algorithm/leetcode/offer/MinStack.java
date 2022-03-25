@@ -2,7 +2,7 @@ package com.demo.algorithm.leetcode.offer;
 
 /**
  * Created by chl on 2022/3/25.
- * description : 包含min函数的栈
+ * description : 剑指 Offer 30. 包含min函数的栈
  *
  * 定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数在该栈中，调用min、push及pop的时间复杂度都是O(1)。
  *
