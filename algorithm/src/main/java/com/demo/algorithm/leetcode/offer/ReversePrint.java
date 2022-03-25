@@ -36,4 +36,27 @@ public class ReversePrint {
         }
         return result;
     }
+
+    public int[] reversePrint2(ListNode head) {
+        if (head == null) {
+            return new int[0];
+        }
+        int count = 0;
+        ListNode cur = null;
+        while (head != null) {
+            count++;
+            ListNode tem = cur;
+            cur = head;
+            head = head.next;
+            cur.next = tem;
+        }
+        int[] result = new int[count];
+        int index = 0;
+        while (cur != null) {
+            result[index] = cur.val;
+            cur = cur.next;
+            index++;
+        }
+        return result;
+    }
 }
