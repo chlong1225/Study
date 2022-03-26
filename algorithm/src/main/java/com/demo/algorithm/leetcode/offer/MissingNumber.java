@@ -29,4 +29,24 @@ public class MissingNumber {
         }
         return length;
     }
+
+    public int missingNumber2(int[] nums) {
+        int length = nums.length;
+        if (nums[length - 1] == length - 1) {
+            return length;
+        }
+        int start = 0;
+        int end = length - 1;
+        while (start < end) {
+            int middle = (start + end) >> 1;
+            if (nums[middle] == middle) {
+                //此时表示缺失的数字在：middle+1~end之间
+                start = middle + 1;
+            } else {
+                //此时表示缺失的数字在：start~middle之间
+                end = middle;
+            }
+        }
+        return start;
+    }
 }
