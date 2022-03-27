@@ -24,20 +24,18 @@ public class BuyStock {
     //使用动态规划
     public int maxProfit(int[] prices) {
         int length = prices.length;
-        if (length <= 1) {
+        if (length < 2) {
             return 0;
         }
-        //当天三种状态：购买，卖出，不交易(这个忽略)
+        //当前有三种状态：1，购买，2，卖出，3，不操作
         int preBuy = -prices[0];
         int preSell = 0;
-        int buy = preBuy;
-        int sell = preSell;
+        int buy = 0;
+        int sell = 0;
         for (int i = 1; i < length; i++) {
             int price = prices[i];
-            //当前状态为购买 = 上次购买 , 之前没有买卖,这次购买
-            buy = Math.max(preBuy, -price);
-            //当前购买状态 = 上一次购买,上一次卖出+本次卖出
-            sell = Math.max(preSell, preBuy + price);
+            buy = Math.max(-price, preBuy);
+            sell = Math.max(preSell, price + preBuy);
             if (i < length - 1) {
                 preBuy = buy;
                 preSell = sell;
