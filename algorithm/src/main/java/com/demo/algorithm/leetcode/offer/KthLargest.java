@@ -18,7 +18,6 @@ import com.demo.algorithm.leetcode.entity.TreeNode;
  * 输出: 4
  *
  * 示例 2:
- *
  * 输入: root = [5,3,6,2,4,null,null,1], k = 3
  *        5
  *       / \
@@ -28,10 +27,8 @@ import com.demo.algorithm.leetcode.entity.TreeNode;
  *   /
  *  1
  * 输出: 4
- *  
  *
  * 限制：
- *
  * 1 ≤ k ≤ 二叉搜索树元素个数
  */
 public class KthLargest {
