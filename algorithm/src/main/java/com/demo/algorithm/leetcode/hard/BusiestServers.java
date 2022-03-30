@@ -85,8 +85,7 @@ public class BusiestServers {
         for (int i = 0; i < k; i++) {
             counts[i]++;
             int end = arrival[i] + load[i];
-            int[] item = {end, i};
-            dates.offer(item);
+            dates.offer(new int[]{end, i});
         }
         //记录空闲的服务器编号
         TreeSet<Integer> frees = new TreeSet<>();
@@ -105,14 +104,20 @@ public class BusiestServers {
                 //没有空闲服务器
                 continue;
             }
+            Integer index;
             if (frees.ceiling(i % k) != null) {
-                int index = frees.ceiling(i % k);
+                index = frees.ceiling(i % k);
+            } else {
+                index = frees.first();
+            }
+            if (index != null) {
                 counts[index]++;
                 int end = time + load[i];
-                dates.offer(new int[]{end, i});
+                dates.offer(new int[]{end, index});
                 if (counts[index] > max) {
                     max = counts[index];
                 }
+                frees.remove(index);
             }
         }
         //统计所有最大执行次数的服务器id
