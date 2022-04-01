@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode.contest.week283;
 
+import java.util.Arrays;
+
 /**
  * Created by chl on 2022/3/8.
  * description : 向数组中追加K个整数
@@ -22,12 +24,52 @@ package com.demo.algorithm.leetcode.contest.week283;
  * 所以追加到数组中的两个整数之和是 1 + 2 + 3 + 4 + 7 + 8 = 25 ，所以返回 25 。
  *
  * 提示：
- * 1 <= nums.length <= 105
- * 1 <= nums[i], k <= 109
+ * 1 <= nums.length <= 10^5
+ * 1 <= nums[i], k <= 10^9
  */
 public class AddKSum {
 
     public long minimalKSum(int[] nums, int k) {
-        return 0;
+        //1，对nums进行排序
+        Arrays.sort(nums);
+        long sum = 0;
+        //2，在1～nums[0]之间插入数字
+        int start = nums[0];
+        //可以追加的数量
+        long count = start - 1;
+        if (count > 0) {
+            if (k > count) {
+                k -= count;
+                //追加从1开始的count个数字
+                sum += (1 + count) * count / 2;
+            } else {
+                sum += (1L + k) * k / 2;
+                return sum;
+            }
+        }
+        //3，遍历nums，在i与i+1之前插入数字
+        int length = nums.length;
+        for (int i = 1; i < length; i++) {
+            int next = nums[i];
+            if (next - start >= 2) {
+                //start～next之间可以添加数字：start+1～next-1
+                count = next - start - 1;
+                if (k > count) {
+                    k -= count;
+                    sum += (start + next) * count / 2;
+                } else {
+                    long end = start + k;
+                    sum += (start + 1 + end) * k / 2;
+                    return sum;
+                }
+            }
+            start = next;
+        }
+        //4，在nums[length-1]之后继续插入数字
+        if (k > 0) {
+            long end = start + k;
+            sum += (start + 1 + end) * k / 2;
+        }
+        return sum;
     }
 }
