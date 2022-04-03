@@ -29,6 +29,7 @@ package com.demo.algorithm.leetcode.easy;
  */
 public class NextGreatestLetter {
 
+    //线性遍历
     public char nextGreatestLetter(char[] letters, char target) {
         if (target == 'z') {
             return letters[0];
@@ -40,5 +41,25 @@ public class NextGreatestLetter {
             }
         }
         return letters[0];
+    }
+
+    //使用二分法查找
+    public char nextGreatestLetter2(char[] letters, char target) {
+        //1，特殊场景：target比最大字符都大，返回第一个字符
+        int length = letters.length;
+        if (target >= letters[length-1]) {
+            return letters[0];
+        }
+        int start = 0;
+        int end = letters.length - 1;
+        while (start < end) {
+            int middle = (end - start) / 2 + start;
+            if (letters[middle] > target) {
+                end = middle;
+            } else {
+                start = middle + 1;
+            }
+        }
+        return letters[start];
     }
 }
