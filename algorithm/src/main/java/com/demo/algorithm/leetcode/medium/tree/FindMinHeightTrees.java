@@ -89,4 +89,65 @@ public class FindMinHeightTrees {
         }
         return step;
     }
+
+    public List<Integer> findMinHeightTrees2(int n, int[][] edges) {
+        //1，构建图的数据结构
+        List<List<Integer>> dates = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            dates.add(new ArrayList<>());
+        }
+        int length = edges.length;
+        for (int i = 0; i < length; i++) {
+            dates.get(edges[i][0]).add(edges[i][1]);
+            dates.get(edges[i][1]).add(edges[i][0]);
+        }
+        //2，获取最大长度的两个节点
+        int[] parents = new int[n];
+        for (int i = 0; i < n; i++) {
+            parents[i] = -1;
+        }
+        int x = findLongPoint(0, parents, dates);
+        int y = findLongPoint(x, parents, dates);
+        //3，获取x-y之间的路径
+        List<Integer> path = new ArrayList<>();
+        parents[x] = -1;
+        while (y != -1) {
+            path.add(y);
+            y = parents[y];
+        }
+        List<Integer> result = new ArrayList<>();
+        if (path.size() % 2 == 0) {
+            result.add(path.get(path.size() / 2 - 1));
+        }
+        result.add(path.get(path.size() / 2));
+        return result;
+    }
+
+    private int findLongPoint(int root, int[] parents, List<List<Integer>> dates) {
+        int n = dates.size();
+        boolean[] marks = new boolean[n];
+        int result = root;
+        List<Integer> curs = new ArrayList<>();
+        curs.add(root);
+        marks[root] = true;
+        List<Integer> next = new ArrayList<>();
+        while (curs.size() > 0) {
+            for (int i = 0; i < curs.size(); i++) {
+                result = curs.get(i);
+                marks[result] = true;
+                List<Integer> items = dates.get(result);
+                for (int j = 0; j < items.size(); j++) {
+                    if (!marks[items.get(j)]) {
+                        marks[items.get(j)] = true;
+                        next.add(items.get(j));
+                        parents[items.get(j)] = result;
+                    }
+                }
+            }
+            curs.clear();
+            curs.addAll(next);
+            next.clear();
+        }
+        return result;
+    }
 }
