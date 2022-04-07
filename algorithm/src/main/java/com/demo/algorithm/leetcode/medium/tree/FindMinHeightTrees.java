@@ -1,7 +1,9 @@
 package com.demo.algorithm.leetcode.medium.tree;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by chl on 2022/4/6.
@@ -147,6 +149,55 @@ public class FindMinHeightTrees {
             curs.clear();
             curs.addAll(next);
             next.clear();
+        }
+        return result;
+    }
+
+    //使用拓扑排序的思路
+    public List<Integer> findMinHeightTrees3(int n, int[][] edges) {
+        List<Integer> result = new ArrayList<>();
+        //特殊场景：只有1个节点
+        if (n == 1) {
+            result.add(0);
+            return result;
+        }
+        //1，构建图的数据
+        List<List<Integer>> dates = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            dates.add(new ArrayList<>());
+        }
+        //记录与当前节点关联的节点数量
+        int[] counts = new int[n];
+        int length = edges.length;
+        for (int i = 0; i < length; i++) {
+            dates.get(edges[i][0]).add(edges[i][1]);
+            dates.get(edges[i][1]).add(edges[i][0]);
+            counts[edges[i][0]]++;
+            counts[edges[i][1]]++;
+        }
+        Queue<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            if (counts[i] == 1) {
+                queue.offer(i);
+            }
+        }
+        int total = n;
+        while (total > 2) {
+            int size = queue.size();
+            total -= size;
+            for (int i = 0; i < size; i++) {
+                int cur = queue.poll();
+                List<Integer> items = dates.get(cur);
+                for (int j = 0; j < items.size(); j++) {
+                    counts[items.get(j)]--;
+                    if (counts[items.get(j)] == 1) {
+                        queue.offer(items.get(j));
+                    }
+                }
+            }
+        }
+        while (!queue.isEmpty()) {
+            result.add(queue.poll());
         }
         return result;
     }
