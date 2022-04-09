@@ -62,4 +62,15 @@ public class CountPrimeSetBits {
         }
         return count;
     }
+
+    public int countPrimeSetBits2(int left, int right) {
+        int count = 0;
+        for (int i = left; i <= right; i++) {
+            int num = Integer.bitCount(i);
+            if (MARKS[num]) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
