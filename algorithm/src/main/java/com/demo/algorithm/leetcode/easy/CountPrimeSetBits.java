@@ -73,4 +73,20 @@ public class CountPrimeSetBits {
         }
         return count;
     }
+
+    public int countPrimeSetBits3(int left, int right) {
+        int count = 0;
+        for (int i = left; i <= right; i++) {
+            int num = 0;
+            int x = i;
+            while (x > 0) {
+                x -= (x & -x);
+                num++;
+            }
+            if (MARKS[num]) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
