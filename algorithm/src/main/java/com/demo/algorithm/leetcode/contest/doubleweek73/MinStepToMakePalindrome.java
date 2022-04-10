@@ -35,6 +35,145 @@ package com.demo.algorithm.leetcode.contest.doubleweek73;
 public class MinStepToMakePalindrome {
 
     public int minMovesToMakePalindrome(String s) {
-        return 0;
+        int length = s.length();
+        //1，长度为1或2时，当前字符串直接为回文
+        if (length <= 2) {
+            return 0;
+        }
+        char[] dates = s.toCharArray();
+        //2，超过2个字符时，区分奇偶数长度。奇数长度时，将没有对应的字符转移到中间
+        int step = 0;
+        boolean isDouble = (length % 2 == 0);
+        int[] counts = new int[26];
+        char middle = 'a';
+        if (!isDouble) {
+            //统计每个字符的数量，判断最后居中字符
+            for (int i = 0; i < length; i++) {
+                counts[dates[i] - 'a']++;
+            }
+            for (int i = 0; i < 26; i++) {
+                if (counts[i] % 2 == 1) {
+                    middle += i;
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < length / 2; i++) {
+            int left = i;
+            int right = length - 1 - i;
+            //前后字符已经对称时，不处理
+            if (dates[left] == dates[right]) {
+                continue;
+            }
+            if (isDouble) {
+                //1，以左边的字符为标准
+                int end = right - 1;
+                while (end > left) {
+                    if (dates[end] == dates[left]) {
+                        break;
+                    }
+                    end--;
+                }
+                int spaceRight = right - end;
+                //2，以右边的字符为标准
+                int start = left + 1;
+                while (start < right) {
+                    if (dates[start] == dates[right]) {
+                        break;
+                    }
+                    start++;
+                }
+                int spaceLeft = start - left;
+                if (spaceLeft > spaceRight) {
+                    //以左边字符为标准，右边字符移动替换
+                    for (int j = end; j < right; j++) {
+                        dates[j] = dates[j + 1];
+                    }
+                    dates[right] = dates[left];
+                    step += spaceRight;
+                } else {
+                    //以右边字符为标准，左边字符移动替换
+                    for (int j = start; j > left; j--) {
+                        dates[j] = dates[j - 1];
+                    }
+                    dates[left] = dates[right];
+                    step += spaceLeft;
+                }
+            } else {
+                if (dates[left] == middle && counts[middle - 'a'] == 1) {
+                    //以右边的字符为标准
+                    int start = left + 1;
+                    while (start < right) {
+                        if (dates[start] == dates[right]) {
+                            break;
+                        }
+                        start++;
+                    }
+                    int spaceLeft = start - left;
+                    for (int j = start; j > left; j--) {
+                        dates[j] = dates[j - 1];
+                    }
+                    dates[left] = dates[right];
+                    step += spaceLeft;
+                } else if (dates[right] == middle && counts[middle - 'a'] == 1) {
+                    //以左边的字符为标准
+                    int end = right - 1;
+                    while (end > left) {
+                        if (dates[end] == dates[left]) {
+                            break;
+                        }
+                        end--;
+                    }
+                    int spaceRight = right - end;
+                    for (int j = end; j < right; j++) {
+                        dates[j] = dates[j + 1];
+                    }
+                    dates[right] = dates[left];
+                    step += spaceRight;
+                } else {
+                    //此时跟偶数相同
+                    //1，以左边的字符为标准
+                    int end = right - 1;
+                    while (end > left) {
+                        if (dates[end] == dates[left]) {
+                            break;
+                        }
+                        end--;
+                    }
+                    int spaceRight = right - end;
+                    //2，以右边的字符为标准
+                    int start = left + 1;
+                    while (start < right) {
+                        if (dates[start] == dates[right]) {
+                            break;
+                        }
+                        start++;
+                    }
+                    int spaceLeft = start - left;
+                    if (spaceLeft > spaceRight) {
+                        //以左边字符为标准，右边字符移动替换
+                        for (int j = end; j < right; j++) {
+                            dates[j] = dates[j + 1];
+                        }
+                        dates[right] = dates[left];
+                        step += spaceRight;
+                        if (dates[left] == middle) {
+                            counts[middle - 'a'] -= 2;
+                        }
+                    } else {
+                        //以右边字符为标准，左边字符移动替换
+                        for (int j = start; j > left; j--) {
+                            dates[j] = dates[j - 1];
+                        }
+                        dates[left] = dates[right];
+                        step += spaceLeft;
+                        if (dates[right] == middle) {
+                            counts[middle - 'a'] -= 2;
+                        }
+                    }
+                }
+            }
+        }
+        return step;
     }
 }
