@@ -51,7 +51,6 @@ public class MaxCountNum {
                     maxCount = marks.get(nums[i]);
                     max = nums[i];
                 }
-
             }
         }
         return max;

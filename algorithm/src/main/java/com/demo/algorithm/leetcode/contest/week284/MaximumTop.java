@@ -36,6 +36,65 @@ package com.demo.algorithm.leetcode.contest.week284;
 public class MaximumTop {
 
     public int maximumTop(int[] nums, int k) {
-        return 0;
+        int length = nums.length;
+        //1，先处理k=0,1。length=1的特殊场景
+        if (k == 0) {
+            return nums[0];
+        }
+        if (k == 1) {
+            if (length == 1) {
+                return -1;
+            } else {
+                return nums[1];
+            }
+        }
+        if (length == 1) {
+            if (k % 2 == 0) {
+                return nums[0];
+            } else {
+                return -1;
+            }
+        }
+        //2，遍历奇数位置最大值与偶数位置最大值
+        int n = Math.min(length - 1, k);
+        int maxIndex = 0;
+        int maxIndex1 = 1;
+        for (int i = 0; i <= n; i++) {
+            if (i % 2 == 0) {
+                if (nums[i] > nums[maxIndex]) {
+                    maxIndex = i;
+                }
+            } else {
+                if (nums[i] > nums[maxIndex1]) {
+                    maxIndex1 = i;
+                }
+            }
+        }
+        //3，分类讨论
+        if (nums[maxIndex] > nums[maxIndex1]) {
+            //偶数位置的数字最大
+            if (k % 2 == 0) {
+                return nums[maxIndex];
+            }
+            if (k - maxIndex >= 3) {
+                return nums[maxIndex];
+            }
+            if (k >= (length + 1)) {
+                return nums[maxIndex];
+            }
+            return nums[maxIndex1];
+        } else {
+            //此时奇数位置最大
+            if (k % 2 == 1) {
+                return nums[maxIndex1];
+            }
+            if (k - maxIndex1 >= 3) {
+                return nums[maxIndex1];
+            }
+            if (k >= (length + 1)) {
+                return nums[maxIndex1];
+            }
+            return nums[maxIndex];
+        }
     }
 }
