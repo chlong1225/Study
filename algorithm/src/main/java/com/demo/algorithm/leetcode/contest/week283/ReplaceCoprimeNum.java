@@ -1,5 +1,6 @@
 package com.demo.algorithm.leetcode.contest.week283;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,36 @@ import java.util.List;
 public class ReplaceCoprimeNum {
 
     public List<Integer> replaceNonCoprimes(int[] nums) {
-        return null;
+        List<Integer> result = new ArrayList<>();
+        int length = nums.length;
+        if (length == 1) {
+            result.add(nums[0]);
+            return result;
+        }
+        result.add(nums[0]);
+        for (int i = 1; i < length; i++) {
+            int cur = nums[i];
+            while (result.size() > 0) {
+                int pre = result.get(result.size() - 1);
+                if (cur == 1 || pre == 1) {
+                    break;
+                } else {
+                    int maxCommonFactor = getMaxCommonFactor(cur, pre);
+                    //pre与cur互质
+                    if (maxCommonFactor == 1) {
+                        break;
+                    } else {
+                        cur = pre / maxCommonFactor * cur;
+                        result.remove(result.size() - 1);
+                    }
+                }
+            }
+            result.add(cur);
+        }
+        return result;
+    }
+
+    private int getMaxCommonFactor(int a, int b) {
+        return b != 0 ? getMaxCommonFactor(b, a % b) : a;
     }
 }
