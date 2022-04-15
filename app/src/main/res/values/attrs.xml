@@ -12,4 +12,44 @@
         <attr name="expand_icon" format="reference|integer"/>
     </declare-styleable>
 
+    <!--控件设置shape类型的背景-->
+    <!--填充的颜色-->
+    <attr name="solid_color" format="color"/>
+    <!--描边的颜色-->
+    <attr name="stroke_color" format="color"/>
+    <!--描边的宽度-->
+    <attr name="stroke_width" format="dimension"/>
+    <!--四个圆角的大小-->
+    <attr name="all_radius" format="dimension"/>
+    <!--左上方的圆角大小-->
+    <attr name="top_left_radius" format="dimension"/>
+    <!--右下方的圆角大小-->
+    <attr name="top_right_radius" format="dimension"/>
+    <!--左下方的圆角大小-->
+    <attr name="bottom_left_radius" format="dimension"/>
+    <!--右下方的圆角大小-->
+    <attr name="bottom_right_radius" format="dimension"/>
+
+    <declare-styleable name="BLTextView">
+        <attr name="solid_color"/>
+        <attr name="stroke_color"/>
+        <attr name="stroke_width"/>
+        <attr name="all_radius"/>
+        <attr name="top_left_radius"/>
+        <attr name="top_right_radius"/>
+        <attr name="bottom_right_radius"/>
+        <attr name="bottom_left_radius"/>
+    </declare-styleable>
+
+    <declare-styleable name="BLConstraintLayout">
+        <attr name="solid_color"/>
+        <attr name="stroke_color"/>
+        <attr name="stroke_width"/>
+        <attr name="all_radius"/>
+        <attr name="top_left_radius"/>
+        <attr name="top_right_radius"/>
+        <attr name="bottom_right_radius"/>
+        <attr name="bottom_left_radius"/>
+    </declare-styleable>
+
 </resources>
