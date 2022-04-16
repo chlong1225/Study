@@ -43,5 +43,26 @@ public class MajorityElement {
         return 0;
     }
 
-
+    //摩尔投票法
+    public int majorityElement2(int[] nums) {
+        int length = nums.length;
+        if (length < 3) {
+            return nums[0];
+        }
+        int result = nums[0];
+        int count = 1;
+        for (int i = 1; i < length; i++) {
+            if (count == 0) {
+                result = nums[i];
+                count++;
+            } else {
+                if (nums[i] == result) {
+                    count++;
+                } else {
+                    count--;
+                }
+            }
+        }
+        return result;
+    }
 }
