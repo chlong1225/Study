@@ -49,4 +49,16 @@ public class LastRemaining {
         }
         return dates.get(0);
     }
+
+    //使用动态规划解决约瑟夫问题
+    public int lastRemaining2(int n, int m) {
+        if (n == 1) {
+            return 0;
+        }
+        int x = 0;
+        for (int i = 2; i <= n; i++) {
+            x = (x + m) % i;
+        }
+        return x;
+    }
 }
