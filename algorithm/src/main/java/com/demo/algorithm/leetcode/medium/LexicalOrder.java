@@ -49,4 +49,23 @@ public class LexicalOrder {
             dfs(i, result);
         }
     }
+
+    public List<Integer> lexicalOrder2(int n) {
+        List<Integer> result = new ArrayList<>(n);
+        int start = 1;
+        for (int i = 0; i < n; i++) {
+            result.add(start);
+            if (start * 10 <= n) {
+                start *= 10;
+            } else {
+                //遍历添加从：start~start+9。或start+1>n时截止
+                while (start % 10 == 9 || start + 1 > n) {
+                    //回溯到上一位：比如：100~109。然后11.
+                    start /= 10;
+                }
+                start++;
+            }
+        }
+        return result;
+    }
 }
