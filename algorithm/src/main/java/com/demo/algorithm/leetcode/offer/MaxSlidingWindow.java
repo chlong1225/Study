@@ -58,4 +58,39 @@ public class MaxSlidingWindow {
         }
         return result;
     }
+
+    public int[] maxSlidingWindow2(int[] nums, int k) {
+        if (nums == null || nums.length == 0) {
+            return new int[0];
+        }
+        int length = nums.length;
+        int n = length - k + 1;
+        int[] result = new int[n];
+        int maxIndex = 0;
+        for (int i = 1; i < k; i++) {
+            if (nums[i] > nums[maxIndex]) {
+                maxIndex = i;
+            }
+        }
+        result[0] = nums[maxIndex];
+        for (int i = k; i < length; i++) {
+            if (maxIndex == i - k) {
+                //重新查找最大值
+                int start = maxIndex + 1;
+                maxIndex = start;
+                for (int j = start + 1; j < start + k; j++) {
+                    if (nums[j] > nums[maxIndex]) {
+                        maxIndex = j;
+                    }
+                }
+                result[i - k + 1] = nums[maxIndex];
+            } else {
+                if (nums[i] > nums[maxIndex]) {
+                    maxIndex = i;
+                }
+                result[i - k + 1] = nums[maxIndex];
+            }
+        }
+        return result;
+    }
 }
