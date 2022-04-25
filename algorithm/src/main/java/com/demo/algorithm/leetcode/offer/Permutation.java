@@ -107,4 +107,41 @@ public class Permutation {
         }
         return result;
     }
+
+    //使用回朔算法
+    public String[] permutation3(String s) {
+        if (s == null || s.length() == 0) {
+            return new String[0];
+        }
+        List<String> dates = new ArrayList<>();
+        char[] chars = s.toCharArray();
+        dfs(chars, 0, dates);
+
+
+        return dates.toArray(new String[dates.size()]);
+    }
+
+    private void dfs(char[] chars, int index, List<String> dates) {
+        if (index == chars.length) {
+            dates.add(new String(chars));
+            return;
+        }
+        boolean[] marks = new boolean[26];
+        for (int i = index; i < chars.length; i++) {
+            if (!marks[chars[i] - 'a']) {
+                marks[chars[i] - 'a'] = true;
+                swap(index, i, chars);
+                dfs(chars, index + 1, dates);
+                //数据复位
+                swap (i,index, chars);
+            }
+        }
+    }
+
+    //两个字符交换
+    private void swap(int i, int j, char[] chars) {
+        char tem = chars[i];
+        chars[i] = chars[j];
+        chars[j] = tem;
+    }
 }
