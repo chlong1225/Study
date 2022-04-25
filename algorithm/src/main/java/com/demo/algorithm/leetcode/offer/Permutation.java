@@ -38,7 +38,7 @@ public class Permutation {
         while (step < length) {
             char c = chars[step];
             //2，遍历dates中的字符串，将c插入
-            List<String> next = new ArrayList<>();
+            Set<String> next = new HashSet<>();
             for (int i = 0; i < dates.size(); i++) {
                 String cur = dates.get(i);
                 int size = cur.length();
@@ -64,11 +64,7 @@ public class Permutation {
             dates.addAll(next);
             step++;
         }
-        String[] result = new String[dates.size()];
-        for (int i = 0; i < dates.size(); i++) {
-            result[i] = dates.get(i);
-        }
-        return result;
+        return dates.toArray(new String[dates.size()]);
     }
 
     public String[] permutation2(String s) {
