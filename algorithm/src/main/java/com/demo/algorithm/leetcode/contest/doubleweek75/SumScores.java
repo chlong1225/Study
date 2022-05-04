@@ -38,6 +38,26 @@ package com.demo.algorithm.leetcode.contest.doubleweek75;
 public class SumScores {
 
     public long sumScores(String s) {
-        return 0;
+        /**
+         * 使用扩展KMP算法,即Z数组
+         * https://oi-wiki.org/string/z-func/
+         */
+        int n = s.length();
+        int[] marks = new int[n];
+        int start = 0;
+        int end = 0;
+        for (int i = 1; i < n; i++) {
+            marks[i] = Math.max(Math.min(marks[i - start], end - i + 1), 0);
+            while (i + marks[i] < n && s.charAt(marks[i]) == s.charAt(marks[i] + i)) {
+                start = i;
+                end = i + marks[i];
+                marks[i]++;
+            }
+        }
+        long sum = n;
+        for (int i = 0; i < n; i++) {
+            sum += marks[i];
+        }
+        return sum;
     }
 }
