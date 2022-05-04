@@ -58,4 +58,26 @@ public class FindTheWinner {
         }
         return dates.get(0);
     }
+
+    public int findTheWinner2(int n, int k) {
+        /**
+         * 约瑟夫环问题，可以使用动态规划找规则
+         * F(n) = [1,2,3....n]删除一个元素，变成了
+         * [k+1,k+2,....n,1,...k-1]
+         * g(n-1) = [k+1,...n,1,...k-1]
+         * f(n) = g(n-1)
+         * f(n-1) = [1,2,3,4...n-1]
+         * 此时，需要对比g(n-1)与f(n-1)。找到关系后即可转移f(n)与f(n-1)
+         * (f(n-1)+k)%n = g(n-1). 但此时存在一个问题。转换后变成了[k+1,k+2,...n-1,0,1,....k-1]
+         * 与g(n-1)在中间=n处不相符。故修改为：(f(n-1)+k-1)%n+1
+         * f(n) = (f(n-1)+k)%n
+         * f(1) = 1
+         */
+        int[] marks = new int[n + 1];
+        marks[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            marks[i] = (marks[i - 1] + k - 1) % i + 1;
+        }
+        return marks[n];
+    }
 }
