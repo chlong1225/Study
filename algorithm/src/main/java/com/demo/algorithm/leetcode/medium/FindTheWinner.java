@@ -70,7 +70,7 @@ public class FindTheWinner {
          * 此时，需要对比g(n-1)与f(n-1)。找到关系后即可转移f(n)与f(n-1)
          * (f(n-1)+k)%n = g(n-1). 但此时存在一个问题。转换后变成了[k+1,k+2,...n-1,0,1,....k-1]
          * 与g(n-1)在中间=n处不相符。故修改为：(f(n-1)+k-1)%n+1
-         * f(n) = (f(n-1)+k)%n
+         * f(n) = (f(n-1)+k-1)%n+1
          * f(1) = 1
          */
         int[] marks = new int[n + 1];
@@ -79,5 +79,17 @@ public class FindTheWinner {
             marks[i] = (marks[i - 1] + k - 1) % i + 1;
         }
         return marks[n];
+    }
+
+    public int findTheWinner3(int n, int k) {
+        /**
+         * 动态规则转移方程：f(n) = (f(n-1)+k-1)%n+1
+         * 由于f(n)只跟f(n-1)有关，可以优化空间
+         */
+        int winer = 1;
+        for (int i = 2; i <= n; i++) {
+            winer = (winer + k - 1) % i + 1;
+        }
+        return winer;
     }
 }
