@@ -21,7 +21,7 @@ package com.demo.algorithm.leetcode.medium;
  * 提示：
  * 1 <= n <= 1690
  */
-public class NthUglyNumber {
+public class NthUglyNumber2 {
 
     public int nthUglyNumber(int n) {
         /**
