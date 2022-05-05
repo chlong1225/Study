@@ -1,5 +1,6 @@
 package com.demo.algorithm.leetcode.contest.week289;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +61,46 @@ public class MinimumRounds {
                 sum += (count / 3);
                 sum++;
             }
+        }
+        return sum;
+    }
+
+    public int minimumRounds2(int[] tasks) {
+        int length = tasks.length;
+        if (length == 1) {
+            return -1;
+        }
+        //1，任务级别进行排序
+        Arrays.sort(tasks);
+        //2，遍历统计相同数量
+        int sum = 0;
+        int pre = tasks[0];
+        int count = 1;
+        for (int i = 1; i < length; i++) {
+            if (tasks[i] == pre) {
+                count++;
+            } else {
+                if (count == 1) {
+                    return -1;
+                }
+                if (count % 3 == 0) {
+                    sum += (count / 3);
+                } else {
+                    sum += (count / 3);
+                    sum++;
+                }
+                pre = tasks[i];
+                count = 1;
+            }
+        }
+        if (count == 1) {
+            return -1;
+        }
+        if (count % 3 == 0) {
+            sum += (count / 3);
+        } else {
+            sum += (count / 3);
+            sum++;
         }
         return sum;
     }
