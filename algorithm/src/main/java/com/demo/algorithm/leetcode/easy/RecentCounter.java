@@ -37,6 +37,7 @@ import java.util.List;
 public class RecentCounter {
 
     private final List<Integer> dates = new ArrayList<>();
+    private int startIndex = 0;
 
     public RecentCounter() {
         dates.clear();
@@ -49,6 +50,21 @@ public class RecentCounter {
         //使用二分查找获取比find小的最大位置
         int index = findIndex(find);
         return dates.size() - index;
+    }
+
+    //使用双指针的方式
+    public int ping2(int t) {
+        dates.add(t);
+        //需要查找比较的起点值
+        int compare = t - 3000;
+        for (int i = startIndex; i < dates.size(); i++) {
+            if (dates.get(startIndex) < compare) {
+                startIndex++;
+            } else {
+                break;
+            }
+        }
+        return dates.size() - startIndex;
     }
 
     private int findIndex(int target) {
