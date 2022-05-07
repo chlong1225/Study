@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode.contest.week288;
 
+import java.util.Arrays;
+
 /**
  * Created by chl on 2022/4/13.
  * description : 花园的最大总美丽值
@@ -50,6 +52,70 @@ package com.demo.algorithm.leetcode.contest.week288;
 public class MaximumBeauty {
 
     public long maximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial) {
-        return 0;
+        //1，对花园中花的数量进行排序
+        Arrays.sort(flowers);
+        int length = flowers.length;
+        if (flowers[0] >= target) {
+            //2，特殊场景，所有花园都已经完善了
+            return (long) full * length;
+        }
+        //3，预处理计算前缀和
+        int[] sums = new int[length];
+        sums[0] = flowers[0];
+        for (int i = 1; i < length; i++) {
+            sums[i] = sums[i - 1] + flowers[i];
+        }
+        long max = 0;
+        for (int i = length - 1; i >= 0; i--) {
+            if (flowers[i] >= target) {
+                continue;
+            }
+            long minCount = flowers[0];
+            long maxCount = target - 1;
+            while (minCount < maxCount) {
+                long middle = (maxCount - minCount + 1) / 2 + minCount;
+                if (check(middle, i, newFlowers, sums,flowers)) {
+                    minCount = middle;
+                } else {
+                    maxCount = middle - 1;
+                }
+            }
+            //计算当前花园保持不完善的最大值
+            long total = (long) full * (length - i - 1) + minCount * partial;
+            if (total > max) {
+                max = total;
+            }
+            //当前花园填充完美
+            if (newFlowers >= (target - flowers[i])) {
+                total = (long) full * (length - i);
+                if (i > 0) {
+                    total += (long) partial * flowers[0];
+                }
+                if (total > max) {
+                    max = total;
+                }
+            }
+            newFlowers -= (target - flowers[i]);
+            if (newFlowers <= 0) {
+                return max;
+            }
+        }
+        return max;
+    }
+
+    //判断是否可以把最小值填充到value
+    private boolean check(long value, int end, long newFlowers, int[] sums, int[] flowers) {
+        //1，获取小于等于value的index
+        int start = 0;
+        while (start < end) {
+            int middle = (end - start + 1) / 2 + start;
+            if (flowers[middle] < value) {
+                start = middle;
+            } else {
+                end = middle - 1;
+            }
+        }
+        long add = (1L + start) * value - sums[start];
+        return newFlowers >= add;
     }
 }
