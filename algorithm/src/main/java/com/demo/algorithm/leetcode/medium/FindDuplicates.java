@@ -61,4 +61,23 @@ public class FindDuplicates {
         }
         return result;
     }
+
+    public List<Integer> findDuplicates2(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        int length = nums.length;
+        if (length == 1) {
+            return result;
+        }
+        int mode = length + 1;
+        for (int i = 0; i < length; i++) {
+            int tem = nums[i] % mode;
+            nums[tem - 1] += mode;
+        }
+        for (int i = 0; i < length; i++) {
+            if (nums[i] / mode == 2) {
+                result.add(i + 1);
+            }
+        }
+        return result;
+    }
 }
