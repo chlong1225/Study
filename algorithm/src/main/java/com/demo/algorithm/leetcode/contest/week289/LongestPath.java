@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.contest.week289;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by chl on 2022/5/6.
  * description : 相邻字符不同的最长路径
@@ -30,7 +33,40 @@ package com.demo.algorithm.leetcode.contest.week289;
  */
 public class LongestPath {
 
+    private int max = 0;
+
     public int longestPath(int[] parent, String s) {
-        return 0;
+        max = 0;
+        int length = parent.length;
+        List<List<Integer>> dates = new ArrayList<>(length);
+        for (int i = 0; i < length; i++) {
+            dates.add(new ArrayList<>());
+        }
+        for (int i = 1; i < length; i++) {
+            dates.get(parent[i]).add(i);
+        }
+        dfs(0, s, dates);
+        return max;
+    }
+
+    private int dfs(int cur, String s, List<List<Integer>> dates) {
+        int max1 = 0;
+        int max2 = 0;
+        List<Integer> points = dates.get(cur);
+        for (int i = 0; i < points.size(); i++) {
+            int num = dfs(points.get(i), s, dates);
+            if (s.charAt(cur) != s.charAt(points.get(i))) {
+                if (num > max1) {
+                    max2 = max1;
+                    max1 = num;
+                } else if (num > max2) {
+                    max2 = num;
+                }
+            }
+        }
+        if (max < max1 + max2 + 1) {
+            max = max1 + max2 + 1;
+        }
+        return max1+1;
     }
 }
