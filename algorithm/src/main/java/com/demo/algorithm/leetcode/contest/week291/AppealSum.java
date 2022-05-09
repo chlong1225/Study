@@ -36,7 +36,37 @@ package com.demo.algorithm.leetcode.contest.week291;
  */
 public class AppealSum {
 
+    //使用朴素枚举的解法，会超时
     public long appealSum(String s) {
-        return 0;
+        int n = s.length();
+        //1，单个字符的子串引力为1
+        long sum = n;
+        for (int i = 2; i <= n; i++) {
+            //不同长度的子串，使用滑动窗口进行统计
+            int[] counts = new int[26];
+            long diff = 0;
+            for (int j = 0; j < i; j++) {
+                int index = s.charAt(j) - 'a';
+                if (counts[index] == 0) {
+                    diff++;
+                }
+                counts[index]++;
+            }
+            sum += diff;
+            for (int j = i; j < n; j++) {
+                int delete = s.charAt(j - i) - 'a';
+                int add = s.charAt(j) - 'a';
+                if (counts[delete] == 1) {
+                    diff--;
+                }
+                counts[delete]--;
+                if (counts[add] == 0) {
+                    diff++;
+                }
+                counts[add]++;
+                sum += diff;
+            }
+        }
+        return sum;
     }
 }
