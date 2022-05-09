@@ -48,4 +48,22 @@ public class DiStringMatch {
         }
         return result;
     }
+
+    public int[] diStringMatch2(String s) {
+        int n = s.length();
+        int[] result = new int[n + 1];
+        int low = 0;
+        int height = n;
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == 'I') {
+                result[i] = low;
+                low++;
+            } else {
+                result[i] = height;
+                height--;
+            }
+        }
+        result[n] = low;
+        return result;
+    }
 }
