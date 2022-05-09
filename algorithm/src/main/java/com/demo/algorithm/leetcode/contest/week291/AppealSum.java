@@ -69,4 +69,25 @@ public class AppealSum {
         }
         return sum;
     }
+
+    //使用动态规划
+    public long appealSum2(String s) {
+        int n = s.length();
+        long cur = 1;
+        //统计字符最大的index
+        int[] indexs = new int[26];
+        indexs[s.charAt(0) - 'a'] = 1;
+        long sum = cur;
+        for (int i = 2; i <= n; i++) {
+            if (s.charAt(i - 1) == s.charAt(i - 2)) {
+                //当前字符与上一个相同
+                cur++;
+            } else {
+                cur += (i - indexs[s.charAt(i - 1) - 'a']);
+            }
+            indexs[s.charAt(i - 1) - 'a'] = i;
+            sum += cur;
+        }
+        return sum;
+    }
 }
