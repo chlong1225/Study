@@ -65,10 +65,21 @@ public class Codec {
         }
         int left = start + 1;
         int right = end;
+        //特殊场景
+        if (data[left] > node.val) {
+            //不存在左节点
+            node.right = buildTree(left, end, data);
+            return node;
+        }
+        if (node.val > data[end]) {
+            //不存在右边节点
+            node.left = buildTree(left, end, data);
+            return node;
+        }
         while (left < right) {
             int middle = (right - left) / 2 + left;
             if (data[middle] > node.val) {
-                right = middle - 1;
+                right = middle;
             } else {
                 left = middle;
                 if (data[left + 1] > node.val) {
