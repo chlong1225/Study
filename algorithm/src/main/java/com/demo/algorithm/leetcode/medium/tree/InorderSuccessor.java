@@ -64,7 +64,40 @@ public class InorderSuccessor {
         dfs(root.right, p);
     }
 
-    public static class TreeNode {
+    public TreeNode inorderSuccessor2(TreeNode root, TreeNode p) {
+        isNext = false;
+        find = false;
+        result = null;
+        /**
+         * 使用二分优化
+         */
+        dfs2(root, p);
+        return result;
+    }
+
+    private void dfs2(TreeNode root, TreeNode p) {
+        if (root == null) {
+            return;
+        }
+        if (find) {
+            return;
+        }
+        if (root.val < p.val) {
+            dfs2(root.right, p);
+        } else if (root.val == p.val) {
+            isNext = true;
+            dfs2(root.right, p);
+        } else {
+            dfs2(root.left, p);
+            if (isNext) {
+                isNext = false;
+                find = true;
+                result = root;
+            }
+        }
+    }
+
+    private static class TreeNode {
         public int val;
         public TreeNode left;
         public TreeNode right;
