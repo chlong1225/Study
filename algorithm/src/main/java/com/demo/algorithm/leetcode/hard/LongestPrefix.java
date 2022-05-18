@@ -74,4 +74,25 @@ public class LongestPrefix {
         }
         return true;
     }
+
+    //使用KMP算法
+    public String longestPrefix2(String s) {
+        int length = s.length();
+        if (length == 1) {
+            return "";
+        }
+        int k = -1;
+        int[] marks = new int[length];
+        marks[0] = -1;
+        for (int i = 1; i < length; i++) {
+            while (k > -1 && s.charAt(k + 1) != s.charAt(i)) {
+                k = marks[k];
+            }
+            if (s.charAt(k + 1) == s.charAt(i)) {
+                k++;
+            }
+            marks[i] = k;
+        }
+        return s.substring(0, marks[length - 1] + 1);
+    }
 }
