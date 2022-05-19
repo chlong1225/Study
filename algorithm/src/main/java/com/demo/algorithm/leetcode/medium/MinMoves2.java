@@ -1,7 +1,5 @@
 package com.demo.algorithm.leetcode.medium;
 
-import java.util.Arrays;
-
 /**
  * create on 2022/5/19
  * @author chenglong
@@ -28,16 +26,63 @@ import java.util.Arrays;
  */
 public class MinMoves2 {
 
+    private int[] dates;
+    private int[] marks;
+
     public int minMoves2(int[] nums) {
-        //1，排序数据
-        Arrays.sort(nums);
         int length = nums.length;
-        int target = nums[(length - 1) / 2];
+        dates = nums;
+        marks = new int[length];
+        //1，排序数据
+        sortDates(0, length - 1);
+        int target = dates[(length - 1) / 2];
         int sum = 0;
         //2，遍历统计
         for (int i = 0; i < length; i++) {
-            sum += Math.abs(nums[i] - target);
+            sum += Math.abs(dates[i] - target);
         }
         return sum;
+    }
+
+    //使用归并排序
+    private void sortDates(int start, int end) {
+        //1，拆分数据
+        if (start >= end) {
+            return;
+        }
+        int middle = (end - start) / 2 + start;
+        sortDates(start, middle);
+        sortDates(middle + 1, end);
+        //2，合并数据区间：[start~middle]与[middle+1~end]
+        int index = start;
+        int index1 = start;
+        int index2 = middle + 1;
+        int end1 = middle + 1;
+        int end2 = end + 1;
+        while (index1 < end1 && index2 < end2) {
+            if (dates[index1] > dates[index2]) {
+                marks[index] = dates[index2];
+                index2++;
+            } else {
+                marks[index] = dates[index1];
+                index1++;
+            }
+            index++;
+        }
+        if (index1 == end1) {
+            for (int i = index2; i < end2; i++) {
+                marks[index] = dates[i];
+                index++;
+            }
+        } else {
+            for (int i = index1; i < end1; i++) {
+                marks[index] = dates[i];
+                index++;
+            }
+        }
+        for (int i = start; i <= end; i++) {
+            dates[i] = marks[i];
+            marks[i] = 0;
+        }
     }
 }
