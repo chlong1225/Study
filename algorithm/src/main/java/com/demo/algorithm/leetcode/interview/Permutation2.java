@@ -65,4 +65,39 @@ public class Permutation2 {
             }
         }
     }
+
+    public String[] permutation2(String S) {
+        Set<String> ans = new HashSet<>();
+        dfs(0, S.toCharArray(), ans);
+        String[] result = new String[ans.size()];
+        Iterator<String> iterator = ans.iterator();
+        int index = 0;
+        while (iterator.hasNext()) {
+            result[index++] = iterator.next();
+        }
+        return result;
+    }
+
+    private void dfs(int index, char[] dates, Set<String> ans) {
+        if (index == dates.length) {
+            ans.add(new String(dates));
+            return;
+        }
+        HashSet<Character> marks = new HashSet<>();
+        for (int i = index; i < dates.length; i++) {
+            if (marks.contains(dates[i])) {
+                continue;
+            }
+            marks.add(dates[i]);
+            swap(i, index, dates);
+            dfs(index + 1, dates, ans);
+            swap(index, i, dates);
+        }
+    }
+
+    private void swap(int x, int y, char[] dates) {
+        char tem = dates[x];
+        dates[x] = dates[y];
+        dates[y] = tem;
+    }
 }
