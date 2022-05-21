@@ -23,26 +23,30 @@ import java.util.List;
  */
 public class Permutation {
 
+    private int index;
+
     public String[] permutation(String S) {
-        List<String> ans = new ArrayList<>();
-        List<Integer> path = new ArrayList<>();
-        dfs(0, S, path, ans);
-        String[] result = new String[ans.size()];
-        for (int i = 0; i < ans.size(); i++) {
-            result[i] = ans.get(i);
+        int length = S.length();
+        int count = 1;
+        for (int i = 2; i <= length; i++) {
+            count *= i;
         }
+        String[] result = new String[count];
+        List<Integer> path = new ArrayList<>();
+        dfs(0, S, path, result);
         return result;
     }
 
-    private void dfs(int index, String str, List<Integer> path, List<String> ans) {
+    private void dfs(int step, String str, List<Integer> path, String[] result) {
         int length = str.length();
-        if (index == length) {
+        if (step == length) {
             //构建字符串
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < path.size(); i++) {
                 builder.append(str.charAt(path.get(i)));
             }
-            ans.add(builder.toString());
+            result[index] = builder.toString();
+            index++;
             return;
         }
         for (int i = 0; i < length; i++) {
@@ -51,11 +55,11 @@ public class Permutation {
                     continue;
                 }
                 path.add(i);
-                dfs(index + 1, str, path, ans);
+                dfs(step + 1, str, path, result);
                 path.remove(path.size() - 1);
             } else {
                 path.add(i);
-                dfs(index + 1, str, path, ans);
+                dfs(step + 1, str, path, result);
                 path.remove(path.size() - 1);
             }
         }
