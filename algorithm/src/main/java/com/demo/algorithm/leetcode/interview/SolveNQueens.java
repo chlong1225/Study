@@ -97,4 +97,61 @@ public class SolveNQueens {
         }
         return result;
     }
+
+    //使用深度遍历+回溯
+    public List<List<String>> solveNQueens2(int n) {
+        List<List<String>> result = new ArrayList<>();
+        if (n == 1) {
+            List<String> items = new ArrayList<>();
+            items.add("Q");
+            result.add(items);
+            return result;
+        }
+        if (n < 4) {
+            return result;
+        }
+        List<Integer> path = new ArrayList<>();
+        dfs(0, n, path, result);
+        return result;
+    }
+
+    private void dfs(int step, int n, List<Integer> path, List<List<String>> result) {
+        if (step == n) {
+            List<String> items = new ArrayList<>();
+            for (int i = 0; i < path.size(); i++) {
+                int cur = path.get(i);
+                StringBuilder builder = new StringBuilder();
+                for (int j = 0; j < n; j++) {
+                    if (j == cur) {
+                        builder.append("Q");
+                    } else {
+                        builder.append(".");
+                    }
+                }
+                items.add(builder.toString());
+            }
+            result.add(items);
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            //判断当前位置能不能加入到path中
+            boolean check = true;
+            for (int j = 0; j < path.size(); j++) {
+                if (i == path.get(j)) {
+                    check = false;
+                    break;
+                }
+                //判断两个点是否在对角线上
+                if (Math.abs(step - j) == Math.abs(i - path.get(j))) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                path.add(i);
+                dfs(step + 1, n, path, result);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
 }
