@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.contest.week293;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * Created by chl on 2022/5/15.
  * description : 统计区间中的整数数目
@@ -40,46 +43,29 @@ package com.demo.algorithm.leetcode.contest.week293;
  * 最多调用add和count方法总计10^5次
  * 调用 count 方法至少一次
  */
-public class CountIntervals {
+public class CountIntervals2 {
 
-    private CountIntervals mLeft;
-    private CountIntervals mRight;
+    private TreeMap<Integer, Integer> marks = new TreeMap<>();
     private int total;
-    private int l;
-    private int r;
 
-    public CountIntervals() {
-        l = 1;
-        r = 1000000007;
-    }
-
-    public CountIntervals(int l, int r) {
-        this.l = l;
-        this.r = r;
+    public CountIntervals2() {
+        marks.clear();
+        total = 0;
     }
 
     public void add(int left, int right) {
-        if (total == r - l + 1) {
-            return;
+        Map.Entry<Integer, Integer> entry = marks.ceilingEntry(left);
+        while (entry != null && entry.getValue() <= right) {
+            int l = entry.getValue();
+            int r = entry.getKey();
+            left = Math.min(left, l);
+            right = Math.max(right, r);
+            total -= (r - l + 1);
+            marks.remove(r);
+            entry = marks.ceilingEntry(left);
         }
-        if (left <= l && r <= right) {
-            total = r - l + 1;
-            return;
-        }
-        int middle = (l + r) / 2;
-        if (mLeft == null) {
-            mLeft = new CountIntervals(l, middle);
-        }
-        if (mRight == null) {
-            mRight = new CountIntervals(middle + 1, r);
-        }
-        if (left <= middle) {
-            mLeft.add(left, right);
-        }
-        if (middle < right) {
-            mRight.add(left, right);
-        }
-        total = mLeft.total + mRight.total;
+        total += (right - left + 1);
+        marks.put(right, left);
     }
 
     public int count() {
