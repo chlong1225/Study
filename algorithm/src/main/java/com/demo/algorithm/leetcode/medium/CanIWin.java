@@ -37,15 +37,17 @@ import java.util.Map;
  */
 public class CanIWin {
 
-    private static final int UN_KNOW = 0;
-    private static final int FIST_WIN = 1;
-    private static final int SECOND_WIN = 2;
+    private static final int WIN = 1;
+    private static final int LOSE = -1;
 
     private int max;
-    private final Map<Integer, Integer> marks = new HashMap<>();
+    private int[] marks;
 
     public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
         //1，统计所有的和，判断特殊场景
+        if (maxChoosableInteger >= desiredTotal) {
+            return true;
+        }
         int sum = (maxChoosableInteger + 1) * maxChoosableInteger / 2;
         if (sum < desiredTotal) {
             //此时两个玩家都无法通过选择数字获胜，即先手玩家不能赢
@@ -56,45 +58,35 @@ public class CanIWin {
             return maxChoosableInteger % 2 == 1;
         }
         max = maxChoosableInteger;
-        marks.clear();
+        marks = new int[1 << maxChoosableInteger];
         //2，遍历所有的场景获取结果。使用位的0，1区分是否选中
         int result = dfs(1, 0, 0, desiredTotal);
-        return result == FIST_WIN;
+        return result == WIN;
     }
 
     private int dfs(int step, int select, int sum, int desiredTotal) {
-        if (marks.containsKey(select)) {
-            return marks.get(select);
+        if (marks[select] != 0) {
+            return marks[select];
         }
-        //当前选择的是否为先手用户
-        boolean isFirst = false;
-        if (step % 2 == 1) {
-            isFirst = true;
-        }
-        int ans = isFirst ? SECOND_WIN : FIST_WIN;
-        for (int i = 1; i <= max; i++) {
-            int tem = 1 << (i - 1);
+        for (int i = 0; i < max; i++) {
+            int tem = 1 << i;
             if ((select & tem) == 0) {
                 //第i位置的数未选中，计算选中后新的数字
                 int num = (select | tem);
-                int total = sum + i;
+                int total = sum + i + 1;
                 if (total >= desiredTotal) {
-                    ans = isFirst ? FIST_WIN : SECOND_WIN;
-                    marks.put(select, ans);
-                    return ans;
+                    marks[select] = WIN;
+                    return WIN;
                 }
                 int result = dfs(step + 1, num, total, desiredTotal);
-                if (result == (isFirst ? FIST_WIN : SECOND_WIN)) {
-                    marks.put(select, result);
-                    return result;
-                }
-                if (result == UN_KNOW) {
-                    ans = UN_KNOW;
+                if (result == LOSE) {
+                    marks[select] = WIN;
+                    return WIN;
                 }
             }
         }
-        marks.put(select, ans);
-        return ans;
+        marks[select] = LOSE;
+        return LOSE;
     }
 
     private int maxNun;
