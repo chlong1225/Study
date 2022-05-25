@@ -96,4 +96,57 @@ public class CanIWin {
         marks.put(select, ans);
         return ans;
     }
+
+    private int maxNun;
+    private int compare;
+    private int[] mark;
+
+    public boolean canIWin2(int maxChoosableInteger, int desiredTotal) {
+        /**
+         * 当前玩家赢了标记为1，输了标记为-1。默认为0
+         */
+        //1，处理特殊场景
+        if (maxChoosableInteger >= desiredTotal) {
+            return true;
+        }
+        //统计所有的数字和
+        int sum = (maxChoosableInteger + 1) * maxChoosableInteger / 2;
+        if (sum < desiredTotal) {
+            return false;
+        }
+        if (sum == desiredTotal) {
+            return maxChoosableInteger % 2 == 1;
+        }
+        //2，遍历所有的场景
+        maxNun = maxChoosableInteger;
+        compare = desiredTotal;
+        int length = 1 << maxChoosableInteger;
+        mark = new int[length];
+        int state = dfs(0, 0);
+        return state == 1;
+    }
+
+    private int dfs(int select, int total) {
+        if (mark[select] != 0) {
+            return mark[select];
+        }
+        for (int i = 0; i < maxNun; i++) {
+            int cur = 1 << i;
+            if ((select & cur) == 0) {
+                //当前位置未被选中
+                int sum = total + i + 1;
+                if (sum >= compare) {
+                    mark[select] = 1;
+                    return 1;
+                }
+                int next = select | cur;
+                if (dfs(next, sum) == -1) {
+                    mark[select] = 1;
+                    return 1;
+                }
+            }
+        }
+        mark[select] = -1;
+        return -1;
+    }
 }
