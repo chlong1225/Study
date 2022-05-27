@@ -23,15 +23,15 @@ public class FindClosest {
         if (words == null || words.length < 2) {
             return 0;
         }
-        Map<String, Integer> marks = new HashMap<>();
+        int index1 = -1;
+        int index2 = -1;
         int length = words.length;
         int min = Integer.MAX_VALUE;
-        marks.put(words[0], 0);
-        for (int i = 1; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             String cur = words[i];
             if (word1.equals(cur)) {
-                if (marks.containsKey(word2)) {
-                    int space = i - marks.get(word2);
+                if (index2 != -1) {
+                    int space = i - index2;
                     if (space == 1) {
                         return 1;
                     }
@@ -39,9 +39,10 @@ public class FindClosest {
                         min = space;
                     }
                 }
+                index1 = i;
             } else if (word2.equals(cur)) {
-                if (marks.containsKey(word1)) {
-                    int space = i - marks.get(word1);
+                if (index1 != -1) {
+                    int space = i - index1;
                     if (space == 1) {
                         return 1;
                     }
@@ -49,8 +50,8 @@ public class FindClosest {
                         min = space;
                     }
                 }
+                index2 = i;
             }
-            marks.put(cur, i);
         }
         return min == Integer.MAX_VALUE ? 0 : min;
     }
