@@ -71,8 +71,6 @@ public class CanMouseWin2 {
      */
     private static final int MAX_STEP = 1000;
 
-    private static final int MOD = 8;
-
     private static final int[][] offsets = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
 
     private String[] mGrid;
@@ -90,8 +88,7 @@ public class CanMouseWin2 {
         n = grid[0].length();
         mCatJump = catJump;
         mMouseJump = mouseJump;
-        int max = m * MOD | n;
-        marks = new int[max][max][MAX_STEP];
+        marks = new int[m * n][m * n][MAX_STEP];
         //1，查找食物的位置，猫和老鼠的初始位置
         int cat = 0;
         int mouse = 0;
@@ -99,15 +96,16 @@ public class CanMouseWin2 {
             for (int j = 0; j < n; j++) {
                 char tem = grid[i].charAt(j);
                 if (tem == 'C') {
-                    cat = i * MOD + j;
+                    cat = i * n + j;
                 } else if (tem == 'M') {
-                    mouse = i * MOD + j;
+                    mouse = i * n + j;
                 } else if (tem == 'F') {
-                    compare = i * MOD + j;
+                    compare = i * n + j;
                 }
             }
         }
-        return dfs(mouse, cat, 0) == MOUSE_WIN;
+        int state = dfs(mouse, cat, 0);
+        return state == MOUSE_WIN;
     }
 
     private int dfs(int mouse, int cat, int step) {
@@ -138,8 +136,8 @@ public class CanMouseWin2 {
     }
 
     private int catJump(int mouse, int cat, int step) {
-        int x = cat / MOD;
-        int y = cat % MOD;
+        int x = cat / n;
+        int y = cat % n;
         //原地不动
         if (dfs(mouse, cat, step + 1) == CAT_WIN) {
             marks[mouse][cat][step] = CAT_WIN;
@@ -154,7 +152,7 @@ public class CanMouseWin2 {
                         //移动到的位置为障碍物，无法继续跳跃
                         break;
                     }
-                    if (dfs(mouse, nx * MOD + ny, step + 1) == CAT_WIN) {
+                    if (dfs(mouse, nx * n + ny, step + 1) == CAT_WIN) {
                         marks[mouse][cat][step] = CAT_WIN;
                         return CAT_WIN;
                     }
@@ -168,8 +166,8 @@ public class CanMouseWin2 {
     }
 
     private int mouseJum(int mouse, int cat, int step) {
-        int x = mouse / MOD;
-        int y = mouse % MOD;
+        int x = mouse / n;
+        int y = mouse % n;
         //原地不动
         if (dfs(mouse, cat, step + 1) == MOUSE_WIN) {
             marks[mouse][cat][step] = MOUSE_WIN;
@@ -184,7 +182,7 @@ public class CanMouseWin2 {
                         //移动到的位置为障碍物，无法继续跳跃
                         break;
                     }
-                    if (dfs(nx * MOD + ny, cat, step + 1) == MOUSE_WIN) {
+                    if (dfs(nx * n + ny, cat, step + 1) == MOUSE_WIN) {
                         marks[mouse][cat][step] = MOUSE_WIN;
                         return MOUSE_WIN;
                     }
