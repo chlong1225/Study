@@ -58,36 +58,31 @@ package com.demo.algorithm.leetcode.hard;
  */
 public class CanMouseWin2 {
 
-    /**
-     * 用于标记当前状态的跳跃情况，分别对应：
-     * 老鼠跳跃
-     * 猫跳跃
-     * 两者都跳跃
-     */
-    private static final int MOUSE_JUMP = 1;
-    private static final int CAT_JUMP = 2;
-    private static final int DOUBLE_JUMP = 3;
 
     /**
      * 分别记录结果：未知；老鼠获胜；猫获胜
      */
     private static final int UN_KNOW = 0;
-    private static final int MOUSE_WIN = 101;
-    private static final int CAT_WIN = 102;
+    private static final int MOUSE_WIN = 1;
+    private static final int CAT_WIN = -1;
 
     /**
      * 最大的限制步数
      */
     private static final int MAX_STEP = 1000;
+
+    private static final int MOD = 8;
+
+    private static final int[][] offsets = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+
     private String[] mGrid;
     private int m;
     private int n;
     private int mCatJump;
     private int mMouseJump;
     //记录老鼠和猫位置对应的执行次数。
-    private int[][][][] marks;
-    private final int[] food = new int[2];
-    private final int[] bounds = new int[4];
+    private int[][][] marks;
+    private int compare;
 
     public boolean canMouseWin(String[] grid, int catJump, int mouseJump) {
         mGrid = grid;
@@ -95,222 +90,110 @@ public class CanMouseWin2 {
         n = grid[0].length();
         mCatJump = catJump;
         mMouseJump = mouseJump;
-        marks = new int[m][n][m][n];
+        int max = m * MOD | n;
+        marks = new int[max][max][MAX_STEP];
         //1，查找食物的位置，猫和老鼠的初始位置
-        int[] cat = new int[2];
-        int[] mouse = new int[2];
+        int cat = 0;
+        int mouse = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 char tem = grid[i].charAt(j);
                 if (tem == 'C') {
-                    cat[0] = i;
-                    cat[1] = j;
+                    cat = i * MOD + j;
                 } else if (tem == 'M') {
-                    mouse[0] = i;
-                    mouse[1] = j;
+                    mouse = i * MOD + j;
                 } else if (tem == 'F') {
-                    food[0] = i;
-                    food[1] = j;
+                    compare = i * MOD + j;
                 }
             }
         }
-        //2，遍历查找食物左上右下四个方向可达的位置，防止有墙壁挡住
-        checkFoodBounds(food, grid);
-        //3，模拟老鼠和猫依次跳跃
-        int state = mouseJump(1, mouse, cat);
-        if (state == MOUSE_WIN) {
-            return true;
-        }
-        return false;
+        return dfs(mouse, cat, 0) == MOUSE_WIN;
     }
 
-    //深度搜索老鼠跳跃
-    private int mouseJump(int step, int[] mouse, int[] cat) {
-        //如果老鼠跳跃次数超过MAX_STEP，判断猫获胜
-        if (step > MAX_STEP) {
+    private int dfs(int mouse, int cat, int step) {
+        if (step == MAX_STEP - 1) {
+            marks[mouse][cat][step] = CAT_WIN;
             return CAT_WIN;
         }
-        int result = UN_KNOW;
-        if (marks[mouse[0]][mouse[1]][cat[0]][cat[1]] == MOUSE_JUMP || marks[mouse[0]][mouse[1]][cat[0]][cat[1]] == DOUBLE_JUMP) {
-            return result;
+        if (mouse == cat) {
+            marks[mouse][cat][step] = CAT_WIN;
+            return CAT_WIN;
         }
-        marks[mouse[0]][mouse[1]][cat[0]][cat[1]] += MOUSE_JUMP;
-        //1，先判断老鼠是否可以直接跳跃到食物
-        if (mouse[0] == food[0]) {
-            //老鼠和食物在同一水平方向上
-            if (mouse[1] >= bounds[0] && mouse[1] <= bounds[2]) {
-                if (Math.abs(mouse[1] - food[1]) <= mMouseJump) {
-                    return MOUSE_WIN;
-                }
-            }
+        if (mouse == compare) {
+            marks[mouse][cat][step] = MOUSE_WIN;
+            return MOUSE_WIN;
         }
-        if (mouse[1] == food[1]) {
-            //老鼠和食物在同一垂直方向上
-            if (mouse[0] >= bounds[1] && mouse[0] <= bounds[3]) {
-                if (Math.abs(mouse[0] - food[0]) <= mMouseJump) {
-                    return MOUSE_WIN;
-                }
-            }
+        if (cat == compare) {
+            marks[mouse][cat][step] = CAT_WIN;
+            return CAT_WIN;
         }
-        //2，遍历老鼠跳跃的所有场景
-        //2.1，向左边跳跃
-        int end = Math.max(0, mouse[1] - mMouseJump);
-        for (int i = mouse[1]; i >= end; i--) {
-            if (mGrid[mouse[0]].charAt(i) == '#') {
-                break;
-            } else {
-                int state = catJump(step, cat, new int[]{mouse[0], i});
-                if (state == CAT_WIN) {
-                    result = CAT_WIN;
-                }
-            }
+        if (marks[mouse][cat][step] != UN_KNOW) {
+            return marks[mouse][cat][step];
         }
-        //2.2，向右边跳跃
-        end = Math.min(n - 1, mouse[1] + mMouseJump);
-        for (int i = mouse[1] + 1; i <= end; i++) {
-            if (mGrid[mouse[0]].charAt(i) == '#') {
-                break;
-            } else {
-                int state = catJump(step, cat, new int[]{mouse[0], i});
-                if (state == CAT_WIN) {
-                    result = CAT_WIN;
-                }
-            }
+        if (step % 2 == 0) {
+            return mouseJum(mouse, cat, step);
+        } else {
+            return catJump(mouse, cat, step);
         }
-        //2.3，向上方跳跃
-        end = Math.max(0, mouse[0] - mMouseJump);
-        for (int i = mouse[0] - 1; i >= end; i--) {
-            if (mGrid[i].charAt(mouse[1]) == '#') {
-                break;
-            } else {
-                int state = catJump(step, cat, new int[]{i, mouse[1]});
-                if (state == CAT_WIN) {
-                    result = CAT_WIN;
-                }
-            }
-        }
-        //2.4，向下方跳跃
-        end = Math.min(m - 1, mouse[0] + mMouseJump);
-        for (int i = mouse[0] + 1; i <= end; i++) {
-            if (mGrid[i].charAt(mouse[1]) == '#') {
-                break;
-            } else {
-                int state = catJump(step, cat, new int[]{i, mouse[1]});
-                if (state == CAT_WIN) {
-                    result = CAT_WIN;
-                }
-            }
-        }
-        return result;
     }
 
-    private int catJump(int step, int[] cat, int[] mouse) {
-        int result = UN_KNOW;
-        if (marks[mouse[0]][mouse[1]][cat[0]][cat[1]] == CAT_JUMP || marks[mouse[0]][mouse[1]][cat[0]][cat[1]] == DOUBLE_JUMP) {
-            return result;
+    private int catJump(int mouse, int cat, int step) {
+        int x = cat / MOD;
+        int y = cat % MOD;
+        //原地不动
+        if (dfs(mouse, cat, step + 1) == CAT_WIN) {
+            marks[mouse][cat][step] = CAT_WIN;
+            return CAT_WIN;
         }
-        marks[mouse[0]][mouse[1]][cat[0]][cat[1]] += CAT_JUMP;
-        //1，先判断猫是否可以直接跳跃到食物
-        if (cat[0] == food[0]) {
-            //猫和食物在同一水平方向上
-            if (cat[1] >= bounds[0] && cat[1] <= bounds[2]) {
-                if (Math.abs(cat[1] - food[1]) <= mCatJump) {
-                    return CAT_WIN;
+        for (int i = 0; i < offsets.length; i++) {
+            for (int j = 1; j <= mCatJump; j++) {
+                int nx = x + offsets[i][0] * j;
+                int ny = y + offsets[i][1] * j;
+                if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                    if (mGrid[nx].charAt(ny) == '#') {
+                        //移动到的位置为障碍物，无法继续跳跃
+                        break;
+                    }
+                    if (dfs(mouse, nx * MOD + ny, step + 1) == CAT_WIN) {
+                        marks[mouse][cat][step] = CAT_WIN;
+                        return CAT_WIN;
+                    }
+                } else {
+                    break;
                 }
             }
         }
-        if (cat[1] == food[1]) {
-            //猫和食物在同一垂直方向上
-            if (cat[0] >= bounds[1] && cat[0] <= bounds[3]) {
-                if (Math.abs(cat[0] - food[0]) <= mCatJump) {
-                    return CAT_WIN;
-                }
-            }
-        }
-        //2，遍历猫跳跃的所有场景
-        //2.1，向左边跳跃
-        int end = Math.max(0, cat[1] - mCatJump);
-        for (int i = cat[1]; i >= end; i--) {
-            if (mGrid[cat[0]].charAt(i) == '#') {
-                break;
-            } else {
-                int state = mouseJump(step + 1, mouse, new int[]{cat[0], i});
-                if (state == MOUSE_WIN) {
-                    result = MOUSE_WIN;
-                }
-            }
-        }
-        //2.2，向右边跳跃
-        end = Math.min(n - 1, cat[1] + mCatJump);
-        for (int i = cat[1] + 1; i <= end; i++) {
-            if (mGrid[cat[0]].charAt(i) == '#') {
-                break;
-            } else {
-                int state = mouseJump(step + 1, mouse, new int[]{cat[0], i});
-                if (state == MOUSE_WIN) {
-                    result = MOUSE_WIN;
-                }
-            }
-        }
-        //2.3，向上方跳跃
-        end = Math.max(0, cat[0] - mCatJump);
-        for (int i = cat[0] - 1; i >= end; i--) {
-            if (mGrid[i].charAt(cat[1]) == '#') {
-                break;
-            } else {
-                int state = mouseJump(step + 1, mouse, new int[]{i, cat[1]});
-                if (state == MOUSE_WIN) {
-                    result = MOUSE_WIN;
-                }
-            }
-        }
-        //2.4，向下方跳跃
-        end = Math.min(m - 1, cat[0] + mCatJump);
-        for (int i = cat[0] + 1; i <= end; i++) {
-            if (mGrid[i].charAt(cat[1]) == '#') {
-                break;
-            } else {
-                int state = mouseJump(step + 1, mouse, new int[]{i, cat[1]});
-                if (state == MOUSE_WIN) {
-                    result = MOUSE_WIN;
-                }
-            }
-        }
-        return result;
+        marks[mouse][cat][step] = MOUSE_WIN;
+        return MOUSE_WIN;
     }
 
-    private void checkFoodBounds(int[] food, String[] grid) {
-        bounds[0] = food[1];
-        for (int i = food[1] - 1; i >= 0; i--) {
-            if (grid[food[0]].charAt(i) == '#') {
-                break;
-            } else {
-                bounds[0] = i;
+    private int mouseJum(int mouse, int cat, int step) {
+        int x = mouse / MOD;
+        int y = mouse % MOD;
+        //原地不动
+        if (dfs(mouse, cat, step + 1) == MOUSE_WIN) {
+            marks[mouse][cat][step] = MOUSE_WIN;
+            return MOUSE_WIN;
+        }
+        for (int i = 0; i < offsets.length; i++) {
+            for (int j = 1; j <= mMouseJump; j++) {
+                int nx = x + offsets[i][0] * j;
+                int ny = y + offsets[i][1] * j;
+                if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                    if (mGrid[nx].charAt(ny) == '#') {
+                        //移动到的位置为障碍物，无法继续跳跃
+                        break;
+                    }
+                    if (dfs(nx * MOD + ny, cat, step + 1) == MOUSE_WIN) {
+                        marks[mouse][cat][step] = MOUSE_WIN;
+                        return MOUSE_WIN;
+                    }
+                } else {
+                    break;
+                }
             }
         }
-        bounds[1] = food[0];
-        for (int i = food[0] - 1; i >= 0; i--) {
-            if (grid[i].charAt(food[1]) == '#') {
-                break;
-            } else {
-                bounds[1] = i;
-            }
-        }
-        bounds[2] = food[1];
-        for (int i = food[1] + 1; i < n; i++) {
-            if (grid[food[0]].charAt(i) == '#') {
-                break;
-            } else {
-                bounds[2] = i;
-            }
-        }
-        bounds[3] = food[0];
-        for (int i = food[0] + 1; i < m; i++) {
-            if (grid[i].charAt(food[1]) == '#') {
-                break;
-            } else {
-                bounds[3] = i;
-            }
-        }
+        marks[mouse][cat][step] = CAT_WIN;
+        return CAT_WIN;
     }
 }
