@@ -49,20 +49,11 @@ public class RangeSum {
         }
         //2，对子数组和进行排序
         Arrays.sort(dates);
-        //3，区间和
-        int[] sums = new int[count];
-        sums[0] = dates[0];
-        for (int i = 1; i < count; i++) {
-            sums[i] = sums[i - 1] + dates[i];
-            sums[i] %= MOD;
-        }
-        //从left-1~right-1的和
-        int total = sums[right - 1];
-        if (left > 1) {
-            total -= sums[left - 2];
-        }
-        if (total < 0) {
-            total += MOD;
+        //3，区间求和
+        int total = 0;
+        for (int i = left - 1; i < right; i++) {
+            total += dates[i];
+            total %= MOD;
         }
         return total;
     }
