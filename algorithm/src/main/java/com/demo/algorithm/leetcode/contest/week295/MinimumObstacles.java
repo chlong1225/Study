@@ -62,6 +62,9 @@ public class MinimumObstacles {
                         continue;
                     }
                     marks[nx][ny] = marks[cur[0]][cur[1]] + grid[nx][ny];
+                    if (nx == m - 1 && ny == n - 1) {
+                        return marks[nx][ny];
+                    }
                     if (grid[nx][ny] == 0) {
                         stack.addFirst(new int[]{nx, ny});
                     } else {
