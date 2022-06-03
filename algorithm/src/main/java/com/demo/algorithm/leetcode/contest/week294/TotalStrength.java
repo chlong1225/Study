@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.contest.week294;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * Created by chl on 2022/5/22.
  * description : 巫师的总力量和
@@ -46,8 +49,64 @@ package com.demo.algorithm.leetcode.contest.week294;
  */
 public class TotalStrength {
 
-    public int totalStrength(int[] strength) {
+    private static final int MOD = 1000000007;
 
-        return 0;
+    public int totalStrength(int[] strength) {
+        int length = strength.length;
+        long base = 1;
+        if (length == 1) {
+            long total = base * strength[0] * strength[0];
+            return (int) (total % MOD);
+        }
+        //1，统计左边比当前值大的最小位置
+        int[] left = new int[length];
+        left[0] = 0;
+        Deque<Integer> stack = new ArrayDeque<Integer>();
+        stack.add(0);
+        for (int i = 1; i < length; i++) {
+            int cur = strength[i];
+            while (stack.size() > 0 && strength[stack.peekLast()] > cur) {
+                stack.pollLast();
+            }
+            if (stack.isEmpty()) {
+                left[i] = 0;
+            } else {
+                left[i] = stack.peekLast() + 1;
+            }
+            stack.add(i);
+        }
+        //2，统计右边比当前值大的最大位置
+        int[] right = new int[length];
+        right[length - 1] = length - 1;
+        stack.clear();
+        stack.add(length - 1);
+        for (int i = length - 2; i >= 0; i--) {
+            int cur = strength[i];
+            while (stack.size() > 0 && strength[stack.peekLast()] >= cur) {
+                stack.pollLast();
+            }
+            if (stack.isEmpty()) {
+                right[i] = length - 1;
+            } else {
+                right[i] = stack.peekLast() - 1;
+            }
+            stack.add(i);
+        }
+        //3，计算前缀和
+        int s = 0;
+        long[] sums = new long[length + 2];
+        for (int i = 1; i <= length; i++) {
+            s += strength[i - 1];
+            sums[i + 1] = (sums[i] + s) % MOD;
+        }
+        long total = 0;
+        for (int i = 0; i < length; i++) {
+            long count = base * (i - left[i] + 1) * (sums[right[i] + 2] - sums[i + 1]) - base * (right[i] - i + 1) * (sums[i + 1] - sums[left[i]]);
+            count %= MOD;
+            total += (count * strength[i]);
+            total %= MOD;
+        }
+        return (int) (total + MOD) % MOD;
     }
+
 }
