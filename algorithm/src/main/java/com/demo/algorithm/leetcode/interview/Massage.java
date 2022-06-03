@@ -40,4 +40,24 @@ public class Massage {
         }
         return Math.max(marks[length - 1][0], marks[length - 1][1]);
     }
+
+    public int massage2(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int length = nums.length;
+        int preUnReserve = 0;
+        int preReserve = nums[0];
+        int unReserve = 0;
+        int reserve = nums[0];
+        for (int i = 1; i < length; i++) {
+            unReserve = Math.max(preUnReserve, preReserve);
+            reserve = preUnReserve + nums[i];
+            if (i < length - 1) {
+                preUnReserve = unReserve;
+                preReserve = reserve;
+            }
+        }
+        return Math.max(unReserve, reserve);
+    }
 }
