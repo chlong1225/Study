@@ -49,4 +49,24 @@ public class WaysToChange {
         }
         return marks[n];
     }
+
+    public int waysToChange2(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        int sum = 0;
+        int a = n / 25;
+        long base = 1;
+        for (int i = 0; i <= a; i++) {
+            //挑选i个25后剩余的数量
+            int last = n - 25 * i;
+            int b = last / 10;
+            int c = last % 10 / 5;
+            long count = base * (b + 1) * (b + c + 1);
+            count %= MOD;
+            sum += count;
+            sum %= MOD;
+        }
+        return sum;
+    }
 }
