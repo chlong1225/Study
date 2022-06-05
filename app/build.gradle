@@ -65,6 +65,9 @@ dependencies {
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
     androidTestImplementation "androidx.test.ext:junit:${rootProject.ext.testJunitVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espressocoreVersion}"
+    //添加协程
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.ext.coroutineVersion}"
+
     if (isLocal.toBoolean()) {
         implementation project(path: ':common')
     }
