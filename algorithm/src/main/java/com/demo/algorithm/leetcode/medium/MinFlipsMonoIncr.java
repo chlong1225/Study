@@ -38,18 +38,16 @@ public class MinFlipsMonoIncr {
          return 0;
       }
       //记录当前字符为0,1时对应的次数
-      int[][] marks = new int[2][length + 1];
+      int count0 = 0;
+      int count1 = 1;
       for (int i = 0; i < length; i++) {
          if (s.charAt(i) == '0') {
-            //当前为0时，
-            marks[0][i + 1] = marks[0][i];
-            marks[1][i + 1] = Math.min(marks[0][i], marks[1][i]) + 1;
+            count1 = Math.min(count0, count1) + 1;
          } else {
-            //当前为1时
-            marks[0][i + 1] = marks[0][i] + 1;
-            marks[1][i + 1] = Math.min(marks[0][i], marks[1][i]);
+            count1 = Math.min(count0, count1);
+            count0++;
          }
       }
-      return Math.min(marks[0][length], marks[1][length]);
+      return Math.min(count0, count1);
    }
 }
