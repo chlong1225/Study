@@ -1,7 +1,5 @@
 package com.demo.algorithm.leetcode.medium;
 
-import java.util.TreeMap;
-
 /**
  * Created by chl on 2022/6/11.
  * description : 我的日程安排表II
@@ -33,38 +31,89 @@ import java.util.TreeMap;
  */
 public class MyCalendarTwo {
 
-    private TreeMap<Integer, Integer> marks = new TreeMap<>();
+    private static final int N = 1000000000;
+    private static final int M = 120000;
+
+    private Node[] trees = new Node[M];
+    private int mIndex = 1;
 
     public MyCalendarTwo() {
-        marks.clear();
     }
 
     public boolean book(int start, int end) {
-        if (marks.containsKey(start)) {
-            marks.put(start, marks.get(start) + 1);
-        } else {
-            marks.put(start, 1);
+        if (query(1, 1, N + 1, start + 1, end) >= 2) {
+            return false;
         }
-        if (marks.containsKey(end)) {
-            marks.put(end, marks.get(end) - 1);
-        } else {
-            marks.put(end, -1);
-        }
-        int count = 0;
-        for (int value : marks.values()) {
-            count += value;
-            if (count >= 3) {
-                marks.put(start, marks.get(start) - 1);
-                marks.put(end, marks.get(end) + 1);
-                if (marks.get(start) == 0) {
-                    marks.remove(start);
-                }
-                if (marks.get(end) == 0) {
-                    marks.remove(end);
-                }
-                return false;
-            }
-        }
+        update(1, 1, N + 1, start + 1, end, 1);
         return true;
+    }
+
+    private void update(int index, int l, int r, int start, int end, int v) {
+        if (start <= l && r <= end) {
+            trees[index].add += v;
+            trees[index].max += v;
+            return;
+        }
+        create(index);
+        pushdown(index);
+        int middle = (r - l) / 2 + l;
+        if (start <= middle) {
+            update(trees[index].ls, l, middle, start, end, v);
+        }
+        if (end > middle) {
+            update(trees[index].rs, middle + 1, r, start, end, v);
+        }
+        pushup(index);
+    }
+
+    private void pushup(int index) {
+        trees[index].max = Math.max(trees[trees[index].ls].max, trees[trees[index].rs].max);
+    }
+
+    private int query(int index, int l, int r, int start, int end) {
+        if (start <= l && r <= end) {
+            return trees[index].max;
+        }
+        create(index);
+        pushdown(index);
+        int middle = (r - l) / 2 + l;
+        int ans = 0;
+        if (start <= middle) {
+            ans = Math.max(ans, query(trees[index].ls, l, middle, start, end));
+        }
+        if (end > middle) {
+            ans = Math.max(ans, query(trees[index].rs, middle + 1, r, start, end));
+        }
+        return ans;
+    }
+
+    private void pushdown(int index) {
+        trees[trees[index].ls].add += trees[index].add;
+        trees[trees[index].rs].add += trees[index].add;
+        trees[trees[index].ls].max += trees[index].add;
+        trees[trees[index].rs].max += trees[index].add;
+        trees[index].add = 0;
+    }
+
+    private void create(int index) {
+        if (trees[index] == null) {
+            trees[index] = new Node();
+        }
+        if (trees[index].ls == 0) {
+            trees[index].ls = ++mIndex;
+            trees[trees[index].ls] = new Node();
+        }
+        if (trees[index].rs == 0) {
+            trees[index].rs = ++mIndex;
+            trees[trees[index].rs] = new Node();
+        }
+    }
+
+    static class Node{
+
+        int ls;
+        int rs;
+        int add;
+        int max;
     }
 }
