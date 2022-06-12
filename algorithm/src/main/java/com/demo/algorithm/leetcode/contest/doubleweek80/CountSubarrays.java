@@ -87,6 +87,19 @@ public class CountSubarrays {
         return start - index;
     }
 
-
-
+    public long countSubarrays2(int[] nums, long k) {
+        long total = 0;
+        long sum = 0;
+        int length = nums.length;
+        for (int left = 0, right = 0; right < length; right++) {
+            sum += nums[right];
+            int count = right - left + 1;
+            while (sum * count >= k) {
+                sum -= nums[left++];
+                count--;
+            }
+            total += count;
+        }
+        return total;
+    }
 }
