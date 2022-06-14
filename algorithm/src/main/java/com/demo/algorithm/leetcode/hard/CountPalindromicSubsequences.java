@@ -32,43 +32,49 @@ public class CountPalindromicSubsequences {
     private static final int MOD = 1000000007;
 
     public int countPalindromicSubsequences(String s) {
-        int length = s.length();
-        if (length == 1) {
+        int n = s.length();
+        //1，处理特殊情况
+        if (n == 1) {
             return 1;
         }
-        /**
-         * 使用动态规划：参数分别对于: 字母类型，即回文起始字符；字符串左边的位置；字符串右边的位置
-         * 初始化：当前left=right时，当前只有一个字符，回文数为1
-         */
-        int[][][] marks = new int[4][length][length];
-        //1，初始化条件
-        for (int i = 0; i < length; i++) {
+        //2，使用动态规则按照字符串的区间进行转移
+        int[][][] marks = new int[4][n][n];
+        for (int i = 0; i < n; i++) {
+            //指定位置单个字符数量为1
             marks[s.charAt(i) - 'a'][i][i] = 1;
         }
-        //2，遍历字符串长度
-        for (int i = 2; i <= length; i++) {
-            //遍历起始点
-            for (int j = 0; j <= length - i; j++) {
-                int left = j;
-                int right = i + j - 1;
-                for (int k = 0; k < 4; k++) {
-                    if (s.charAt(left) == s.charAt(right) && s.charAt(left) - 'a' == k) {
-                        marks[k][left][right] = 2 + (marks[0][left + 1][right-1] + marks[1][left + 1][right-1]) % MOD
-                                + (marks[2][left + 1][right-1] + marks[3][left + 1][right-1]) % MOD;
-                        marks[k][j][i + j - 1] %= MOD;
-                    } else if (s.charAt(left) - 'a' == k) {
-                        marks[k][left][right] = marks[k][left][right - 1];
-                    } else if (s.charAt(right) - 'a' == k) {
-                        marks[k][left][right] = marks[k][left + 1][right];
+        for (int len = 2; len <= n; len++) {
+            for (int i = 0; i < n + 1 - len; i++) {
+                int left = i;
+                int right = left + len - 1;
+                for (int j = 0; j < 4; j++) {
+                    if (s.charAt(left) == s.charAt(right)) {
+                        int index = s.charAt(left) - 'a';
+                        if (index == j) {
+                            marks[j][left][right] = ((marks[0][left + 1][right - 1] + marks[1][left + 1][right - 1])) % MOD;
+                            marks[j][left][right] += ((marks[2][left + 1][right - 1] + marks[3][left + 1][right - 1])) % MOD;
+                            marks[j][left][right] += 2;
+                            marks[j][left][right] %= MOD;
+                        } else {
+                            marks[j][left][right] = marks[j][left + 1][right - 1];
+                        }
                     } else {
-                        marks[k][left][right] = marks[k][left + 1][right - 1];
+                        int indexLeft = s.charAt(left) - 'a';
+                        int indexRight = s.charAt(right) - 'a';
+                        if (indexLeft == j) {
+                            marks[j][left][right] = marks[j][left][right - 1];
+                        } else if (indexRight == j) {
+                            marks[j][left][right] = marks[j][left + 1][right];
+                        } else {
+                            marks[j][left][right] = marks[j][left + 1][right - 1];
+                        }
                     }
                 }
             }
         }
-        int sum = 0;
-        for (int i = 0; i < 4; i++) {
-            sum += marks[i][0][length - 1];
+        int sum = marks[0][0][n - 1];
+        for (int i = 1; i < 4; i++) {
+            sum += marks[i][0][n - 1];
             sum %= MOD;
         }
         return sum;
