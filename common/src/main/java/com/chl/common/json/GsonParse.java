@@ -55,7 +55,7 @@ class GsonParse extends BaseJsonParse {
     private void checkGson() {
         if (mGson == null) {
             mGson = new Gson();
-            mGson = new GsonBuilder().disableHtmlEscaping().create();
+            mGson = new GsonBuilder().registerTypeAdapterFactory(new GsonDefaultAdapterFactory()).disableHtmlEscaping().create();
         }
     }
 }
