@@ -29,21 +29,20 @@ public class MinCost {
 
    public int minCost(int[][] costs) {
       int n = costs.length;
-      int[][] marks = new int[n][3];
-      marks[0][0] = costs[0][0];
-      marks[0][1] = costs[0][1];
-      marks[0][2] = costs[0][2];
-      for (int i = 1; i < n; i++) {
-         marks[i][0] = Math.min(marks[i - 1][1], marks[i - 1][2]) + costs[i][0];
-         marks[i][1] = Math.min(marks[i - 1][0], marks[i - 1][2]) + costs[i][1];
-         marks[i][2] = Math.min(marks[i - 1][0], marks[i - 1][1]) + costs[i][2];
+      int preRed = 0;
+      int preBlue = 0;
+      int preGreen = 0;
+      int red = 0;
+      int blue = 0;
+      int green = 0;
+      for (int i = 0; i < n; i++) {
+         red = Math.min(preBlue, preGreen) + costs[i][0];
+         blue = Math.min(preRed, preGreen) + costs[i][1];
+         green = Math.min(preRed, preBlue) + costs[i][2];
+         preRed = red;
+         preBlue = blue;
+         preGreen = green;
       }
-      int min = marks[n - 1][0];
-      for (int i = 1; i < 3; i++) {
-         if (min > marks[n - 1][i]) {
-            min = marks[n - 1][i];
-         }
-      }
-      return min;
+      return Math.min(red, Math.min(blue, green));
    }
 }
