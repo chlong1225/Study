@@ -9,17 +9,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getViewBinding().btnKotlin.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                LogUtil.e("AAAA","onClick : kotlin")
-                KotlinActivity.openSelf(this@MainActivity)
-            }
-        })
+        getViewBinding().btnKotlin.setOnClickListener {
+            LogUtil.e("AAAA", "onClick : kotlin")
+            KotlinActivity.openSelf(this@MainActivity)
+        }
         getViewBinding().btnSet.setOnClickListener {
             LogUtil.e("AAAA","onClick : set : $it")
             SetActivity.openSelf(this@MainActivity)
         }
-        getViewBinding().btnData.setOnClickListener({ DataActivity.openSelf(this@MainActivity) })
+        getViewBinding().btnData.setOnClickListener { DataActivity.openSelf(this@MainActivity) }
 
         getViewBinding().btnParseXml.setOnClickListener {
             StringParse.parseXml(this, R.layout.xml_test)
