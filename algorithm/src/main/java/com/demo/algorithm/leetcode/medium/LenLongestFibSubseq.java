@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.medium;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * create on 2022/7/9
  * @author chenglong
@@ -30,6 +33,11 @@ public class LenLongestFibSubseq {
     public int lenLongestFibSubseq(int[] arr) {
         int max = 0;
         int length = arr.length;
+        //1，使用hash统计，便于后续查找位置
+        Map<Integer, Integer> marks = new HashMap<>();
+        for (int i = 0; i < length; i++) {
+            marks.put(arr[i], i);
+        }
         for (int i = 0; i < length - 2; i++) {
             if (length - i <= max) {
                 return max;
@@ -44,14 +52,14 @@ public class LenLongestFibSubseq {
                 int index = j + 1;
                 while (index < length) {
                     int find = a + b;
-                    int tem = findIndex(index, arr, find);
-                    if (tem == -1) {
+                    if (marks.containsKey(find)) {
+                        count++;
+                        index = marks.get(find) + 1;
+                        a = b;
+                        b = find;
+                    } else {
                         break;
                     }
-                    count++;
-                    index = tem + 1;
-                    a = b;
-                    b = find;
                 }
                 if (count > 2) {
                     if (count > max) {
