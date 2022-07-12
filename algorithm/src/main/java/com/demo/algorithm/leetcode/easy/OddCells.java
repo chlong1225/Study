@@ -72,11 +72,19 @@ public class OddCells {
             column[indices[i][1]]++;
         }
         int count = 0;
+        //2，统计列增量时一行中奇偶数的个数
+        int oddNumber = 0;
+        for (int i = 0; i < n; i++) {
+            if (column[i] % 2 == 1) {
+                oddNumber++;
+            }
+        }
+        int evenNumber = n - oddNumber;
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if ((row[i] + column[j]) % 2 == 1) {
-                    count++;
-                }
+            if (row[i] % 2 == 0) {
+                count += oddNumber;
+            } else {
+                count += evenNumber;
             }
         }
         return count;
