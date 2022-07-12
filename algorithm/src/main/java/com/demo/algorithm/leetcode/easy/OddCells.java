@@ -59,4 +59,26 @@ public class OddCells {
         }
         return count;
     }
+
+    public int oddCells2(int m, int n, int[][] indices) {
+        //记录行添加的次数
+        int[] row = new int[m];
+        //记录列添加的次数
+        int[] column = new int[n];
+        //1，分别统计行和列的增量
+        int length = indices.length;
+        for (int i = 0; i < length; i++) {
+            row[indices[i][0]]++;
+            column[indices[i][1]]++;
+        }
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if ((row[i] + column[j]) % 2 == 1) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
