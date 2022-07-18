@@ -32,6 +32,9 @@
         <activity android:name=".StatusBarActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".LifecycleActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

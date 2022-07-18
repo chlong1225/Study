@@ -1,7 +1,6 @@
 package com.demo.study
 
 import android.os.Bundle
-import android.view.View
 import com.chl.common.utils.LogUtil
 import com.demo.study.databinding.ActivityMainBinding
 
@@ -25,6 +24,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
         getViewBinding().btnStatusBar.setOnClickListener {
             StatusBarActivity.openSelf(this@MainActivity)
+        }
+
+        getViewBinding().btnLifecycle.setOnClickListener {
+            LifecycleActivity.openSelf(this)
         }
 
     }
