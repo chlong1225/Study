@@ -1,7 +1,9 @@
 package com.demo.algorithm.leetcode.hard;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * create on 2022/7/18
@@ -17,8 +19,8 @@ import java.util.List;
  * 输入: isInfected = [[0,1,0,0,0,0,0,1],[0,1,0,0,0,0,0,1],[0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0]]
  * 输出: 10
  * 解释:一共有两块被病毒感染的区域。
- * 在第一天，添加 5 墙隔离病毒区域的左侧。病毒传播后的状态是:
- * 第二天，在右侧添加 5 个墙来隔离病毒区域。此时病毒已经被完全控制住了。
+ * 在第一天，添加5墙隔离病毒区域的左侧。病毒传播后的状态是:
+ * 第二天，在右侧添加5个墙来隔离病毒区域。此时病毒已经被完全控制住了。
  *
  * 示例 2：
  * 输入: isInfected = [[1,1,1],[1,0,1],[1,1,1]]
@@ -40,8 +42,10 @@ import java.util.List;
  */
 public class ContainVirus {
 
+    private static final int MOD = 51;
+
     //对应左上右下的偏移
-    private int[][] offsets = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+    private final int[][] offsets = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
     private boolean[][] marks;
     private int m;
     private int n;
@@ -49,22 +53,73 @@ public class ContainVirus {
     public int containVirus(int[][] isInfected) {
         m = isInfected.length;
         n = isInfected[0].length;
-        marks = new boolean[m][n];
         int count = 0;
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (isInfected[i][j] == 0 || marks[i][j]) {
+        List<List<int[]>> totals = new ArrayList<>();
+        int[] max = new int[2];
+        int index = 0;
+        while (true) {
+            totals.clear();
+            marks = new boolean[m][n];
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (isInfected[i][j] == 0 || isInfected[i][j] == -1 || marks[i][j]) {
+                        continue;
+                    }
+                    List<int[]> path = findPath(i, j, isInfected);
+                    totals.add(path);
+                    int[] tem = findCount(path, isInfected);
+                    if (totals.size() == 1) {
+                        max = tem;
+                        index = 0;
+                    } else {
+                        if (tem[1] > max[1]) {
+                            max = tem;
+                            index = totals.size() - 1;
+                        }
+                    }
+                }
+            }
+            if (totals.size() == 0) {
+                break;
+            }
+            count += max[0];
+            //最大区间安装隔离
+            List<int[]> dates = totals.get(index);
+            for (int i = 0; i < dates.size(); i++) {
+                isInfected[dates.get(i)[0]][dates.get(i)[1]] = -1;
+            }
+            //其它区间扩散
+            if (totals.size() == 1) {
+                break;
+            }
+            for (int i = 0; i < totals.size(); i++) {
+                if (i == index) {
                     continue;
                 }
-                List<int[]> path = findPath(i, j, isInfected);
-                count += findCount(path, isInfected);
+                //此时扩散
+                diffusion(totals.get(i), isInfected);
             }
         }
         return count;
     }
 
-    private int findCount(List<int[]> dates, int[][] isInfected) {
+    private void diffusion(List<int[]> date, int[][] isInfected) {
+        for (int i = 0; i < date.size(); i++) {
+            for (int j = 0; j < offsets.length; j++) {
+                int nx = date.get(i)[0] + offsets[j][0];
+                int ny = date.get(i)[1] + offsets[j][1];
+                if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                    if (isInfected[nx][ny] == 0) {
+                        isInfected[nx][ny] = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    private int[] findCount(List<int[]> dates, int[][] isInfected) {
         int count = 0;
+        Set<Integer> nums = new HashSet<>();
         for (int i = 0; i < dates.size(); i++) {
             for (int j = 0; j < offsets.length; j++) {
                 int nx = dates.get(i)[0] + offsets[j][0];
@@ -72,11 +127,12 @@ public class ContainVirus {
                 if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
                     if (isInfected[nx][ny] == 0) {
                         count++;
+                        nums.add(nx * MOD + ny);
                     }
                 }
             }
         }
-        return count;
+        return new int[]{count,nums.size()};
     }
 
     //从位置(x,y)查找连成一片的病毒
