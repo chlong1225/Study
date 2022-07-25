@@ -59,4 +59,34 @@ public class MinOperations {
         }
         return true;
     }
+
+    public int minOperations2(int[] nums, int[] numsDivide) {
+        //1，获取numsDivide的最大公约数
+        int target = getMaxCommonDivisor(numsDivide);
+        //2，对nums进行排序
+        Arrays.sort(nums);
+        int length = nums.length;
+        for (int i = 0; i < length; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            if (target % nums[i] == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int getMaxCommonDivisor(int[] numsDivide) {
+        int length = numsDivide.length;
+        int result = numsDivide[0];
+        for (int i = 1; i < length; i++) {
+            result = gcd(result, numsDivide[i]);
+        }
+        return result;
+    }
+
+    private int gcd(int a, int b) {
+        return b != 0 ? gcd(b, a % b) : a;
+    }
 }
