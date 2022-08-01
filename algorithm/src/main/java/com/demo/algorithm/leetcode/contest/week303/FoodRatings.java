@@ -4,7 +4,6 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -66,8 +65,8 @@ public class FoodRatings {
     private final Map<String, String> foodDates = new HashMap<>();
     //记录烹饪方式与食物信息的对照表
     private final Map<String, PriorityQueue<String[]>> dates = new HashMap<>();
-    //记录食物与排序对象的关系
-    private final Map<String, String[]> marks = new HashMap<>();
+    //记录食物与价格的关系
+    private final Map<String, Integer> marks = new HashMap<>();
 
     public FoodRatings(String[] foods, String[] cuisines, int[] ratings) {
         foodDates.clear();
@@ -76,10 +75,9 @@ public class FoodRatings {
         int length = foods.length;
         for (int i = 0; i < length; i++) {
             foodDates.put(foods[i], cuisines[i]);
+            marks.put(foods[i], ratings[i]);
             if (dates.containsKey(cuisines[i])) {
-                String[] pair = new String[]{"" + ratings[i], foods[i]};
-                marks.put(foods[i], pair);
-                dates.get(cuisines[i]).offer(pair);
+                dates.get(cuisines[i]).offer(new String[]{"" + ratings[i], foods[i]});
             } else {
                 PriorityQueue<String[]> items = new PriorityQueue<>((o1, o2) -> {
                     int a = Integer.parseInt(o1[0]);
@@ -89,26 +87,28 @@ public class FoodRatings {
                     }
                     return b - a;
                 });
-                String[] pair = new String[]{"" + ratings[i], foods[i]};
-                marks.put(foods[i], pair);
-                items.offer(pair);
+                items.offer(new String[]{"" + ratings[i], foods[i]});
                 dates.put(cuisines[i], items);
             }
         }
     }
 
     public void changeRating(String food, int newRating) {
-        String cusine = foodDates.get(food);
-        PriorityQueue<String[]> queue = dates.get(cusine);
-        //需要移除指定的对象
-        String[] pair = marks.get(food);
-        queue.remove(pair);
-        String[] tem = new String[]{"" + newRating, food};
-        dates.get(cusine).offer(tem);
-        marks.put(food, tem);
+        dates.get(foodDates.get(food)).offer(new String[]{"" + newRating, food});
+        marks.put(food, newRating);
     }
 
     public String highestRated(String cuisine) {
-        return dates.get(cuisine).peek()[1];
+        PriorityQueue<String[]> queue = dates.get(cuisine);
+        while (!queue.isEmpty()) {
+            String[] peek = queue.peek();
+            int price = Integer.parseInt(peek[0]);
+            if (marks.get(peek[1]) == price) {
+                return peek[1];
+            } else {
+                queue.poll();
+            }
+        }
+        return "";
     }
 }
