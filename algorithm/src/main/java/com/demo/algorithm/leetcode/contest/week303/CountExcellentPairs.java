@@ -47,7 +47,7 @@ public class CountExcellentPairs {
         int length = nums.length;
         for (int i = 0; i < length; i++) {
             if (marks.add(nums[i])) {
-                counts[getNum(nums[i])]++;
+                counts[Integer.bitCount(nums[i])]++;
             }
         }
         int[] sums = new int[MAX_COUNT + 1];
@@ -71,16 +71,5 @@ public class CountExcellentPairs {
             sum += (base * counts[i] * counts[i]);
         }
         return sum;
-    }
-
-    private int getNum(int num) {
-        int count = 0;
-        while (num > 0) {
-            if (num % 2 == 1) {
-                count++;
-            }
-            num /= 2;
-        }
-        return count;
     }
 }
