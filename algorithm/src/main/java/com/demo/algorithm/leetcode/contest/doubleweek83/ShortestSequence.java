@@ -39,6 +39,20 @@ package com.demo.algorithm.leetcode.contest.doubleweek83;
 public class ShortestSequence {
 
     public int shortestSequence(int[] rolls, int k) {
-        return 0;
+        int count = 1;
+        int[] marks = new int[k + 1];
+        int length = rolls.length;
+        int last = k;
+        for (int i = 0; i < length; i++) {
+            if (marks[rolls[i]] < count) {
+                marks[rolls[i]] = count;
+                last--;
+                if (last == 0) {
+                    count++;
+                    last = k;
+                }
+            }
+        }
+        return count;
     }
 }
