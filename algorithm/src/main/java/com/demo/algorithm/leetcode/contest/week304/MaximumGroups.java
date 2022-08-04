@@ -47,4 +47,32 @@ public class MaximumGroups {
         }
         return count;
     }
+
+    public int maximumGroups2(int[] grades) {
+        //直接从小到大依次分配，数量依次为1，2，3...n
+        int length = grades.length;
+        //此时：(n)*(n+1)/2<=length。使用二分法
+        if (length < 3) {
+            return 1;
+        }
+        int start = 1;
+        int end = length;
+        long base = 1;
+        while (start <= end) {
+            int middle = (end - start) / 2 + start;
+            long tem = base * (middle + 1) * middle / 2;
+            if (tem == length) {
+                return middle;
+            } else if (tem > length) {
+                end = middle - 1;
+            } else {
+                start = middle + 1;
+            }
+        }
+        long check = base * start * (start + 1) / 2;
+        if (check > length) {
+            return start - 1;
+        }
+        return start;
+    }
 }
