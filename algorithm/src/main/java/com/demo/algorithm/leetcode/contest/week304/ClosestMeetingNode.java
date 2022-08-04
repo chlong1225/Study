@@ -1,5 +1,6 @@
 package com.demo.algorithm.leetcode.contest.week304;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -96,6 +97,61 @@ public class ClosestMeetingNode {
                     }
                 }
             }
+        }
+        return result;
+    }
+
+    public int closestMeetingNode2(int[] edges, int node1, int node2) {
+        int n = edges.length;
+        int[] dates = new int[n];
+        Arrays.fill(dates, -1);
+        int index = 0;
+        int cur = node1;
+        dates[cur] = index++;
+        while (true) {
+            int next = edges[cur];
+            if (next == -1) {
+                break;
+            }
+            if (dates[next] != -1) {
+                break;
+            }
+            cur = next;
+            dates[cur] = index++;
+        }
+        //统计node2
+        boolean[] marks = new boolean[n];
+        cur = node2;
+        marks[cur] = true;
+        int min = Integer.MAX_VALUE;
+        int result = -1;
+        if (dates[cur] != -1) {
+            result = cur;
+            min = dates[cur];
+        }
+        index = 1;
+        while (true) {
+            int next = edges[cur];
+            if (next == -1) {
+                break;
+            }
+            cur = next;
+            if (marks[cur]) {
+                break;
+            }
+            marks[cur] = true;
+            if (dates[cur] != -1) {
+                int tem = Math.max(index, dates[cur]);
+                if (min > tem) {
+                    min = tem;
+                    result = cur;
+                } else if (min == tem) {
+                    if (result > cur) {
+                        result = cur;
+                    }
+                }
+            }
+            index++;
         }
         return result;
     }
