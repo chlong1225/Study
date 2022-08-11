@@ -30,6 +30,37 @@ package com.demo.algorithm.leetcode.contest.week304;
 public class LongestCycle {
 
     public int longestCycle(int[] edges) {
-        return 0;
+        int max = -1;
+        int n = edges.length;
+        int[] marks = new int[n];
+        int index = 1;
+        for (int i = 0; i < n; i++) {
+            if (marks[i] != 0) {
+                continue;
+            }
+            int start = index;
+            int cur = i;
+            marks[cur] = index++;
+            //此时遍历的起点：i
+            while (true) {
+                int next = edges[cur];
+                if (next == -1) {
+                    break;
+                }
+                if (marks[next] > 0) {
+                    int pre = marks[next];
+                    if (pre >= start) {
+                        int count = index - pre;
+                        if (count > max) {
+                            max = count;
+                        }
+                    }
+                    break;
+                }
+                cur = next;
+                marks[cur] = index++;
+            }
+        }
+        return max;
     }
 }
