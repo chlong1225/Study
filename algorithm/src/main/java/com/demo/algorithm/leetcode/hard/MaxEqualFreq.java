@@ -71,4 +71,33 @@ public class MaxEqualFreq {
         }
         return max;
     }
+
+    private static final int MAX_COUNT = 100001;
+
+    public int maxEqualFreq2(int[] nums) {
+        //统计每个数字出现的次数
+        int[] counts = new int[MAX_COUNT];
+        //统计出现次数的次数
+        int[] dates = new int[MAX_COUNT];
+        int length = nums.length;
+        int max = 0;
+        //最多相同数字的数量
+        int maxCount = 0;
+        for (int i = 0; i < length; i++) {
+            int cur = nums[i];
+            int pre = counts[cur];
+            counts[cur]++;
+            if (pre > 0) {
+                dates[pre]--;
+            }
+            dates[pre + 1]++;
+            if (maxCount < pre + 1) {
+                maxCount = pre + 1;
+            }
+            if (maxCount == 1 || maxCount * dates[maxCount] == i || (maxCount + (maxCount - 1) * dates[maxCount - 1] == i + 1)) {
+                max = Math.max(max, i + 1);
+            }
+        }
+        return max;
+    }
 }
