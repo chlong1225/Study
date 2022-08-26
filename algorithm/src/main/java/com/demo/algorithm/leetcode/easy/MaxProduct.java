@@ -36,4 +36,23 @@ public class MaxProduct {
         return (nums[length - 1] - 1) * (nums[length - 2] - 1);
     }
 
+    public int maxProduct2(int[] nums) {
+        int max = nums[0];
+        int second = -1;
+        //遍历查找最大值与第二大值
+        int length = nums.length;
+        for (int i = 1; i < length; i++) {
+            int cur = nums[i];
+            if (max < cur) {
+                second = max;
+                max = cur;
+            } else {
+                if (cur > second) {
+                    second = cur;
+                }
+            }
+        }
+        return (max - 1) * (second - 1);
+    }
+
 }
