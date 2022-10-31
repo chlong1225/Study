@@ -1,4 +1,4 @@
-package com.demo.algorithm.leetcode.contest.doulbeweek84;
+package com.demo.algorithm.leetcode.contest.doubleweek84;
 
 import java.util.HashMap;
 import java.util.Map;
