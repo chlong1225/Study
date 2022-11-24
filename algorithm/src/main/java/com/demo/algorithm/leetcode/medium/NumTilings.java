@@ -35,4 +35,34 @@ public class NumTilings {
         }
         return marks[n][3];
     }
+
+    public int numTilings2(int n) {
+        /**
+         * 经统计分析：
+         * f(1) =1
+         * f(2) =2
+         * f(3)=f(2)+f(1)+2=5
+         * f(4)=f(3)+(2)+2(f(1)+1)=11
+         * f(5)=f(4)+f(3)+2(f(2)+f(1)+1)=24
+         * 规律：f(n+1)=f(n)+f(n-1)+2*(f(n-2)+....+1)
+         * 计算可得：f(n+1)=2*f(n)+f(n-2)
+         */
+        if (n == 1) {
+            return 1;
+        }
+        if (n == 2) {
+            return 2;
+        }
+        if (n == 3) {
+            return 5;
+        }
+        int[] marks = new int[n + 1];
+        marks[1] = 1;
+        marks[2] = 2;
+        marks[3] = 5;
+        for (int i = 4; i <= n; i++) {
+            marks[i] = (2 * marks[i - 1] % MOD + marks[i - 3]) % MOD;
+        }
+        return marks[n];
+    }
 }
