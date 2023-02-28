@@ -98,4 +98,25 @@ public class MergeSimilarItems {
         }
         return result;
     }
+
+    //使用桶排序的方式
+    public List<List<Integer>> mergeSimilarItems2(int[][] items1, int[][] items2) {
+        List<List<Integer>> result = new ArrayList<>();
+        int[] counts = new int[1001];
+        for (int i = 0; i < items1.length; i++) {
+            counts[items1[i][0]] += items1[i][1];
+        }
+        for (int i = 0; i < items2.length; i++) {
+            counts[items2[i][0]] += items2[i][1];
+        }
+        for (int i = 0; i < 1001; i++) {
+            if (counts[i] > 0) {
+                List<Integer> tem = new ArrayList<>(2);
+                tem.add(i);
+                tem.add(counts[i]);
+                result.add(tem);
+            }
+        }
+        return result;
+    }
 }
