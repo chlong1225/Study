@@ -34,22 +34,15 @@ public class MinimumDeletions {
          * marks[i][1]对应当前位置为b时删除的字母数量
          */
         int[][] marks = new int[length][2];
-        boolean hasB = false;
-        for (int i = 0; i < length; i++) {
-            char c = s.charAt(i);
-            if (hasB) {
-                if (c == 'a') {
-                    marks[i][0] = marks[i - 1][0];
-                    marks[i][1] = marks[i - 1][1] + 1;
-                } else {
-                    marks[i][0] = marks[i - 1][0] + 1;
-                    marks[i][1] = Math.min(marks[i - 1][0], marks[i - 1][1]);
-                }
+        marks[0][0] = s.charAt(0) == 'b' ? 1 : 0;
+        marks[0][1] = 0;
+        for (int i = 1; i < length; i++) {
+            if (s.charAt(i) == 'a') {
+                marks[i][0] = marks[i - 1][0];
+                marks[i][1] = marks[i - 1][1] + 1;
             } else {
-                if (c == 'b') {
-                    hasB = true;
-                    marks[i][0] = 1;
-                }
+                marks[i][0] = marks[i - 1][0] + 1;
+                marks[i][1] = Math.min(marks[i - 1][0], marks[i - 1][1]);
             }
         }
         return Math.min(marks[length - 1][0], marks[length - 1][1]);
