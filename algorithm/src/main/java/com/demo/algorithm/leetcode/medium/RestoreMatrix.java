@@ -7,7 +7,7 @@ package com.demo.algorithm.leetcode.medium;
  *
  * 给你两个非负整数数组rowSum和colSum，其中rowSum[i]是二维矩阵中第i行元素的和，colSum[j]是第j列元素的和。换言之你不知道矩阵里的每个元素，但是你知道每一行和每一列的和。
  * 请找到大小为rowSum.length x colSum.length的任意非负整数矩阵，且该矩阵满足rowSum和colSum的要求。
- * 请你返回任意一个满足题目要求的二维矩阵，题目保证存在 至少一个 可行矩阵。
+ * 请你返回任意一个满足题目要求的二维矩阵，题目保证存在 至少一个可行矩阵。
  *
  * 示例 1：
  * 输入：rowSum = [3,8], colSum = [4,7]
@@ -61,6 +61,57 @@ public class RestoreMatrix {
                 result[i][j] = Math.min(colSum[j], rowSum[i]);
                 colSum[j] -= result[i][j];
                 rowSum[i] -= result[i][j];
+            }
+        }
+        return result;
+    }
+
+    public int[][] restoreMatrix2(int[] rowSum, int[] colSum) {
+        int m = rowSum.length;
+        int n = colSum.length;
+        int[][] result = new int[m][n];
+        if (m == 1 && n == 1) {
+            result[0][0] = rowSum[0];
+        }
+        int i = 0;
+        int j = 0;
+        while (i < m || j < n) {
+            if (i == m) {
+                if (colSum[j] > 0) {
+                    result[i - 1][j] = colSum[j];
+                }
+                j++;
+            } else if (j == n) {
+                if (rowSum[i] > 0) {
+                    result[i][j - 1] = rowSum[i];
+                }
+                i++;
+            } else {
+                if (rowSum[i] == 0) {
+                    i++;
+                    continue;
+                }
+                if (colSum[j] == 0) {
+                    j++;
+                    continue;
+                }
+                if (rowSum[i] > colSum[j]) {
+                    result[i][j] = colSum[j];
+                    rowSum[i] -= colSum[j];
+                    colSum[j] = 0;
+                    j++;
+                } else if (rowSum[i] == colSum[j]) {
+                    result[i][j] = rowSum[i];
+                    rowSum[i] = 0;
+                    colSum[j] = 0;
+                    i++;
+                    j++;
+                } else {
+                    result[i][j] = rowSum[i];
+                    colSum[j] -= rowSum[i];
+                    rowSum[i] = 0;
+                    i++;
+                }
             }
         }
         return result;
