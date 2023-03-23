@@ -48,7 +48,7 @@ public class CheckArithmeticSubarrays {
         for (int i = 0; i < m; i++) {
             int startIndex = l[i];
             int endIndex = r[i];
-            result.add(checkNum(startIndex, endIndex, nums));
+            result.add(checkNum2(startIndex, endIndex, nums));
         }
         return result;
     }
@@ -69,6 +69,43 @@ public class CheckArithmeticSubarrays {
             if (tem != compare) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    private boolean checkNum2(int start, int end, int[] nums) {
+        if (end - start == 1) {
+            return true;
+        }
+        int min = nums[start];
+        int max = nums[start];
+        for (int i = start + 1; i <= end; i++) {
+            if (nums[i] > max) {
+                max = nums[i];
+            } else if (nums[i] < min) {
+                min = nums[i];
+            }
+        }
+        if (min == max) {
+            return true;
+        }
+        int space = end - start;
+        if ((max - min) % space != 0) {
+            return false;
+        }
+        //等差数列的差
+        int compare = (max - min) / space;
+        boolean[] marks = new boolean[space + 1];
+        for (int i = start; i <= end; i++) {
+            int tem = nums[i] - min;
+            if (tem % compare != 0) {
+                return false;
+            }
+            int index = tem / compare;
+            if (marks[index]) {
+                return false;
+            }
+            marks[index] = true;
         }
         return true;
     }
