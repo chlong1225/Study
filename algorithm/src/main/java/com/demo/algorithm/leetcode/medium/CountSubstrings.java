@@ -69,6 +69,9 @@ public class CountSubstrings {
         for (int i = 0; i < n; i++) {
             if (s.charAt(sIndex + i) != t.charAt(tIndex + i)) {
                 diff++;
+                if (diff > 1) {
+                    break;
+                }
             }
         }
         return diff;
