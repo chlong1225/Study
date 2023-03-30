@@ -64,6 +64,40 @@ public class CountSubstrings {
         return count;
     }
 
+    public int countSubstrings2(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        int[][] lefts = new int[m + 1][n + 1];
+        int[][] rights = new int[m + 1][n + 1];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (s.charAt(i) == t.charAt(j)) {
+                    lefts[i + 1][j + 1] = lefts[i][j] + 1;
+                } else {
+                    lefts[i + 1][j + 1] = 0;
+                }
+            }
+        }
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (s.charAt(i) == t.charAt(j)) {
+                    rights[i][j] = rights[i + 1][j + 1] + 1;
+                } else {
+                    rights[i][j] = 0;
+                }
+            }
+        }
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (s.charAt(i) != t.charAt(j)) {
+                    count += (lefts[i][j] + 1) * (rights[i + 1][j + 1] + 1);
+                }
+            }
+        }
+        return count;
+    }
+
     private int checkDiff(int sIndex, int tIndex, int n, String s, String t) {
         int diff = 0;
         for (int i = 0; i < n; i++) {
