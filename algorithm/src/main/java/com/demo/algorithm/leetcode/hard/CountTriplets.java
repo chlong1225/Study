@@ -58,4 +58,30 @@ public class CountTriplets {
         }
         return count;
     }
+
+    public int countTriplets2(int[] nums) {
+        int n = nums.length;
+        int[] marks = new int[1 << 16];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                marks[nums[i] & nums[j]]++;
+            }
+        }
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            int x = nums[i] ^ (0xffff);
+            /**
+             * 分析：在marks中查找和x与运算为0的值
+             * 比如：x = 1110000111，x异或:y = 0001111000。此时x&y=0。这个时候y是存在1最多的值。
+             * 可以依次较少1的数量：比如：0001110000，0000111000, ...0001100000，0001000000均满足&x = 0
+             */
+            int y = x;
+            while (y != 0) {
+                count += marks[y];
+                y = (y - 1) & x;
+            }
+            count += marks[0];
+        }
+        return count;
+    }
 }
