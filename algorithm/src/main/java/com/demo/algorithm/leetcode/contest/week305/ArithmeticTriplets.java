@@ -34,25 +34,18 @@ package com.demo.algorithm.leetcode.contest.week305;
 public class ArithmeticTriplets {
 
     public int arithmeticTriplets(int[] nums, int diff) {
-        int max = 201;
-        boolean[] marks = new boolean[max];
+        int max = 200;
+        boolean[] marks = new boolean[max + 1];
         int length = nums.length;
         for (int i = 0; i < length; i++) {
             marks[nums[i]] = true;
         }
         int count = 0;
         for (int i = 0; i < length - 2; i++) {
-            int cur = nums[i];
-            int next = cur + diff;
-            if (next >= max) {
-                break;
-            }
-            if (marks[next]) {
-                int three = next + diff;
-                if (three >= max) {
-                    break;
-                }
-                if (marks[three]) {
+            int next = nums[i] + diff;
+            if (next < max && marks[next]) {
+                int last = next + diff;
+                if (last <= max && marks[last]) {
                     count++;
                 }
             }
