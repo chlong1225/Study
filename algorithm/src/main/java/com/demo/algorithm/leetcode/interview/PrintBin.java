@@ -47,4 +47,30 @@ public class PrintBin {
         }
         return "ERROR";
     }
+
+    public String printBin2(double num) {
+        if (num == 0) {
+            return "0";
+        }
+        if (num == 1) {
+            return "1";
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append("0.");
+        int step = 0;
+        while (step < 30) {
+            num *= 2;
+            if (num >= 1) {
+                builder.append("1");
+                num--;
+            } else {
+                builder.append("0");
+            }
+            step++;
+            if (num == 0) {
+                return builder.toString();
+            }
+        }
+        return "ERROR";
+    }
 }
