@@ -62,4 +62,28 @@ public class MinScoreTriangulation {
         marks[start][end] = min;
         return min;
     }
+
+    public int minScoreTriangulation2(int[] values) {
+        int n = values.length;
+        int[][] marks = new int[n][n];
+        /**
+         * 动态规划方程
+         * marks[i][j] = marks[i][k]+marks[k][j]+value[i]*value[k]*value[j]
+         */
+        for (int i = n - 3; i >= 0; i--) {
+            //刚好三个点时
+            marks[i][i + 2] = values[i] * values[i + 1] * values[i + 2];
+            for (int j = i + 3; j < n; j++) {
+                //此时i～j至少4个点
+                marks[i][j] = Integer.MAX_VALUE;
+                for (int k = i + 1; k < j; k++) {
+                    int tem = marks[i][k] + marks[k][j] + values[i] * values[j] * values[k];
+                    if (tem < marks[i][j]) {
+                        marks[i][j] = tem;
+                    }
+                }
+            }
+        }
+        return marks[0][n - 1];
+    }
 }
