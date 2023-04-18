@@ -35,67 +35,32 @@ public class MaxAncestorDiff {
 
     public int maxAncestorDiff(TreeNode root) {
         maxSpace = 0;
-        dfs(root);
+        dfs(root, root.val, root.val);
         return maxSpace;
     }
 
-    private void dfs(TreeNode root) {
-        //空节点或叶子节点结束
-        if (root == null || (root.left == null && root.right == null)) {
+    /**
+     * @param root：当前节点
+     * @param min：所有祖父节点最小值
+     * @param max：所有祖父节点最大值
+     */
+    private void dfs(TreeNode root, int min, int max) {
+        if (root == null) {
             return;
         }
-        //root为A节点
+        int space = Math.max(Math.abs(root.val - min), Math.abs(root.val - max));
+        if (space > maxSpace) {
+            maxSpace = space;
+        }
+        min = Math.min(min, root.val);
+        max = Math.max(max, root.val);
         if (root.left != null) {
-            int min = dfsMin(root.left);
-            int max = dfsMax(root.left);
-            int space = Math.max(Math.abs(root.val - min), Math.abs(root.val - max));
-            if (space > maxSpace) {
-                maxSpace = space;
-            }
-            dfs(root.left);
+            dfs(root.left, min, max);
         }
         if (root.right != null) {
-            int min = dfsMin(root.right);
-            int max = dfsMax(root.right);
-            int space = Math.max(Math.abs(root.val - min), Math.abs(root.val - max));
-            if (space > maxSpace) {
-                maxSpace = space;
-            }
-            dfs(root.right);
+            dfs(root.right, min, max);
         }
     }
 
-    private int dfsMax(TreeNode root) {
-        int max = root.val;
-        if (root.left != null) {
-            int left = dfsMax(root.left);
-            if (left > max) {
-                max = left;
-            }
-        }
-        if (root.right != null) {
-            int right = dfsMax(root.right);
-            if (right > max) {
-                max = right;
-            }
-        }
-        return max;
-    }
 
-    private int dfsMin(TreeNode root) {
-        int min = root.val;
-        if (root.left != null) {
-            int left = dfsMin(root.left);
-            if (left < min) {
-                min = left;
-            }
-        }
-        if (root.right != null) {
-            int right = dfsMin(root.right);
-            if (right < min) {
-                min = right;
-            }
-        }
-        return min;
-    }
 }
