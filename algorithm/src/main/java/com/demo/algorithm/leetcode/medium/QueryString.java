@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.medium;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * create on 2023/5/11
  * @author chenglong
@@ -33,5 +36,27 @@ public class QueryString {
             }
         }
         return true;
+    }
+
+    public boolean queryString2(String s, int n) {
+        Set<Integer> marks = new HashSet<>();
+        int start = 0;
+        while (start < s.length()) {
+            if (s.charAt(start) == '0') {
+                start++;
+            } else {
+                int cur = 1;
+                marks.add(cur);
+                for (int i = start + 1; i < s.length(); i++) {
+                    cur = cur * 2 + (s.charAt(i) - '0');
+                    if (cur > n) {
+                        break;
+                    }
+                    marks.add(cur);
+                }
+                start++;
+            }
+        }
+        return marks.size() == n;
     }
 }
