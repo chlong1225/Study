@@ -35,34 +35,32 @@ package com.demo.algorithm.leetcode.contest.doubleweek90;
 public class OddString {
 
     public String oddString(String[] words) {
-        int[] dates1 = getDiff(words[0]);
-        int[] dates2 = getDiff(words[1]);
-        int[] dates3 = getDiff(words[2]);
-        if (isSame(dates1, dates2)) {
-            if (isSame(dates1, dates3)) {
-                for (int i = 3; i < words.length; i++) {
-                    int[] dates = getDiff(words[i]);
-                    if (!isSame(dates1, dates)) {
-                        return words[i];
-                    }
+        int[] diff1 = getDiff(words[0]);
+        int[] diff2 = getDiff(words[1]);
+        if (isSame(diff1, diff2)) {
+            //此时words[0]是相同的字符
+            for (int i = 2; i < words.length; i++) {
+                int[] compare = getDiff(words[i]);
+                if (!isSame(diff1, compare)) {
+                    return words[i];
                 }
-                return "";
-            } else {
-                return words[2];
             }
         } else {
-            if (isSame(dates1, dates3)) {
+            //此时words[0]与words[1]中有一个不同
+            int[] compare = getDiff(words[2]);
+            if (isSame(diff1, compare)) {
                 return words[1];
             } else {
                 return words[0];
             }
         }
+        return "";
     }
 
-    private boolean isSame(int[] dates1, int[] dates2) {
-        int length = dates1.length;
-        for (int i = 0; i < length; i++) {
-            if (dates1[i] != dates2[i]) {
+    private boolean isSame(int[] data, int[] compare) {
+        int n = data.length;
+        for (int i = 0; i < n; i++) {
+            if (data[i] != compare[i]) {
                 return false;
             }
         }
@@ -77,4 +75,6 @@ public class OddString {
         }
         return diff;
     }
+
+
 }
