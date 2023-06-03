@@ -132,7 +132,7 @@ public class NumTilePossibilities {
         sum += dates[3] * (dates[3] - 1) * 10;
         sum += dates[3] * (dates[2] - 1) * (letterCount - 2) * 60;
         sum += dates[3] * (letterCount - 1) * (letterCount - 2) * (letterCount - 3) * 20;
-        sum += dates[2] * (dates[2] - 1) * (dates[2] - 2) * 10;
+        sum += dates[2] * (dates[2] - 1) * (dates[2] - 2) * 15;
         sum += dates[2] * (dates[2] - 1) * (letterCount - 2) * (letterCount - 3) * 45;
         sum += dates[2] * (letterCount - 1) * (letterCount - 2) * (letterCount - 3) * (letterCount - 4) * 15;
         if (letterCount >= 6) {
@@ -157,7 +157,7 @@ public class NumTilePossibilities {
         sum += dates[3] * (dates[2] - 1) * 10;
         sum += dates[3] * (letterCount - 1) * (letterCount - 2) * 10;
         sum += dates[2] * (dates[2] - 1) * (letterCount - 2) * 15;
-        sum += dates[2] * (letterCount - 1) * (letterCount - 2) * (letterCount - 3) * 9;
+        sum += dates[2] * (letterCount - 1) * (letterCount - 2) * (letterCount - 3) * 10;
         if (letterCount >= 5) {
             sum += letterCount * (letterCount - 1) * (letterCount - 2) * (letterCount - 3) * (letterCount - 4);
         }
