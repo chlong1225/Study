@@ -33,12 +33,13 @@ public class EqualPairs {
         int n = grid.length;
         int count = 0;
         for (int i = 0; i < n; i++) {
-            //用于对应的行数据
+            //第i行
             int[] compare = grid[i];
             for (int j = 0; j < n; j++) {
                 boolean isSame = true;
+                //第j列
                 for (int k = 0; k < n; k++) {
-                    if (grid[k][j] != compare[k]) {
+                    if (compare[k] != grid[k][j]) {
                         isSame = false;
                         break;
                     }
@@ -48,7 +49,6 @@ public class EqualPairs {
                 }
             }
         }
-
         return count;
     }
 }
