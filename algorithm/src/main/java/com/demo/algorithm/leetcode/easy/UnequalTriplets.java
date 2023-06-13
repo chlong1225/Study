@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode.easy;
 
+import java.util.Arrays;
+
 /**
  * create on 2023/6/13
  * @author chenglong
@@ -41,6 +43,38 @@ public class UnequalTriplets {
                     if (nums[i] != nums[j] && nums[i] != nums[k] && nums[j] != nums[k]) {
                         count++;
                     }
+                }
+            }
+        }
+        return count;
+    }
+
+    public int unequalTriplets2(int[] nums) {
+        int count = 0;
+        //1，排序
+        Arrays.sort(nums);
+        int n = nums.length;
+        //查找第一个不同数字最后的index
+        int pre = 0;
+        for (int i = 1; i < n; i++) {
+            if (nums[pre] != nums[i]) {
+                break;
+            } else {
+                pre = i;
+            }
+        }
+        int cur = pre + 1;
+        while (cur < n - 1) {
+            int tem = 1;
+            for (int i = cur + 1; i < n; i++) {
+                if (nums[i] == nums[cur]) {
+                    tem++;
+                    cur = i;
+                } else {
+                    count += (pre + 1) * tem * (n - tem - pre - 1);
+                    pre = cur;
+                    cur = i;
+                    break;
                 }
             }
         }
