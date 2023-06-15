@@ -31,7 +31,37 @@ package com.demo.algorithm.leetcode.hard;
 public class MinMoves {
 
     public int minMoves(int[] nums, int k) {
-
-        return 0;
+        if (k == 1) {
+            return 0;
+        }
+        int min = Integer.MAX_VALUE;
+        int n = nums.length;
+        //获取i数量个1对应的index
+        int[] positions = new int[n + 1];
+        int[] sums = new int[n + 1];
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 1) {
+                index++;
+                positions[index] = i - index;
+                sums[index] = positions[index] + sums[index - 1];
+                if (index >= k) {
+                    //此时区间[start,i]中包含k个
+                    int startIndex = index - k + 1;
+                    int start = positions[startIndex] + startIndex;
+                    if (i - start + 1 == k) {
+                        //特殊场景，连续区包含的都是1，不需要交换
+                        return 0;
+                    }
+                    //计算[start,i]之间最小的移动次数
+                    int middle = (startIndex + index) / 2;
+                    int step = sums[index] - 2 * sums[middle - 1] + sums[startIndex - 1] + (2 * middle - index - 1 - startIndex) * positions[middle];
+                    if (step < min) {
+                        min = step;
+                    }
+                }
+            }
+        }
+        return min;
     }
 }
