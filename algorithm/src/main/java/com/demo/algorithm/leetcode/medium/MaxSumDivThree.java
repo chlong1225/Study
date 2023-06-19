@@ -89,4 +89,47 @@ public class MaxSumDivThree {
         }
         return sum;
     }
+
+    public int maxSumDivThree2(int[] nums) {
+        int n = nums.length;
+        //分别对应余数为0，1，2的和
+        int[][] marks = new int[n + 1][3];
+        for (int i = 0; i < n; i++) {
+            int cur = nums[i];
+            if (cur % 3 == 0) {
+                marks[i + 1][0] = cur + marks[i][0];
+                if (marks[i][1] > 0) {
+                    marks[i + 1][1] = cur + marks[i][1];
+                }
+                if (marks[i][2] > 0) {
+                    marks[i + 1][2] = cur + marks[i][2];
+                }
+            } else if (cur % 3 == 1) {
+                if (marks[i][2] > 0) {
+                    marks[i + 1][0] = Math.max(marks[i][0], marks[i][2] + cur);
+                } else {
+                    marks[i + 1][0] = marks[i][0];
+                }
+                marks[i + 1][1] = Math.max(marks[i][1], marks[i][0] + cur);
+                if (marks[i][1] > 0) {
+                    marks[i + 1][2] = Math.max(marks[i][2], marks[i][1] + cur);
+                } else {
+                    marks[i + 1][2] = marks[i][2];
+                }
+            } else {
+                if (marks[i][1] > 0) {
+                    marks[i + 1][0] = Math.max(marks[i][0], marks[i][1] + cur);
+                } else {
+                    marks[i + 1][0] = marks[i][0];
+                }
+                if (marks[i][2] > 0) {
+                    marks[i + 1][1] = Math.max(marks[i][1], marks[i][2] + cur);
+                } else {
+                    marks[i + 1][1] = marks[i][1];
+                }
+                marks[i + 1][2] = Math.max(marks[i][2], marks[i][0] + cur);
+            }
+        }
+        return marks[n][0];
+    }
 }
