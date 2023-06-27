@@ -33,7 +33,42 @@ public class DieSimulator {
     private static final int MOD = 1000000007;
 
     public int dieSimulator(int n, int[] rollMax) {
+        if (n == 1) {
+            return 6;
+        }
+        /**
+         * 动态规划：marks[i][j][k]
+         * i：次数 ； j：最近一次的骰子的大小0～5。k：骰子数为j的连续个数
+         */
+        int[][][] marks = new int[n + 1][6][16];
+        for (int i = 0; i < 6; i++) {
+            marks[1][i][1] = 1;
+        }
+        for (int i = 2; i <= n; i++) {
+            for (int j = 0; j < 6; j++) {
+                //当前骰子数为j
+                marks[i][j][1] = 0;
+                for (int k = 0; k < 6; k++) {
+                    if (j != k) {
+                        for (int l = 0; l < 16; l++) {
+                            marks[i][j][1] += marks[i - 1][k][l];
+                            marks[i][j][1] %= MOD;
+                        }
+                    }
+                }
+                for (int k = 2; k <= rollMax[j]; k++) {
+                    marks[i][j][k] = marks[i - 1][j][k - 1];
+                }
 
-        return 0;
+            }
+        }
+        int sum = 0;
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 16; j++) {
+                sum += marks[n][i][j];
+                sum %= MOD;
+            }
+        }
+        return sum;
     }
 }

@@ -47,97 +47,125 @@ public class ShortestPathAllKeys {
     private static final int[][] OFFSET = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
 
     public int shortestPathAllKeys(String[] grid) {
-        int min = Integer.MAX_VALUE;
         int m = grid.length;
         int n = grid[0].length();
-        //1，统计钥匙的数量与起点
-        int target = 0;
-        List<int[]> dates = new ArrayList<>();
+        //1，统计所有的钥匙的数量与起点并给钥匙进行编号：0～count-1
+        int[] indexs = new int[26];
+        int count = 0;
+        int startX = 0;
+        int startY = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                char c = grid[i].charAt(j);
-                if (c >= 'a' && c <= 'f') {
-                    target |= (1 << (c - 'a'));
+                if (grid[i].charAt(j) >= 'a' && grid[i].charAt(j) <= 'z') {
+                    indexs[grid[i].charAt(j) - 'a'] = count;
+                    count++;
                 }
-                if (c == '@') {
-                    //当前位置为起点
-                    dates.add(new int[]{i, j, 0, 0});
+                if (grid[i].charAt(j) == '@') {
+                    startX = i;
+                    startY = j;
                 }
             }
         }
-        //分别对应位置(i,j),钥匙数k。marks[i][j][k]:移动的步数
-        int[][][] marks = new int[m][n][target + 1];
-        for (int i = 0; i < dates.size(); i++) {
-            int[] cur = dates.get(i);
-            marks[cur[0]][cur[1]][cur[2]] = cur[3];
+        //2，使用二进制记录钥匙的出现。
+        int target = (1 << count) - 1;
+        int step = 0;
+        List<int[]> curs = new ArrayList<>();
+        List<int[]> nexts = new ArrayList<>();
+        curs.add(new int[]{startX, startY, 0});
+        List<Integer>[][] marks = new List[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                marks[i][j] = new ArrayList<>();
+            }
         }
-        List<int[]> next = new ArrayList<>();
-        while (dates.size() > 0) {
-            for (int i = 0; i < dates.size(); i++) {
-                //当前位置(x,y),当前步数step，当前钥匙数，使用二进制数表示
-                int x = dates.get(i)[0];
-                int y = dates.get(i)[1];
-                int step = dates.get(i)[2];
-                int num = dates.get(i)[3];
-                if (step + 1 >= min) {
-                    //下一步的数量已经超过最小步数时，后面的数据无效
-                    continue;
-                }
+        marks[startX][startY].add(0);
+        while (curs.size() > 0) {
+            step++;
+            for (int i = 0; i < curs.size(); i++) {
+                int[] cur = curs.get(i);
                 for (int j = 0; j < OFFSET.length; j++) {
-                    int nx = x + OFFSET[j][0];
-                    int ny = y + OFFSET[j][1];
-                    if (nx < 0 || nx >= m || ny < 0 || ny >= n) {
-                        //移动越界，当前移动无效
-                        continue;
-                    }
-                    char c = grid[nx].charAt(ny);
-                    if (c == '#' || c == '@') {
-                        //移动到墙壁或再次回到起点，当前移动无效
-                        continue;
-                    }
-                    if (c >= 'a' && c <= 'f') {
-                        //当前为钥匙
-                        int nextNum = num | (1 << (c - 'a'));
-                        if (marks[nx][ny][num] != 0 && marks[nx][ny][nextNum] <= step + 1) {
-                            //之前搜索过
+                    int nx = cur[0] + OFFSET[j][0];
+                    int ny = cur[1] + OFFSET[j][1];
+                    if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                        char c = grid[nx].charAt(ny);
+                        if (c == '#') {
+                            //此时为墙壁无法通过
                             continue;
                         }
-                        marks[nx][ny][nextNum] = step + 1;
-                        next.add(new int[]{nx, ny, step + 1, nextNum});
-                        if (nextNum == target) {
-                            if (min > target + 1) {
-                                min = target + 1;
+                        if (c == '.' || c == '@') {
+                            //空房间或回到起点
+                            if (marks[nx][ny].size() == 0) {
+                                //当前位置没有经过
+                                marks[nx][ny].add(cur[2]);
+                                nexts.add(new int[]{nx, ny, cur[2]});
+                            } else {
+                                List<Integer> keys = marks[nx][ny];
+                                if (checkValidKey(keys, cur[2])) {
+                                    addKey(keys, cur[2]);
+                                    nexts.add(new int[]{nx, ny, cur[2]});
+                                }
+                            }
+                        } else if (c >= 'a' && c <= 'z') {
+                            //此时为钥匙
+                            int index = indexs[c - 'a'];
+                            int num = cur[2] | (1 << index);
+                            if (num == target) {
+                                return step;
+                            }
+                            if (marks[nx][ny].size() == 0) {
+                                marks[nx][ny].add(num);
+                                nexts.add(new int[]{nx, ny, num});
+                            } else {
+                                List<Integer> keys = marks[nx][ny];
+                                if (checkValidKey(keys, num)) {
+                                    addKey(keys, num);
+                                    nexts.add(new int[]{nx, ny, num});
+                                }
+                            }
+                        } else {
+                            //此时为锁，需要判断是否可以打开通过
+                            int findIndex = indexs[c - 'A'];
+                            if ((cur[2] & (1 << findIndex)) != 0) {
+                                if (marks[nx][ny].size() == 0) {
+                                    //当前位置没有经过
+                                    marks[nx][ny].add(cur[2]);
+                                    nexts.add(new int[]{nx, ny, cur[2]});
+                                } else {
+                                    List<Integer> keys = marks[nx][ny];
+                                    if (checkValidKey(keys, cur[2])) {
+                                        addKey(keys, cur[2]);
+                                        nexts.add(new int[]{nx, ny, cur[2]});
+                                    }
+                                }
                             }
                         }
                     }
-                    if (c >= 'A' && c <= 'F') {
-                        //当前位置为锁，需要判断是否找到钥匙
-                        int tem = 1 << (c - 'A');
-                        if ((tem & num) == 0) {
-                            //没有找到钥匙
-                            continue;
-                        }
-                        //下一步数据（nx，ny，num，step+1）
-                        if (marks[nx][ny][num] != 0 && marks[nx][ny][num] <= step + 1) {
-                            continue;
-                        }
-                        marks[nx][ny][num] = step + 1;
-                        next.add(new int[]{nx, ny, step + 1, num});
-                    }
-                    if (c == '.') {
-                        //空房间
-                        if (marks[nx][ny][num] != 0 && marks[nx][ny][num] <= step + 1) {
-                            continue;
-                        }
-                        marks[nx][ny][num] = step + 1;
-                        next.add(new int[]{nx, ny, step + 1, num});
-                    }
                 }
             }
-            dates.clear();
-            dates.addAll(next);
-            next.clear();
+            curs.clear();
+            curs.addAll(nexts);
+            nexts.clear();
         }
-        return min == Integer.MAX_VALUE ? -1 : min;
+        return -1;
+    }
+
+    private void addKey(List<Integer> keys, int key) {
+        for (int i = keys.size() - 1; i >= 0; i--) {
+            int cur = keys.get(i);
+            if ((cur & key) == cur) {
+                keys.remove(i);
+            }
+        }
+        keys.add(key);
+    }
+
+    private boolean checkValidKey(List<Integer> keys, int compare) {
+        for (int i = 0; i < keys.size(); i++) {
+            int cur = keys.get(i);
+            if ((compare & cur) == compare) {
+                return false;
+            }
+        }
+        return true;
     }
 }
