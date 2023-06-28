@@ -67,6 +67,20 @@ public class TilingRectangle {
                 min = count;
                 return;
             }
+        } else {
+            //此时右边可能没有空间，需要检查
+            boolean hasFind = false;
+            for (int i = startY; i < n; i++) {
+                if (!marks[startX][startY]) {
+                    hasFind = true;
+                    startY = i;
+                    break;
+                }
+            }
+            if (!hasFind) {
+                dfs(startX, n, marks, count);
+                return;
+            }
         }
         //从点(startX,startY)开始搜索可以覆盖的最大瓷砖
         int size = getMaxSize(startX, startY, marks);

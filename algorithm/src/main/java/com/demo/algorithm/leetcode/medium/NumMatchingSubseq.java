@@ -76,6 +76,9 @@ public class NumMatchingSubseq {
             int pre = start;
             start = marks[pre][find];
             if (start == pre) {
+                start = marks[pre + 1][find];
+            }
+            if (start == -1) {
                 return false;
             }
             index++;
