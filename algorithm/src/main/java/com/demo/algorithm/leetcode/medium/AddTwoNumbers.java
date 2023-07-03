@@ -94,12 +94,12 @@ public class AddTwoNumbers {
     //链表反转
     private ListNode reverse(ListNode l1) {
         ListNode p = l1;
-        ListNode head = new ListNode(l1.val);
-        while (p.next != null) {
-            ListNode tem = new ListNode(p.next.val);
+        ListNode head = null;
+        while (p != null) {
+            ListNode pre = p;
             p = p.next;
-            tem.next = head;
-            head = tem;
+            pre.next = head;
+            head = pre;
         }
         return head;
     }
