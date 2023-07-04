@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.easy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * create by chenglong on 9/13/21
  * description : 两数之和 II - 输入有序数组
@@ -71,6 +74,24 @@ public class TwoSum {
             }
         }
         return -1;
+    }
+
+    public int[] twoSum2(int[] nums, int target) {
+        int[] result = new int[2];
+        int length = nums.length;
+        Map<Integer, Integer> marks = new HashMap<>();
+        for (int i = 0; i < length; i++) {
+            marks.put(nums[i], i);
+        }
+        for (int i = 0; i < length; i++) {
+            int find = target - nums[i];
+            if (marks.containsKey(find) && marks.get(find) != i) {
+                result[0] = i;
+                result[1] = marks.get(find);
+                return result;
+            }
+        }
+        return result;
     }
 
 }

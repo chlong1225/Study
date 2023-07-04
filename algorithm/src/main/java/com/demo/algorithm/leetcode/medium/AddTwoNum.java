@@ -64,4 +64,59 @@ public class AddTwoNum {
         return result.next;
     }
 
+    public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        ListNode root = new ListNode();
+        ListNode p = root;
+        int add = 0;
+        while (l1 != null && l2 != null) {
+            int sum = l1.val + l2.val + add;
+            if (sum >= 10) {
+                sum -= 10;
+                add = 1;
+            } else {
+                add = 0;
+            }
+            p.next = new ListNode(sum);
+            p = p.next;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        if (l1 == null) {
+            while (l2 != null) {
+                int sum = l2.val + add;
+                if (sum >= 10) {
+                    sum -= 10;
+                    add = 1;
+                } else {
+                    add = 0;
+                }
+                p.next = new ListNode(sum);
+                p = p.next;
+                l2 = l2.next;
+            }
+        } else {
+            while (l1 != null) {
+                int sum = l1.val + add;
+                if (sum >= 10) {
+                    sum -= 10;
+                    add = 1;
+                } else {
+                    add = 0;
+                }
+                p.next = new ListNode(sum);
+                p = p.next;
+                l1 = l1.next;
+            }
+        }
+        if (add > 0) {
+            p.next = new ListNode(add);
+        }
+        return root.next;
+    }
 }
