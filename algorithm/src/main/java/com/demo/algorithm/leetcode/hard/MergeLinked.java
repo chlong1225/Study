@@ -82,4 +82,40 @@ public class MergeLinked {
         }
         return head.next;
     }
+
+    public ListNode mergeKLists2(ListNode[] lists) {
+        ListNode head = new ListNode();
+        if (lists.length > 0) {
+            for (int i = 0; i < lists.length; i++) {
+                merge(head, lists[i]);
+            }
+        }
+        return head.next;
+    }
+
+    private void merge(ListNode head, ListNode list) {
+        ListNode p = head.next;
+        ListNode result = new ListNode();
+        ListNode q = result;
+        while (p != null && list != null) {
+            if (p.val < list.val) {
+                ListNode tem = p;
+                p = p.next;
+                tem.next = null;
+                q.next = tem;
+            } else {
+                ListNode tem = list;
+                list = list.next;
+                tem.next = null;
+                q.next = tem;
+            }
+            q = q.next;
+        }
+        if (p == null) {
+            q.next = list;
+        } else {
+            q.next = p;
+        }
+        head.next = result.next;
+    }
 }
