@@ -1,5 +1,7 @@
 package com.demo.algorithm.leetcode.medium;
 
+import com.demo.algorithm.leetcode.entity.TreeNode;
+
 /**
  * create on 2022/5/11
  * @author chenglong
@@ -30,79 +32,79 @@ public class Codec {
         }
         StringBuilder builder = new StringBuilder();
         builder.append("[");
-        dfs(root, builder);
-        builder.delete(builder.length() - 1, builder.length());
+        builder.append(dfs(root));
         builder.append("]");
         return builder.toString();
     }
 
-    private void dfs(TreeNode root, StringBuilder builder) {
-        if (root == null) {
-            return;
-        }
+    private String dfs(TreeNode root) {
+        StringBuilder builder = new StringBuilder();
         builder.append(root.val);
-        builder.append(",");
-        dfs(root.left, builder);
-        dfs(root.right, builder);
+        if (root.left != null) {
+            builder.append(",");
+            builder.append(dfs(root.left));
+        }
+        if (root.right != null) {
+            builder.append(",");
+            builder.append(dfs(root.right));
+        }
+        return builder.toString();
     }
 
     public TreeNode deserialize(String data) {
-        if ("[]".equals(data)) {
+        if (data == null || data.isEmpty() || "[]".equals(data)) {
             return null;
         }
+        //获取树节点的值
         String[] split = data.substring(1, data.length() - 1).split(",");
-        int[] nums = new int[split.length];
-        for (int i = 0; i < split.length; i++) {
+        int n = split.length;
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++) {
             nums[i] = Integer.parseInt(split[i]);
         }
-        return buildTree(0, split.length - 1, nums);
+        TreeNode root = new TreeNode(nums[0]);
+        if (n > 1) {
+            buildTree(root, 1, n - 1, nums);
+        }
+        return root;
     }
 
-    private TreeNode buildTree(int start, int end, int[] data) {
-        TreeNode node = new TreeNode(data[start]);
+    private void buildTree(TreeNode root, int start, int end, int[] nums) {
+        if (start > end) {
+            return;
+        }
+        int compare = root.val;
         if (start == end) {
-            return node;
-        }
-        int left = start + 1;
-        int right = end;
-        //特殊场景
-        if (data[left] > node.val) {
-            //不存在左节点
-            node.right = buildTree(left, end, data);
-            return node;
-        }
-        if (node.val > data[end]) {
-            //不存在右边节点
-            node.left = buildTree(left, end, data);
-            return node;
-        }
-        while (left < right) {
-            int middle = (right - left) / 2 + left;
-            if (data[middle] > node.val) {
-                right = middle;
+            //此时只有一个节点
+            if (nums[start] < compare) {
+                root.left = new TreeNode(nums[start]);
             } else {
-                left = middle;
-                if (data[left + 1] > node.val) {
-                    break;
-                }
+                root.right = new TreeNode(nums[start]);
             }
-        }
-        if (start + 1 <= left) {
-            node.left = buildTree(start + 1, left, data);
-        }
-        if (left + 1 <= end) {
-            node.right = buildTree(left + 1, end, data);
-        }
-        return node;
-    }
-
-    public static class TreeNode {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-
-        public TreeNode(int x) {
-            val = x;
+        } else {
+            if (compare < nums[start]) {
+                //此时只有右节点
+                root.right = new TreeNode(nums[start]);
+                buildTree(root.right, start + 1, end, nums);
+            } else if (compare > nums[end]) {
+                //此时只有左节点
+                root.left = new TreeNode(nums[start]);
+                buildTree(root.left, start + 1, end, nums);
+            } else {
+                //此时左右节点都有，查找右节点的起始位置
+                int findIndex = -1;
+                for (int i = start + 1; i <= end; i++) {
+                    if (nums[i] > compare) {
+                        findIndex = i;
+                        break;
+                    }
+                }
+                //此时左节点区间[start,findIndex-1]，右节点区间[findIndex,end]
+                root.left = new TreeNode(nums[start]);
+                buildTree(root.left, start + 1, findIndex - 1, nums);
+                root.right = new TreeNode(nums[findIndex]);
+                buildTree(root.right, findIndex + 1, end, nums);
+            }
         }
     }
 }
