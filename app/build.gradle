@@ -68,6 +68,8 @@ dependencies {
     //添加协程
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.ext.coroutineVersion}"
 
+    implementation 'androidx.work:work-runtime:2.8.1'
+
     if (isLocal.toBoolean()) {
         implementation project(path: ':common')
     }
