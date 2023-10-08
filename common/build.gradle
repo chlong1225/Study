@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
@@ -41,7 +41,7 @@ dependencies {
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
     androidTestImplementation "androidx.test.ext:junit:${rootProject.ext.testJunitVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espressocoreVersion}"
-    //网络请求库okhttpl
+    //网络请求库okhttp
     implementation "com.squareup.okhttp3:okhttp:${rootProject.ext.okhttpVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.ext.okhttpVersion}"
     implementation 'com.google.code.gson:gson:2.8.9'
