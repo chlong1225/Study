@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -13,5 +14,16 @@
         android:layout_marginStart="20dp"
         android:textSize="16sp"
         android:text="Kotlin代码示例页"/>
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        android:layout_marginTop="10dp"
+        android:text="start"
+        android:textAllCaps="false"
+        android:gravity="center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

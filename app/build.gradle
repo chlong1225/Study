@@ -67,6 +67,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espressocoreVersion}"
     //添加协程
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.ext.coroutineVersion}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.coroutineVersion}"
 
     implementation 'androidx.work:work-runtime:2.8.1'
 
