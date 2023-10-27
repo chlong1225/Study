@@ -73,6 +73,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.lifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.lifecycleVersion}"
 
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
     implementation 'androidx.work:work-runtime:2.8.1'
 
     if (isLocal.toBoolean()) {

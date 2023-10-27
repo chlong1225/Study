@@ -41,9 +41,9 @@ class KotlinActivity : BaseActivity<ActivityKotlinBinding>() {
         super.onCreate(savedInstanceState)
 
         getViewBinding().btnStart.setOnClickListener {
-//            start()
-//            testCoroutineContext()
-//            testCoroutineStart()
+            start()
+            testCoroutineContext()
+            testCoroutineStart()
 //            testCoroutineExceptionHandler()
         }
     }
