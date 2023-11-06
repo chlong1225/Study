@@ -41,8 +41,13 @@ public class MaxWordProduct {
                 return o2.length() - o1.length();
             }
         });
-        //2，遍历查询
+        //2，将string转换为int便于计算比较
         int n = words.length;
+        int[] dates = new int[n];
+        for (int i = 0; i < n; i++) {
+            dates[i] = stringToInt(words[i]);
+        }
+        //3，遍历查询
         for (int i = 0; i < n - 1; i++) {
             //当前遍历条件下可能的最大值
             int checkMax = words[i].length() * words[i + 1].length();
@@ -55,7 +60,7 @@ public class MaxWordProduct {
                 if (tem <= max) {
                     break;
                 }
-                if (hasSameWord(words[i], words[j])) {
+                if ((dates[i] & dates[j]) == 0) {
                     max = tem;
                     break;
                 }
@@ -64,17 +69,12 @@ public class MaxWordProduct {
         return max;
     }
 
-    private boolean hasSameWord(String word, String compare) {
-        boolean[] dates = new boolean[26];
+    private int stringToInt(String word) {
+        int result = 0;
         for (int i = 0; i < word.length(); i++) {
-            dates[word.charAt(i) - 'a'] = true;
+            int index = word.charAt(i) - 'a';
+            result |= (1 << index);
         }
-        for (int i = 0; i < compare.length(); i++) {
-            int index = compare.charAt(i) - 'a';
-            if (dates[index]) {
-                return false;
-            }
-        }
-        return true;
+        return result;
     }
 }
