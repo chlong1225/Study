@@ -31,13 +31,12 @@ public class MaxSubArray {
 
     public int maxSubArray(int[] nums) {
         int n = nums.length;
-        int[] marks = new int[n];
-        marks[0] = nums[0];
-        int max = marks[0];
+        int sum = nums[0];
+        int max = nums[0];
         for (int i = 1; i < n; i++) {
-            marks[i] = Math.max(marks[i - 1] + nums[i], nums[i]);
-            if (marks[i] > max) {
-                max = marks[i];
+            sum = Math.max(nums[i], sum + nums[i]);
+            if (sum > max) {
+                max = sum;
             }
         }
         return max;
