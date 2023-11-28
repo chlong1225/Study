@@ -1,5 +1,8 @@
 package com.demo.algorithm.leetcode.medium;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * create on 2023/11/28
  * @author chenglong
@@ -42,191 +45,71 @@ package com.demo.algorithm.leetcode.medium;
  */
 public class FrontMiddleBackQueue {
 
-    private int size;
-    private LinkedNode head;
-    private LinkedNode middle;
-    private LinkedNode last;
+    private final Deque<Integer> left = new ArrayDeque<>();
+    private final Deque<Integer> right = new ArrayDeque<>();
 
     public FrontMiddleBackQueue() {
-        size = 0;
-        head = null;
-        middle = null;
-        last = null;
+        left.clear();
+        right.clear();
     }
 
     public void pushFront(int val) {
-        LinkedNode node = new LinkedNode(val);
-        if (size == 0) {
-            head = node;
-        } else if (size == 1) {
-            last = head;
-            head = node;
-        } else if (size == 2) {
-            middle = head;
-            head = node;
-            head.next = middle;
-            middle.pre = head;
-            middle.next = last;
-            last.pre = middle;
-        } else {
-            head.pre = node;
-            node.next = head;
-            head = node;
-            if (size % 2 == 1) {
-                middle = middle.pre;
-            }
+        left.addFirst(val);
+        if (left.size() == right.size() + 2) {
+            right.addFirst(left.pollLast());
         }
-        size++;
     }
 
     public void pushMiddle(int val) {
-        LinkedNode node = new LinkedNode(val);
-        if (size == 0) {
-            head = node;
-        } else if (size == 1) {
-            last = head;
-            head = node;
-        } else if (size == 2) {
-            middle = node;
-            head.next = middle;
-            middle.pre = head;
-            middle.next = last;
-            last.pre = middle;
+        if (left.size() == right.size()) {
+            left.addLast(val);
         } else {
-            if (size % 2 == 0) {
-                //此时节点数为偶数。middle为两个中间的左边
-                node.pre = middle;
-                node.next = middle.next;
-                middle.next.pre = node;
-                middle.next = node;
-                middle = node;
-            } else {
-                //此时节点数为奇数，middle为正中间。节点添加在middle左边，并且middle重新赋值为node
-                node.pre = middle.pre;
-                middle.pre.next = node;
-                middle.pre = node;
-                node.next = middle;
-                middle = node;
-            }
+            right.addFirst(left.pollLast());
+            left.addLast(val);
         }
-        size++;
     }
 
     public void pushBack(int val) {
-        LinkedNode node = new LinkedNode(val);
-        if (size == 0) {
-            head = node;
-        } else if (size == 1) {
-            last = node;
-        } else if (size == 2) {
-            middle = last;
-            last = node;
-            head.next = middle;
-            middle.pre = head;
-            middle.next = last;
-            last.next = middle;
-        } else {
-            last.next = node;
-            node.pre = last;
-            last = node;
-            if (size % 2 == 0) {
-                middle = middle.next;
-            }
+        right.addLast(val);
+        if (right.size() > left.size()) {
+            left.addLast(right.pollFirst());
         }
-        size++;
     }
 
     public int popFront() {
-        if (size == 0) {
+        if (left.isEmpty()) {
             return -1;
         }
-        int value = head.value;
-        if (size == 1) {
-            head = null;
-        } else if (size == 2) {
-            //此时head与las赋值
-            head = last;
-            last = null;
-        } else if (size == 3) {
-            //此时head，last，middle赋值
-            head = middle;
-            middle = null;
-        } else {
-            head = head.next;
-            if (size % 2 == 0) {
-                //此时节点数为偶数。比如：4，6，8。中间节点偏左。删除前节点后中间节点居中。
-                middle = middle.next;
-            }
+        int value = left.pollFirst();
+        if (left.size() < right.size()) {
+            left.addLast(right.pollFirst());
         }
-        size--;
         return value;
     }
 
     public int popMiddle() {
-        if (size == 0) {
+        if (left.isEmpty()) {
             return -1;
         }
-        int value = -1;
-        if (size == 1) {
-            value = head.value;
-            head = null;
-        } else if (size == 2) {
-            value = head.value;
-            head = last;
-            last = null;
-        } else if (size == 3) {
-            value = middle.value;
-            middle = null;
-        } else {
-            value = middle.value;
-            if (size % 2 == 0) {
-                middle.pre.next = middle.next;
-                middle.next.pre = middle.pre;
-                middle = middle.next;
-            } else {
-                middle.pre.next = middle.next;
-                middle.next.pre = middle.pre;
-                middle = middle.pre;
-            }
+        int value = left.pollLast();
+        if (left.size() < right.size()) {
+            left.addLast(right.pollFirst());
         }
-        size--;
         return value;
     }
 
     public int popBack() {
-        if (size == 0) {
-            return -1;
-        }
-        int value = -1;
-        if (size == 1) {
-            value = head.value;
-            head = null;
-        } else if (size == 2) {
-            value = last.value;
-            last = null;
-        } else if (size == 3) {
-            value = last.value;
-            last = middle;
-            middle = null;
-        } else {
-            value = last.value;
-            last = last.pre;
-            if (size % 2 == 1) {
-                middle = middle.pre;
+        if (right.isEmpty()) {
+            if (left.isEmpty()) {
+                return -1;
+            } else {
+                return left.pollLast();
             }
         }
-        size--;
-        return value;
-    }
-
-    static class LinkedNode{
-
-        public int value;
-        public LinkedNode pre;
-        public LinkedNode next;
-
-        public LinkedNode(int value) {
-            this.value = value;
+        int value = right.pollLast();
+        if (left.size() == right.size() + 2) {
+            right.addFirst(left.pollLast());
         }
+        return value;
     }
 }
