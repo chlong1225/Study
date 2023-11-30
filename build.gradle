@@ -46,4 +46,5 @@ ext{
     lifecycleVersion = '2.4.0'
     //其它第三方库
     okhttpVersion='4.9.3'
+    gsonVersion='2.9.0'
 }
