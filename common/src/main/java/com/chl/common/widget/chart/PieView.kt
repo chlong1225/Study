@@ -3,9 +3,10 @@ package com.chl.common.widget.chart
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.graphics.Color
+import android.view.MotionEvent
 import android.view.View
 
 /**
@@ -22,6 +23,17 @@ class PieView @JvmOverloads constructor(context: Context, attrs: AttributeSet? =
         style = Paint.Style.FILL
     }
 
+    //手指按压下的位置
+    private var downX = 0f
+    private var downY = 0f
+    private var isShowTouch = false
+
+    private val touchPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        color = Color.BLACK
+    }
+
     override fun onDraw(canvas: Canvas) {
         val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
         if (dates.isNotEmpty()) {
@@ -30,6 +42,22 @@ class PieView @JvmOverloads constructor(context: Context, attrs: AttributeSet? =
                 canvas.drawArc(rect,it.startAngle,it.sweepAngle,true,paint)
             }
         }
+        if (isShowTouch) {
+            canvas.drawCircle(downX,downY,5f,touchPaint)
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            downX = event.x
+            downY = event.y
+            isShowTouch = true
+            invalidate()
+        } else if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+            isShowTouch = false
+            invalidate()
+        }
+        return true
     }
 
     fun setDates(beans: List<PieBean>) {
