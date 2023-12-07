@@ -2,6 +2,8 @@ package com.demo.study
 
 import android.os.Bundle
 import com.chl.common.utils.LogUtil
+import android.graphics.Color
+import com.chl.common.widget.chart.PieView
 import com.demo.study.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -29,6 +31,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         getViewBinding().btnLifecycle.setOnClickListener {
             LifecycleActivity.openSelf(this)
         }
+        val dates = mutableListOf<PieView.PieBean>()
+        dates.add(PieView.PieBean(1.0, Color.RED))
+        dates.add(PieView.PieBean(2.0, Color.GREEN))
+        dates.add(PieView.PieBean(3.0, Color.BLUE))
+        dates.add(PieView.PieBean(4.0, Color.YELLOW))
+        getViewBinding().pvView.setDates(dates)
 
     }
 
