@@ -1,4 +1,4 @@
-package com.demo.algorithm.leetcode.easy;
+package com.demo.algorithm.leetcode.easy.tree;
 
 import com.demo.algorithm.leetcode.entity.TreeNode;
 
