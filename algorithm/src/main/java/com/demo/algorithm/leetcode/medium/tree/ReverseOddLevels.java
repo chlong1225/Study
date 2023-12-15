@@ -1,4 +1,4 @@
-package com.demo.algorithm.leetcode.medium;
+package com.demo.algorithm.leetcode.medium.tree;
 
 import com.demo.algorithm.leetcode.entity.TreeNode;
 
