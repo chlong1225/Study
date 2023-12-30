@@ -1,4 +1,4 @@
-package com.demo.algorithm.leetcode.easy;
+package com.demo.algorithm.leetcode.lcp;
 
 /**
  * create on 2023/12/30
