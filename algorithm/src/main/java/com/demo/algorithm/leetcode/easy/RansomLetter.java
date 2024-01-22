@@ -38,22 +38,19 @@ public class RansomLetter {
         if (m > n) {
             return false;
         }
-        //2，记录ransomNote中字符的数量
+        //2，记录magazine中字符的数量
         int[] counts = new int[26];
-        for (int i = 0; i < m; i++) {
-            counts[ransomNote.charAt(i) - 'a']++;
-        }
-        int compare = m;
         for (int i = 0; i < n; i++) {
-            int index = magazine.charAt(i) - 'a';
+            counts[magazine.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < m; i++) {
+            int index = ransomNote.charAt(i) - 'a';
             if (counts[index] > 0) {
                 counts[index]--;
-                compare--;
-                if (compare == 0) {
-                    return true;
-                }
+            } else {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
