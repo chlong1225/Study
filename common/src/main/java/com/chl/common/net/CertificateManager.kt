@@ -1,4 +1,4 @@
-package com.stl.commonlib.net
+package com.chl.common.net
 
 import java.security.SecureRandom
 import java.security.cert.X509Certificate

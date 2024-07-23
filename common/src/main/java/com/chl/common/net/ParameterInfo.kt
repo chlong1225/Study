@@ -1,4 +1,4 @@
-package com.stl.commonlib.net
+package com.chl.common.net
 
 import androidx.annotation.Keep
 import java.util.*

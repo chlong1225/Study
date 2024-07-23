@@ -1,6 +1,6 @@
-package com.stl.huikao.uilib.utils.net.request
+package com.chl.common.net.request
 
-import com.stl.commonlib.net.ParameterInfo
+import com.chl.common.net.ParameterInfo
 import okhttp3.Request
 
 /**

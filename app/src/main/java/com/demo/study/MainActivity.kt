@@ -37,6 +37,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             RvListActivity.openSelf(this)
         }
 
+        getViewBinding().btnPdf.setOnClickListener {
+            PdfActivity.openSelf(this)
+        }
+
         val dates = mutableListOf<PieView.PieBean>()
         dates.add(PieView.PieBean(1.0, Color.RED))
         dates.add(PieView.PieBean(2.0, Color.GREEN))

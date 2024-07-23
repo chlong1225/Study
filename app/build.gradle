@@ -76,6 +76,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation 'androidx.work:work-runtime:2.8.1'
+    //https://github.com/DImuthuUpe/AndroidPdfViewer
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 
     if (isLocal.toBoolean()) {
         implementation project(path: ':common')

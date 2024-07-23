@@ -1,7 +1,4 @@
-package com.stl.commonlib.net
-
-import com.chl.common.net.ReturnModel
-
+package com.chl.common.net
 
 /**
  * create on 12/20/21

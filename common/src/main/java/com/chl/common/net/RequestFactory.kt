@@ -1,6 +1,10 @@
-package com.stl.commonlib.net
+package com.chl.common.net
 
-import com.stl.huikao.uilib.utils.net.request.*
+import com.chl.common.net.request.DeleteRequest
+import com.chl.common.net.request.FileRequest
+import com.chl.common.net.request.GetRequest
+import com.chl.common.net.request.PostRequest
+import com.chl.common.net.request.PutRequest
 import okhttp3.Request
 import java.lang.IllegalArgumentException
 
