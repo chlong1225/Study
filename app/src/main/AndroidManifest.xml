@@ -44,6 +44,10 @@
         <activity android:name=".PdfActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".FloatActivity"
+            android:theme="@style/DialogTheme"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>
