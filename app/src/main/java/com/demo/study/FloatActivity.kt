@@ -53,7 +53,7 @@ class FloatActivity : BaseActivity<ActivityFloatBinding>() {
             }
         }
 
-        getViewBinding().root.setOnTouchListener { v, event ->
+        getViewBinding().ivMove.setOnTouchListener { v, event ->
             if (isSmall) {
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     startX = event.rawX
@@ -67,21 +67,37 @@ class FloatActivity : BaseActivity<ActivityFloatBinding>() {
                     window.attributes = params
                     startX = event.rawX
                     startY = event.rawY
+                } else {
+                    val params = window.attributes
+                    if (params.x < 0) {
+                        params.x = 0
+                    }else if (params.x + params.width > ScreenUtil.getScreenWidth()) {
+                        params.x = ScreenUtil.getScreenWidth() - params.width
+                    }
+                    if (params.y < 0) {
+                        params.y = 0
+                    }else if (params.y + params.height > ScreenUtil.getScreenHeight()) {
+                        params.y = ScreenUtil.getScreenHeight() - params.height
+                    }
+                    window.attributes = params
                 }
                 return@setOnTouchListener true
             } else {
                 return@setOnTouchListener false
             }
         }
+
+
     }
 
     private fun updateWindow() {
-        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        window.decorView.background = null
         if (isSmall) {
             val params = window.attributes
-            params.width = ScreenUtil.getScreenWidth() / 2
-            params.height = ScreenUtil.getScreenHeight() / 2
+            params.width = ScreenUtil.getScreenWidth() - ScreenUtil.dp2px(32f)
+            params.height = (ScreenUtil.getScreenHeight()*0.6).toInt()
+            params.gravity = Gravity.TOP or Gravity.START
+            params.x = ScreenUtil.dp2px(16f)
+            params.y = (ScreenUtil.getScreenHeight() * 0.2).toInt()
             params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
             window.attributes = params
             window.setDimAmount(0f)
