@@ -52,6 +52,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         dates.add(PieView.PieBean(4.0, Color.YELLOW))
         getViewBinding().pvView.setDates(dates)
 
+        WindowManager.window = window
     }
 
     override fun buildViewBinding(): ActivityMainBinding {
