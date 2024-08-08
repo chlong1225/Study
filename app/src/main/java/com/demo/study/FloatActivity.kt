@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import com.chl.common.utils.LogUtil
 import com.chl.common.utils.ScreenUtil
@@ -64,44 +66,95 @@ class FloatActivity : BaseActivity<ActivityFloatBinding>() {
             }
         }
 
+        getViewBinding().ivMove.setOnTouchListener { v, event -> doMoveOperate(event) }
 
+        getViewBinding().ivLeft.setOnTouchListener { v, event -> doScaleOperate(ScaleOperateType.left,event) }
+        getViewBinding().ivRight.setOnTouchListener { v, event -> doScaleOperate(ScaleOperateType.right,event) }
+        getViewBinding().ivBottom.setOnTouchListener { v, event -> doScaleOperate(ScaleOperateType.bottom,event) }
+    }
 
-        getViewBinding().ivMove.setOnTouchListener { v, event ->
-            if (isSmall) {
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    startX = event.rawX
-                    startY = event.rawY
-                }else if (event.action == MotionEvent.ACTION_MOVE) {
-                    val dx = event.rawX - startX
-                    val dy = event.rawY - startY
-                    getViewBinding().clRoot.translationX += dx
-                    getViewBinding().clRoot.translationY += dy
-                    startX = event.rawX
-                    startY = event.rawY
-                } else {
-                    val location = IntArray(2)
-                    getViewBinding().clRoot.getLocationOnScreen(location)
-                    if (location[0] < 0) {
-                        getViewBinding().clRoot.translationX = getViewBinding().clRoot.width * scaleX / 2 - ScreenUtil.getScreenWidth() / 2
-                    }else if (location[0] + getViewBinding().clRoot.width * scaleX > ScreenUtil.getScreenWidth()) {
-                        getViewBinding().clRoot.translationX = ScreenUtil.getScreenWidth() / 2 - getViewBinding().clRoot.width * scaleX / 2
-                    }
-                    if (location[1] < ScreenUtil.getStatusBarHeight()) {
-                        getViewBinding().clRoot.translationY =
-                            getViewBinding().clRoot.height * scaleY / 2 - ScreenUtil.getScreenHeight() / 2 + ScreenUtil.getStatusBarHeight() / 2
-                    }else if (location[1] + getViewBinding().clRoot.height * scaleY > ScreenUtil.getScreenHeight() + ScreenUtil.getStatusBarHeight()) {
-                        getViewBinding().clRoot.translationY =
-                            ScreenUtil.getScreenHeight() / 2 - getViewBinding().clRoot.height * scaleY / 2 + ScreenUtil.getStatusBarHeight() / 2
-                    }
-                    val width = getViewBinding().clRoot.measuredWidth
-                    val height = getViewBinding().clRoot.measuredHeight
-                    LogUtil.e("AAAA","w = $width ;; h = $height")
-                }
-                return@setOnTouchListener true
+    private fun doMoveOperate(event: MotionEvent):Boolean{
+        if (isSmall) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                startX = event.rawX
+                startY = event.rawY
+            }else if (event.action == MotionEvent.ACTION_MOVE) {
+                val dx = event.rawX - startX
+                val dy = event.rawY - startY
+                getViewBinding().clRoot.translationX += dx
+                getViewBinding().clRoot.translationY += dy
+                startX = event.rawX
+                startY = event.rawY
             } else {
-                return@setOnTouchListener false
+                val location = IntArray(2)
+                getViewBinding().clRoot.getLocationOnScreen(location)
+                if (location[0] < 0) {
+                    getViewBinding().clRoot.translationX = getViewBinding().clRoot.width * scaleX / 2 - ScreenUtil.getScreenWidth() / 2
+                }else if (location[0] + getViewBinding().clRoot.width * scaleX > ScreenUtil.getScreenWidth()) {
+                    getViewBinding().clRoot.translationX = ScreenUtil.getScreenWidth() / 2 - getViewBinding().clRoot.width * scaleX / 2
+                }
+                if (location[1] < ScreenUtil.getStatusBarHeight()) {
+                    getViewBinding().clRoot.translationY =
+                        getViewBinding().clRoot.height * scaleY / 2 - ScreenUtil.getScreenHeight() / 2 + ScreenUtil.getStatusBarHeight() / 2
+                }else if (location[1] + getViewBinding().clRoot.height * scaleY > ScreenUtil.getScreenHeight() + ScreenUtil.getStatusBarHeight()) {
+                    getViewBinding().clRoot.translationY =
+                        ScreenUtil.getScreenHeight() / 2 - getViewBinding().clRoot.height * scaleY / 2 + ScreenUtil.getStatusBarHeight() / 2
+                }
             }
+            return true
         }
+        return false
+    }
+
+    private fun doScaleOperate(type: Int, event: MotionEvent): Boolean {
+        if (isSmall) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                startX = event.rawX
+                startY = event.rawY
+            } else if (event.action == MotionEvent.ACTION_MOVE) {
+                val dx = event.rawX - startX
+                val dy = event.rawY - startY
+                if (type == ScaleOperateType.bottom) {
+                    //此时根据dy判断放大还是缩小。dy>0向下进行放大，dy<0向上进行缩小
+                    scaleY = (getViewBinding().clRoot.height * scaleY + dy) / getViewBinding().clRoot.height
+                    if (scaleY > 0.9) {
+                        scaleY = 0.9f
+                    }
+                    scaleX = scaleY
+                    getViewBinding().clRoot.scaleX = scaleX
+                    getViewBinding().clRoot.scaleY = scaleY
+                    getViewBinding().clRoot.translationY = getViewBinding().clRoot.translationY + dy / 2
+                } else if (type == ScaleOperateType.left) {
+                    //左右两边以dx为准。dx>0缩小
+                    scaleX = (getViewBinding().clRoot.width * scaleX - dx) / getViewBinding().clRoot.width
+                    if (scaleX > 0.9) {
+                        scaleX = 0.9f
+                    }
+                    scaleY = scaleX
+                    getViewBinding().clRoot.scaleX = scaleX
+                    getViewBinding().clRoot.scaleY = scaleY
+                    getViewBinding().clRoot.translationX = getViewBinding().clRoot.translationX + dx / 2
+                    val moveY = dx * getViewBinding().clRoot.height / getViewBinding().clRoot.width
+                    getViewBinding().clRoot.translationY = getViewBinding().clRoot.translationY - moveY / 2
+                } else {
+                    //dx<0缩小
+                    scaleX = (getViewBinding().clRoot.width * scaleX + dx) / getViewBinding().clRoot.width
+                    if (scaleX > 0.9) {
+                        scaleX = 0.9f
+                    }
+                    scaleY = scaleX
+                    getViewBinding().clRoot.scaleX = scaleX
+                    getViewBinding().clRoot.scaleY = scaleY
+                    getViewBinding().clRoot.translationX = getViewBinding().clRoot.translationX + dx / 2
+                    val moveY = dx * getViewBinding().clRoot.height / getViewBinding().clRoot.width
+                    getViewBinding().clRoot.translationY = getViewBinding().clRoot.translationY + moveY / 2
+                }
+                startX = event.rawX
+                startY = event.rawY
+            }
+            return true
+        }
+        return false
     }
 
     private var isValid = false
@@ -138,13 +191,22 @@ class FloatActivity : BaseActivity<ActivityFloatBinding>() {
 
     private fun updateWindow() {
         if (isSmall) {
-            getViewBinding().clRoot.scaleX = scaleX
-            getViewBinding().clRoot.scaleY = scaleY
+            scaleX = 0.6f
+            scaleY = 0.6f
         } else {
-            getViewBinding().clRoot.scaleX = 1f
-            getViewBinding().clRoot.scaleY = 1f
-            getViewBinding().clRoot.translationX = 0f
-            getViewBinding().clRoot.translationY = 0f
+            scaleX = 1.0f
+            scaleY = 1.0f
         }
+        getViewBinding().clRoot.scaleX = scaleX
+        getViewBinding().clRoot.scaleY = scaleY
+        getViewBinding().clRoot.translationX = 0f
+        getViewBinding().clRoot.translationY = 0f
+    }
+
+    object ScaleOperateType{
+
+        const val left = 0
+        const val right = 1
+        const val bottom = 2
     }
 }

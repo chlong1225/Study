@@ -28,6 +28,17 @@
         android:gravity="center"
         android:text="缩小"/>
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/btn_small"
+        app:layout_constraintStart_toEndOf="@id/btn_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingHorizontal="6dp"
+        android:maxLines="1"
+        android:textSize="12sp"
+        android:text="跟单表现，指的是总的数据统计，只是信息展示件"/>
+
     <Button
         android:id="@+id/btn_reset"
         android:layout_width="wrap_content"
@@ -45,8 +56,26 @@
         android:layout_height="60dp"
         app:layout_constraintTop_toBottomOf="@id/btn_reset"
         app:layout_constraintStart_toStartOf="@id/btn_reset"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:background="#6e6e6e"
         android:hint="请输入内容22"/>
+    
+    <ImageView
+        android:id="@+id/iv_left"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_right"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
