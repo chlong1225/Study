@@ -42,6 +42,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             PdfActivity.openSelf(this)
         }
 
+        getViewBinding().btnBig.setOnClickListener {
+            BigImageActivity.openSelf(this)
+        }
+
         getViewBinding().btnFloat.setOnClickListener {
             FloatActivity.openSelf(this)
         }

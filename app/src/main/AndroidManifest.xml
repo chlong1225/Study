@@ -46,6 +46,9 @@
         <activity android:name=".list.RvListActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".BigImageActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".PdfActivity"
             android:screenOrientation="portrait"/>
 
