@@ -59,6 +59,14 @@
         android:layout_marginTop="30dp"
         android:background="#6e6e6e"
         android:hint="请输入内容22"/>
+
+    <TextView
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/et_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:text="聊天页面的弹窗的间距和设计稿有差异聊天页面的弹窗的间距和"/>
     
     <ImageView
         android:id="@+id/iv_left"
@@ -77,5 +85,11 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#00ff00"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

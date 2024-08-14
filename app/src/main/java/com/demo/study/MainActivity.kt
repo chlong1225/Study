@@ -1,5 +1,6 @@
 package com.demo.study
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import com.chl.common.utils.LogUtil
 import android.graphics.Color
@@ -53,6 +54,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         getViewBinding().pvView.setDates(dates)
 
         WindowManager.window = window
+
+        parseManifest()
+    }
+
+    /**
+     * 解析AndroidManifest文件中的内容
+     */
+    private fun parseManifest() {
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            val versionCode = packageInfo.versionCode
+            val versionName = packageInfo.versionName
+            //获取权限信息
+            val permissions = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions
+            val activities = packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES).activities
+            val services = packageManager.getPackageInfo(packageName,PackageManager.GET_SERVICES).services
+            val provides = packageManager.getPackageInfo(packageName,PackageManager.GET_PROVIDERS).providers
+            val receivers = packageManager.getPackageInfo(packageName,PackageManager.GET_RECEIVERS).receivers
+            val info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            val value = info.metaData.getInt("InstallChannel")
+            LogUtil.e("AAAA", "pareValue = $value")
+        } catch (e: Exception) {
+            LogUtil.e("AAAA", "paresError = ${e.message}")
+        }
     }
 
     override fun buildViewBinding(): ActivityMainBinding {
