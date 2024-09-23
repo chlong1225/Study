@@ -37,13 +37,14 @@ class RvListActivity : BaseActivity<ActivityRvListBinding>() {
         }
 
         val beans = mutableListOf<String>()
-        for (i in 0 until 20) {
+        for (i in 1 ..  101) {
             beans.add("第${i}条数据")
         }
         adapter.setDates(beans)
 
         val itemTouchHelper = ItemTouchHelper(RvListItemTouchHelperCallback(adapter))
         itemTouchHelper.attachToRecyclerView(getViewBinding().rvList)
+        getViewBinding().rvList.addItemDecoration(RvItemDecoration())
     }
 
 }

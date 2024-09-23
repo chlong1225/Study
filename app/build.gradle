@@ -79,6 +79,8 @@ dependencies {
     //https://github.com/DImuthuUpe/AndroidPdfViewer
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
+
     if (isLocal.toBoolean()) {
         implementation project(path: ':common')
     }
