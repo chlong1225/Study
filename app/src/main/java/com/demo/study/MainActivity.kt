@@ -6,6 +6,7 @@ import com.chl.common.utils.LogUtil
 import android.graphics.Color
 import com.chl.common.widget.chart.PieView
 import com.demo.study.databinding.ActivityMainBinding
+import com.demo.study.dialog.TestDialog
 import com.demo.study.list.RvListActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -48,6 +49,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         getViewBinding().btnFloat.setOnClickListener {
             FloatActivity.openSelf(this)
+        }
+
+        getViewBinding().btnDialog.setOnClickListener {
+            val dialog = TestDialog()
+            dialog.show(supportFragmentManager, TestDialog.TEST_DIALOG_TAG)
         }
 
         val dates = mutableListOf<PieView.PieBean>()
