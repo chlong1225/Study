@@ -57,6 +57,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             dialog.show(supportFragmentManager, TestSheetDialog.TEST_SHEET_DIALOG_TAG)
         }
 
+        getViewBinding().btnNest.setOnClickListener {
+            NestActivity.openSelf(this)
+        }
+
+        getViewBinding().btnWallet.setOnClickListener {
+            WalletActivity.openSelf(this)
+        }
+
         val dates = mutableListOf<PieView.PieBean>()
         dates.add(PieView.PieBean(1.0, Color.RED))
         dates.add(PieView.PieBean(2.0, Color.GREEN))

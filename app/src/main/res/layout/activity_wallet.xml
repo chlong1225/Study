@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
+
+    <Button
+        android:id="@+id/btn_wallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:text="创建钱包"/>
+
+    <TextView
+        android:id="@+id/tv_words"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_wallet"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/et_eth_amount"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_words"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:hint="请输入eth转账金额"/>
+
+    <TextView
+        android:id="@+id/tv_eth_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/et_eth_amount"
+        app:layout_constraintBottom_toBottomOf="@id/et_eth_amount"
+        app:layout_constraintStart_toEndOf="@id/et_eth_amount"
+        android:layout_marginStart="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_eth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/et_eth_amount"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btn_eth_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:text="eth余额查询"/>
+
+        <Button
+            android:id="@+id/btn_eth_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:text="eth转账"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_usdt_amount"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ll_eth"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:hint="请输入usdt转账金额"/>
+
+    <TextView
+        android:id="@+id/tv_usdt_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/et_usdt_amount"
+        app:layout_constraintBottom_toBottomOf="@id/et_usdt_amount"
+        app:layout_constraintStart_toEndOf="@id/et_usdt_amount"
+        android:layout_marginStart="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_type_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/et_usdt_amount"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:text="自定义Funcation方式"/>
+
+    <LinearLayout
+        android:id="@+id/ll_usdt_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tv_type_1"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btn_usdt_balance_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt余额查询"/>
+
+        <Button
+            android:id="@+id/btn_usdt_pay_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt转账"/>
+
+        <Button
+            android:id="@+id/btn_usdt_approve_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt授权"/>
+
+        <Button
+            android:id="@+id/btn_usdt_approve_pay_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt授权转账"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

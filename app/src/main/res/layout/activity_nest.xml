@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.demo.study.widget.nest.MyCoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior=".widget.nest.MyBehavior"
+        app:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="44dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.demo.study.widget.nest.MyRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+</com.demo.study.widget.nest.MyCoordinatorLayout>
