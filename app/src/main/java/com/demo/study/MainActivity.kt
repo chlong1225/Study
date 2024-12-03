@@ -6,9 +6,9 @@ import com.chl.common.utils.LogUtil
 import android.graphics.Color
 import com.chl.common.widget.chart.PieView
 import com.demo.study.databinding.ActivityMainBinding
-import com.demo.study.dialog.TestDialog
 import com.demo.study.dialog.TestSheetDialog
 import com.demo.study.list.RvListActivity
+import com.demo.study.wallet.WalletActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 

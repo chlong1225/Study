@@ -143,4 +143,63 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_type_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ll_usdt_1"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:text="自动生成代码"/>
+
+    <LinearLayout
+        android:id="@+id/ll_usdt_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tv_type_2"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btn_usdt_balance_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt余额查询"/>
+
+        <Button
+            android:id="@+id/btn_usdt_pay_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt转账"/>
+
+        <Button
+            android:id="@+id/btn_usdt_approve_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt授权"/>
+
+        <Button
+            android:id="@+id/btn_usdt_approve_pay_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:paddingHorizontal="2dp"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:text="usdt授权转账"/>
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

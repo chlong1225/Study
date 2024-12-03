@@ -1,4 +1,4 @@
-package com.demo.study
+package com.demo.study.wallet
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import com.chl.common.utils.LogUtil
+import com.demo.study.BaseActivity
 import com.demo.study.databinding.ActivityWalletBinding
+import com.demo.study.wallet.usdt.ContractAbi
 import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Address
@@ -26,6 +28,8 @@ import org.web3j.protocol.core.methods.request.Transaction
 import org.web3j.protocol.core.methods.response.EthCall
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.Contract
+import org.web3j.tx.RawTransactionManager
+import org.web3j.tx.gas.DefaultGasProvider
 import org.web3j.utils.Convert
 import org.web3j.utils.Numeric
 import java.io.File
@@ -47,6 +51,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
 
         //节点
         private val eth_url = "https://rpc.sepolia.org/"
+//        private val eth_url = "https://sepolia.infura.io/v3/ed257b038fdf462ebb43a33f967277c9"
 
         private const val sepolia_eth_chainId = 11155111L
 
@@ -94,11 +99,109 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         getViewBinding().btnUsdtApprovePay1.setOnClickListener {
             payApproveUsdT1()
         }
+        getViewBinding().btnUsdtBalance2.setOnClickListener {
+            queryUsdTBalance2()
+        }
+        getViewBinding().btnUsdtPay2.setOnClickListener {
+            payUsdT2()
+        }
+        getViewBinding().btnUsdtApprove2.setOnClickListener {
+            approveUsdT2()
+        }
+        getViewBinding().btnUsdtApprovePay2.setOnClickListener {
+            payApproveUsdT2()
+        }
 
     }
 
+    private fun payApproveUsdT2() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val amount = getViewBinding().etUsdtAmount.text.trim().toString()
+        if (TextUtils.isEmpty(amount)) {
+            Toast.makeText(this, "请先输入支付金额", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread {
+            try {
+                val web3j = Web3j.build(HttpService(eth_url))
+                val contractAbi = ContractAbi.load(usd_path, web3j, RawTransactionManager(web3j, crash!!, 11155111), object : DefaultGasProvider() {})
+                val amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
+                val transferFrom = contractAbi.transferFrom(ower_address, pay_address, amountInWei).send()
+                LogUtil.e("AAAA","payApproveUsdT2 : hash = ${transferFrom.blockHash} ;; state = ${transferFrom.isStatusOK}")
+            } catch (e: Exception) {
+                LogUtil.e("AAAA", "payApproveUsdT2 : error = ${e.message}")
+            }
+        }.start()
+    }
+
+    private fun approveUsdT2() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val amount = getViewBinding().etUsdtAmount.text.trim().toString()
+        if (TextUtils.isEmpty(amount)) {
+            Toast.makeText(this, "请先输入授权金额", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            try {
+                val web3j = Web3j.build(HttpService(eth_url))
+                val contractAbi = ContractAbi.load(usd_path, web3j, RawTransactionManager(web3j, crash!!, 11155111), object : DefaultGasProvider() {})
+                val amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
+                val approve = contractAbi.approve(ower_address, amountInWei).send()
+                LogUtil.e("AAAA","approveUsdT2 : hash = ${approve.blockHash} ;; state = ${approve.isStatusOK}")
+            } catch (e: Exception) {
+                LogUtil.e("AAAA", "approveUsdT2 : error = ${e.message}")
+            }
+        }.start()
+    }
+
+    private fun payUsdT2() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val amount = getViewBinding().etUsdtAmount.text.trim().toString()
+        if (TextUtils.isEmpty(amount)) {
+            Toast.makeText(this, "请先输入交易金额", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            try {
+                val web3j = Web3j.build(HttpService(eth_url))
+                val contractAbi = ContractAbi.load(usd_path, web3j, RawTransactionManager(web3j, crash!!, 11155111), object : DefaultGasProvider() {})
+                val amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
+                val transfer = contractAbi.transfer(pay_address, amountInWei).send()
+                LogUtil.e("AAAA","payUsdT2 : hash = ${transfer.blockHash} ;; state = ${transfer.isStatusOK}")
+            } catch (e: Exception) {
+                LogUtil.e("AAAA", "payUsdT2 : error = ${e.message}")
+            }
+        }.start()
+    }
+
+    private fun queryUsdTBalance2() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            val web3j = Web3j.build(HttpService(eth_url))
+            val contractAbi = ContractAbi.load(usd_path, web3j, RawTransactionManager(web3j, crash!!, sepolia_eth_chainId), object : DefaultGasProvider() {})
+            val value = contractAbi.balanceOf(ower_address).send()
+            val balance = Convert.fromWei(value.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA", "queryUsdTBalance2 : balance = $balance ;; value = $value")
+            runOnUiThread {
+                getViewBinding().tvUsdtBalance.text = balance.toString()
+            }
+        }.start()
+    }
+
     /**
-     * UsdT授权交易
+     * UsdT授权交易。注意：会覆盖之前的授权，不是叠加
      */
     private fun payApproveUsdT1() {
         if (crash == null) {
@@ -256,7 +359,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             // 创建一个 EthCall 请求
             val ethCall: EthCall = web3j.ethCall(
                 Transaction.createEthCallTransaction(ower_address, usd_path, data),
-                DefaultBlockParameterName.PENDING
+                DefaultBlockParameterName.LATEST
             ).send()
             val value = BigInteger(ethCall.value.substring(2), 16)
             val balance = Convert.fromWei(value.toString(), Convert.Unit.ETHER)
