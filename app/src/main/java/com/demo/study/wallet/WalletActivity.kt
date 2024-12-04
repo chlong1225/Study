@@ -59,11 +59,16 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
 
         private const val sepolia_eth_chainId = 11155111L
 
+        private val avax_url = "https://ava-testnet.public.blastapi.io/ext/bc/C/rpc"
+
+        private const val avax_chainId = 43113L
+
         //钱包地址
         private const val ower_address = "0x980e77e6ae3efb8d4889c84c8644611a087d192e"
 
         //接收者的地址
-        private val pay_address = "0xef8cd17ce6b73b552181c46d9a95974c9c0dd1a3"
+//        private val pay_address = "0xef8cd17ce6b73b552181c46d9a95974c9c0dd1a3"
+        private val pay_address = "0x08aa84c00328a939aa53e04f8884a5d395042453"
 
         //USD合约的地址
         private const val usd_path = "0xF4bB9F6634b7228ede7F0252771015ca193853Fa"
@@ -145,7 +150,83 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         getViewBinding().btnBullApprovePay2.setOnClickListener {
             payApproveBull2()
         }
+        getViewBinding().btnAvaxBalance.setOnClickListener {
+            queryAvaxBalance()
+        }
+        getViewBinding().btnAvaxPay.setOnClickListener {
+            payAvax()
+        }
 
+    }
+
+    /**
+     * AVAX币的交易
+     */
+    private fun payAvax() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val amount = getViewBinding().etAvaxAmount.text.trim().toString()
+        if (TextUtils.isEmpty(amount)) {
+            Toast.makeText(this, "请先输入交易金额", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            val web3j = Web3j.build(HttpService(avax_url))
+
+            //交易参数
+            val amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
+            val gasPrice = web3j.ethGasPrice().send().gasPrice
+            val nonce = web3j.ethGetTransactionCount(crash!!.address, DefaultBlockParameterName.PENDING).send().transactionCount
+            LogUtil.e("AAAA", "payAvax ： nonce = $nonce ;; gasPrice = $gasPrice")
+
+            val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
+            val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA", "payAvax ： balance = $balance ;; bigDecimal = $bigDecimal")
+            if (balance < amountInWei) {
+                runOnUiThread {
+                    Toast.makeText(this, "当前余额不够", Toast.LENGTH_SHORT).show()
+                }
+                return@Thread
+            }
+
+            //创建交易
+            val rawTransaction = RawTransaction.createEtherTransaction(nonce, gasPrice, Contract.GAS_LIMIT, pay_address, amountInWei)
+
+            //签署交易
+            val signedMessage = TransactionEncoder.signMessage(rawTransaction, avax_chainId, crash)
+            //交易编码
+            val hexValue = Numeric.toHexString(signedMessage)
+
+            //发送交易
+            val ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send()
+
+            if (ethSendTransaction.hasError()) {
+                LogUtil.e("AAAA", "payAvax ： fail = ${ethSendTransaction.error.message}")
+            } else {
+                LogUtil.e("AAAA", "payAvax ： success = ${ethSendTransaction.transactionHash}")
+            }
+        }.start()
+    }
+
+    /**
+     * 查询AVAX币的数量
+     */
+    private fun queryAvaxBalance() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            val web3j = Web3j.build(HttpService(avax_url))
+            val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
+            val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA","queryAvaxBalance : balance = $balance ;; bigDecimal = $bigDecimal")
+            runOnUiThread {
+                getViewBinding().tvAvaxBalance.text = bigDecimal.toString()
+            }
+        }.start()
     }
 
     private fun payApproveBull2() {
