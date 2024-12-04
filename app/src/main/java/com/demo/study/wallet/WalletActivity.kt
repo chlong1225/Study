@@ -17,6 +17,9 @@ import org.web3j.abi.datatypes.Bool
 import org.web3j.abi.datatypes.Function
 import org.web3j.abi.datatypes.Type
 import org.web3j.abi.datatypes.generated.Uint256
+import org.bitcoinj.core.Base58
+import org.web3j.crypto.Bip32ECKeyPair
+import org.web3j.crypto.Hash
 import org.web3j.crypto.Bip44WalletUtils
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.MnemonicUtils
@@ -84,6 +87,9 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         super.onCreate(savedInstanceState)
         getViewBinding().btnWallet.setOnClickListener {
             buildWallet()
+        }
+        getViewBinding().btnTron1.setOnClickListener {
+            buildTronAddress()
         }
         getViewBinding().btnEthBalance.setOnClickListener {
             queryEthBalance()
@@ -712,6 +718,37 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
     }
 
     /**
+     * 生成波场TRON的地址
+     */
+    private fun buildTronAddress() {
+        if (crash == null) {
+            return
+        }
+        Thread{
+            val seed = MnemonicUtils.generateSeed(mnemonic, SALT)
+            val masterKeypair = Bip32ECKeyPair.generateKeyPair(seed)
+            // m/44'/60'/0'/0/0
+            val path = intArrayOf(44 or Bip32ECKeyPair.HARDENED_BIT, 195 or Bip32ECKeyPair.HARDENED_BIT, 0 or Bip32ECKeyPair.HARDENED_BIT, 0, 0)
+            val bip44Keypair = Bip32ECKeyPair.deriveKeyPair(masterKeypair, path)
+            val create = Credentials.create(bip44Keypair)
+            val pri = create.ecKeyPair.privateKey.toString(16)
+            val pub = create.ecKeyPair.publicKey.toString(16)
+            val addressByte = Numeric.hexStringToByteArray("0x41" + create.address.substring(2))
+            val firstHash = Hash.sha256(addressByte)
+            val secondHash = Hash.sha256(firstHash)
+            val tronHash = ByteArray(addressByte.size + 4)
+            for (i in addressByte.indices) {
+                tronHash[i] = addressByte[i]
+            }
+            for (i in addressByte.size until tronHash.size) {
+                tronHash[i] = secondHash[i - addressByte.size]
+            }
+            val tronAddress = Base58.encode(tronHash)
+            LogUtil.e("AAAA", "波场TRON : address = $tronAddress ;; pri = $pri ;; pub = $pub")
+        }.start()
+    }
+
+    /**
      * 创建钱包
      */
     private fun buildWallet() {
@@ -728,11 +765,12 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             }
             val seed = MnemonicUtils.generateSeed(mnemonic, SALT)
             val wallet = WalletUtils.generateBip39WalletFromMnemonic(SALT, mnemonic, file)
-            val credentials39 = WalletUtils.loadBip39Credentials(SALT, mnemonic)
-            val credentials391 = Bip44WalletUtils.loadBip39Credentials(SALT, mnemonic)
             //这个与欧易地址相同
             crash = Bip44WalletUtils.loadBip44Credentials(SALT, mnemonic)
-            LogUtil.e("AAAA","钱包创建完成")
+            val pri = Numeric.toHexStringWithPrefixZeroPadded(crash!!.ecKeyPair.privateKey, 64)
+            val pub = crash!!.ecKeyPair.publicKey.toString(16)
+            val address = crash!!.address
+            LogUtil.e("AAAA", "钱包创建完成: ETH系列的 : address = $address ;; pri = $pri ;; pub = $pub")
         }.start()
     }
 

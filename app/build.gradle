@@ -85,4 +85,7 @@ dependencies {
         implementation project(path: ':common')
     }
     implementation ('org.web3j:core:4.8.9-android')
+    implementation("org.bitcoinj:bitcoinj-core:0.16.3"){
+        exclude group: 'org.bouncycastle',module:'bcprov-jdk15to18'
+    }
 }
