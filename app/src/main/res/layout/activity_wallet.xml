@@ -373,7 +373,7 @@
             android:layout_marginStart="10dp"/>
 
         <LinearLayout
-            android:id="@+id/ll_avax_1"
+            android:id="@+id/ll_avax"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -395,6 +395,50 @@
                 android:textAllCaps="false"
                 android:gravity="center"
                 android:text="avax转账"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_bnb_amount"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/ll_avax"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:hint="请输入BNB转账金额"/>
+
+        <TextView
+            android:id="@+id/tv_bnb_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/et_bnb_amount"
+            app:layout_constraintBottom_toBottomOf="@id/et_bnb_amount"
+            app:layout_constraintStart_toEndOf="@id/et_bnb_amount"
+            android:layout_marginStart="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/ll_bnb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/et_bnb_amount"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/btn_bnb_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:text="bnb余额查询"/>
+
+            <Button
+                android:id="@+id/btn_bnb_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:text="bnb转账"/>
 
         </LinearLayout>
 

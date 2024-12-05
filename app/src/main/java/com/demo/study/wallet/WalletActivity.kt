@@ -10,6 +10,7 @@ import com.demo.study.BaseActivity
 import com.demo.study.databinding.ActivityWalletBinding
 import com.demo.study.wallet.bull.BullContractAbi
 import com.demo.study.wallet.usdt.ContractAbi
+import org.bitcoinj.core.Base58
 import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Address
@@ -17,11 +18,10 @@ import org.web3j.abi.datatypes.Bool
 import org.web3j.abi.datatypes.Function
 import org.web3j.abi.datatypes.Type
 import org.web3j.abi.datatypes.generated.Uint256
-import org.bitcoinj.core.Base58
 import org.web3j.crypto.Bip32ECKeyPair
-import org.web3j.crypto.Hash
 import org.web3j.crypto.Bip44WalletUtils
 import org.web3j.crypto.Credentials
+import org.web3j.crypto.Hash
 import org.web3j.crypto.MnemonicUtils
 import org.web3j.crypto.RawTransaction
 import org.web3j.crypto.TransactionEncoder
@@ -56,12 +56,13 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         //节点
 //        private val eth_url = "https://rpc.sepolia.org/"
         private val eth_url = "https://sepolia.infura.io/v3/ed257b038fdf462ebb43a33f967277c9"
-
         private const val sepolia_eth_chainId = 11155111L
 
         private val avax_url = "https://ava-testnet.public.blastapi.io/ext/bc/C/rpc"
-
         private const val avax_chainId = 43113L
+
+        private val bnb_url = "https://data-seed-prebsc-1-s1.binance.org:8545/"
+        private const val bnb_chainId = 97L
 
         //钱包地址
         private const val ower_address = "0x980e77e6ae3efb8d4889c84c8644611a087d192e"
@@ -156,7 +157,77 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         getViewBinding().btnAvaxPay.setOnClickListener {
             payAvax()
         }
+        getViewBinding().btnBnbBalance.setOnClickListener {
+            queryBnbBalance()
+        }
+        getViewBinding().btnBnbPay.setOnClickListener {
+            payBnb()
+        }
 
+    }
+
+    private fun payBnb() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val amount = getViewBinding().etBnbAmount.text.trim().toString()
+        if (TextUtils.isEmpty(amount)) {
+            Toast.makeText(this, "请先输入交易金额", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            val web3j = Web3j.build(HttpService(bnb_url))
+
+            //交易参数
+            val amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
+            val gasPrice = web3j.ethGasPrice().send().gasPrice
+            val nonce = web3j.ethGetTransactionCount(crash!!.address, DefaultBlockParameterName.PENDING).send().transactionCount
+            LogUtil.e("AAAA", "payBnb ： nonce = $nonce ;; gasPrice = $gasPrice ;; default = ${Contract.GAS_PRICE}")
+
+            val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
+            val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA", "payBnb ： balance = $balance ;; bigDecimal = $bigDecimal")
+            if (balance < amountInWei) {
+                runOnUiThread {
+                    Toast.makeText(this, "当前余额不够", Toast.LENGTH_SHORT).show()
+                }
+                return@Thread
+            }
+
+            //创建交易
+            val rawTransaction = RawTransaction.createEtherTransaction(nonce, gasPrice, BigInteger.valueOf(430000), pay_address, amountInWei)
+
+            //签署交易
+            val signedMessage = TransactionEncoder.signMessage(rawTransaction, bnb_chainId, crash)
+            //交易编码
+            val hexValue = Numeric.toHexString(signedMessage)
+
+            //发送交易
+            val ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send()
+
+            if (ethSendTransaction.hasError()) {
+                LogUtil.e("AAAA", "payBnb ： fail = ${ethSendTransaction.error.message}")
+            } else {
+                LogUtil.e("AAAA", "payBnb ： success = ${ethSendTransaction.transactionHash}")
+            }
+        }.start()
+    }
+
+    private fun queryBnbBalance() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            val web3j = Web3j.build(HttpService(bnb_url))
+            val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
+            val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA","queryBnbBalance : balance = $balance ;; bigDecimal = $bigDecimal")
+            runOnUiThread {
+                getViewBinding().tvBnbBalance.text = bigDecimal.toString() + "BNB"
+            }
+        }.start()
     }
 
     /**
