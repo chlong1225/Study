@@ -64,6 +64,9 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         private val bnb_url = "https://data-seed-prebsc-1-s1.binance.org:8545/"
         private const val bnb_chainId = 97L
 
+        private val pol_url = "https://polygon-amoy.drpc.org"
+        private const val pol_chainId = 80002L
+
         //钱包地址
         private const val ower_address = "0x980e77e6ae3efb8d4889c84c8644611a087d192e"
 
@@ -163,7 +166,77 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         getViewBinding().btnBnbPay.setOnClickListener {
             payBnb()
         }
+        getViewBinding().btnPolBalance.setOnClickListener {
+            queryPolBalance()
+        }
+        getViewBinding().btnPolPay.setOnClickListener {
+            payPol()
+        }
 
+    }
+
+    private fun payPol() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val amount = getViewBinding().etPolAmount.text.trim().toString()
+        if (TextUtils.isEmpty(amount)) {
+            Toast.makeText(this, "请先输入交易金额", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            val web3j = Web3j.build(HttpService(pol_url))
+
+            //交易参数
+            val amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()
+            val gasPrice = web3j.ethGasPrice().send().gasPrice
+            val nonce = web3j.ethGetTransactionCount(crash!!.address, DefaultBlockParameterName.PENDING).send().transactionCount
+            LogUtil.e("AAAA", "payPol ： nonce = $nonce ;; gasPrice = $gasPrice ;; default = ${Contract.GAS_PRICE}")
+
+            val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
+            val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA", "payPol ： balance = $balance ;; bigDecimal = $bigDecimal")
+            if (balance < amountInWei) {
+                runOnUiThread {
+                    Toast.makeText(this, "当前余额不够", Toast.LENGTH_SHORT).show()
+                }
+                return@Thread
+            }
+
+            //创建交易
+            val rawTransaction = RawTransaction.createEtherTransaction(nonce, gasPrice, BigInteger.valueOf(430000), pay_address, amountInWei)
+
+            //签署交易
+            val signedMessage = TransactionEncoder.signMessage(rawTransaction, pol_chainId, crash)
+            //交易编码
+            val hexValue = Numeric.toHexString(signedMessage)
+
+            //发送交易
+            val ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send()
+
+            if (ethSendTransaction.hasError()) {
+                LogUtil.e("AAAA", "payPol ： fail = ${ethSendTransaction.error.message}")
+            } else {
+                LogUtil.e("AAAA", "payPol ： success = ${ethSendTransaction.transactionHash}")
+            }
+        }.start()
+    }
+
+    private fun queryPolBalance() {
+        if (crash == null) {
+            Toast.makeText(this, "请先创建钱包", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Thread{
+            val web3j = Web3j.build(HttpService(pol_url))
+            val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
+            val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA","queryPolBalance : balance = $balance ;; bigDecimal = $bigDecimal")
+            runOnUiThread {
+                getViewBinding().tvPolBalance.text = bigDecimal.toString() + "POL"
+            }
+        }.start()
     }
 
     private fun payBnb() {
