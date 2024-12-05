@@ -197,13 +197,21 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             //计算手续费
             val freeCount = gasPrice * amountUsed
             val free = Convert.fromWei(freeCount.toString(), Convert.Unit.ETHER)
+            val allCount = amountInWei + freeCount
+            val all = Convert.fromWei(allCount.toString(), Convert.Unit.ETHER)
+            val compareFreeCount = gasPrice * Contract.GAS_LIMIT
+            val compareFree = Convert.fromWei(compareFreeCount.toString(), Convert.Unit.ETHER)
+            val compareAllCount = amountInWei + compareFreeCount
+            val compareAll = Convert.fromWei(compareAllCount.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA","payPol : compareFreeCount = $compareFreeCount ;; compareFree = $compareFree ;; compareAllCount = $compareAllCount ;; compareAll = $compareAll")
+
             val nonce = web3j.ethGetTransactionCount(crash!!.address, DefaultBlockParameterName.PENDING).send().transactionCount
-            LogUtil.e("AAAA", "payPol ： nonce = $nonce ;; gasPrice = $gasPrice ;; amountUSed = $amountUsed ;; freeCount = $freeCount ;; freeValue = $free")
+            LogUtil.e("AAAA", "payPol ： nonce = $nonce ;; gasPrice = $gasPrice ;; amountUSed = $amountUsed ;; freeCount = $freeCount ;; freeValue = $free ;; allCount = $allCount ;; all = $all")
 
             val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
             val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
             LogUtil.e("AAAA", "payPol ： balance = $balance ;; bigDecimal = $bigDecimal")
-            if (balance < amountInWei) {
+            if (balance < amountInWei + freeCount) {
                 runOnUiThread {
                     Toast.makeText(this, "当前余额不够", Toast.LENGTH_SHORT).show()
                 }
@@ -211,7 +219,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             }
 
             //创建交易
-            val rawTransaction = RawTransaction.createEtherTransaction(nonce, gasPrice, BigInteger.valueOf(430000), pay_address, amountInWei)
+            val rawTransaction = RawTransaction.createEtherTransaction(nonce, gasPrice, Contract.GAS_LIMIT, pay_address, amountInWei)
 
             //签署交易
             val signedMessage = TransactionEncoder.signMessage(rawTransaction, pol_chainId, crash)
@@ -279,7 +287,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             val balance = web3j.ethGetBalance(crash!!.address, DefaultBlockParameterName.LATEST).send().balance
             val bigDecimal = Convert.fromWei(balance.toString(), Convert.Unit.ETHER)
             LogUtil.e("AAAA", "payBnb ： balance = $balance ;; bigDecimal = $bigDecimal")
-            if (balance < amountInWei) {
+            if (balance < amountInWei + freeCount) {
                 runOnUiThread {
                     Toast.makeText(this, "当前余额不够", Toast.LENGTH_SHORT).show()
                 }
