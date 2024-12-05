@@ -96,8 +96,11 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getViewBinding().btnWallet.setOnClickListener {
-            buildWallet()
+        getViewBinding().btnWalletWords.setOnClickListener {
+            buildWalletByWords()
+        }
+        getViewBinding().btnWalletPri.setOnClickListener {
+            buildWalletByPri()
         }
         getViewBinding().btnTron1.setOnClickListener {
             buildTronAddress()
@@ -174,7 +177,6 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         getViewBinding().btnPolPay.setOnClickListener {
             payPol()
         }
-
     }
 
     private fun payPol() {
@@ -862,10 +864,12 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             val freeCount1 = gasPrice * amountUsed1
             val free = Convert.fromWei(freeCount.toString(), Convert.Unit.ETHER)
             val free1 = Convert.fromWei(freeCount1.toString(), Convert.Unit.ETHER)
-
+            val compareCount = gasPrice * Contract.GAS_LIMIT
+            val compare = Convert.fromWei(compareCount.toString(), Convert.Unit.ETHER)
+            LogUtil.e("AAAA","payUsdT1 : freeCount1 = $freeCount1 ;; free1 = $free1 ;; compareCount = $compareCount ;; compare = $compare")
+            //与实际的手续费对不上
             val nonce = web3j.ethGetTransactionCount(crash!!.address, DefaultBlockParameterName.PENDING).send().transactionCount
             LogUtil.e("AAAA","payUsdT1 ： nonce = $nonce ;; gasPrice = $gasPrice ;; amountUSed = $amountUsed ;; freeCount = $freeCount ;; freeValue = $free")
-            LogUtil.e("AAAA","payUsdT1 ： nonce = $nonce ;; gasPrice = $gasPrice ;; amountUSed1 = $amountUsed1 ;; freeCount1 = $freeCount1 ;; freeValue1 = $free1")
 
             //创建交易
             val rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, Contract.GAS_LIMIT, usd_path, data)
@@ -1026,7 +1030,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
     /**
      * 创建钱包
      */
-    private fun buildWallet() {
+    private fun buildWalletByPri() {
         val entropy = ByteArray(16)
         SecureRandom().nextBytes(entropy)
 //        val mnemonic = MnemonicUtils.generateMnemonic(entropy)
@@ -1045,7 +1049,33 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             val pri = Numeric.toHexStringWithPrefixZeroPadded(crash!!.ecKeyPair.privateKey, 64)
             val pub = crash!!.ecKeyPair.publicKey.toString(16)
             val address = crash!!.address
-            LogUtil.e("AAAA", "钱包创建完成: ETH系列的 : address = $address ;; pri = $pri ;; pub = $pub")
+            LogUtil.e("AAAA", "私钥钱包创建完成: ETH系列的 : address = $address ;; pri = $pri ;; pub = $pub")
+        }.start()
+    }
+
+    /**
+     * 创建钱包
+     */
+    private fun buildWalletByWords() {
+        val entropy = ByteArray(16)
+        SecureRandom().nextBytes(entropy)
+//        val mnemonic = MnemonicUtils.generateMnemonic(entropy)
+        getViewBinding().tvWords.text = mnemonic
+        LogUtil.e("AAAA", "words = $mnemonic")
+        val parentPath = cacheDir.absolutePath + File.separator + "eth"
+        Thread {
+            val file = File(parentPath)
+            if (!file.exists()) {
+                file.mkdirs()
+            }
+            val seed = MnemonicUtils.generateSeed(mnemonic, SALT)
+            val wallet = WalletUtils.generateBip39WalletFromMnemonic(SALT, mnemonic, file)
+            //这个与欧易地址相同
+            crash = Bip44WalletUtils.loadBip44Credentials(SALT, mnemonic)
+            val pri = Numeric.toHexStringWithPrefixZeroPadded(crash!!.ecKeyPair.privateKey, 64)
+            val pub = crash!!.ecKeyPair.publicKey.toString(16)
+            val address = crash!!.address
+            LogUtil.e("AAAA", "助记词钱包创建完成: ETH系列的 : address = $address ;; pri = $pri ;; pub = $pub")
         }.start()
     }
 

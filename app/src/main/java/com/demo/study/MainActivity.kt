@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import com.chl.common.utils.LogUtil
 import android.graphics.Color
+import android.os.Build
 import com.chl.common.widget.chart.PieView
 import com.demo.study.databinding.ActivityMainBinding
 import com.demo.study.dialog.TestSheetDialog
@@ -62,7 +63,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         getViewBinding().btnWallet.setOnClickListener {
-            WalletActivity.openSelf(this)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                WalletActivity.openSelf(this)
+            }
         }
 
         val dates = mutableListOf<PieView.PieBean>()

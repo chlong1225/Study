@@ -10,32 +10,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btn_wallet"
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:id="@+id/hsv_create"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textAllCaps="false"
-            android:gravity="center"
-            android:text="创建钱包"/>
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/btn_tron1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/btn_wallet"
-            app:layout_constraintBottom_toBottomOf="@id/btn_wallet"
-            app:layout_constraintStart_toEndOf="@id/btn_wallet"
-            android:textAllCaps="false"
-            android:gravity="center"
-            android:text="生成TRON地址"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_wallet_words"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:text="助记词创建钱包"/>
+
+                <Button
+                    android:id="@+id/btn_wallet_pri"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:text="私钥创建钱包"/>
+
+                <Button
+                    android:id="@+id/btn_tron1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:text="生成TRON地址"/>
+
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/tv_words"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/btn_wallet"
+            app:layout_constraintTop_toBottomOf="@id/hsv_create"
             android:layout_marginTop="10dp"/>
 
         <EditText
