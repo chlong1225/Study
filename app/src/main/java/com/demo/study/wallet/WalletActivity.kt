@@ -55,6 +55,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         private const val SALT = ""
         //同步欧易的助记词
         private val mnemonic = "mystery diamond supreme office violin circle dune brush kid giggle useful bomb"
+//        private val mnemonic = "mountain all crime marble region bubble pudding monitor agent feature brass mixture"
 
         //节点
         private val eth_url = "https://eth-sepolia.public.blastapi.io"
@@ -100,7 +101,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             buildWalletByWords()
         }
         getViewBinding().btnWalletPri.setOnClickListener {
-            buildWalletByPri()
+            buildWalletByPri("0x689dff4f4d024f2d7a067d12610d7fba0cea9b3d7bc31ca14ea6bb91fd5e4e3b")
         }
         getViewBinding().btnTron1.setOnClickListener {
             buildTronAddress()
@@ -1012,44 +1013,39 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             val create = Credentials.create(bip44Keypair)
             val pri = create.ecKeyPair.privateKey.toString(16)
             val pub = create.ecKeyPair.publicKey.toString(16)
-            val addressByte = Numeric.hexStringToByteArray("0x41" + create.address.substring(2))
-            val firstHash = Hash.sha256(addressByte)
-            val secondHash = Hash.sha256(firstHash)
-            val tronHash = ByteArray(addressByte.size + 4)
-            for (i in addressByte.indices) {
-                tronHash[i] = addressByte[i]
-            }
-            for (i in addressByte.size until tronHash.size) {
-                tronHash[i] = secondHash[i - addressByte.size]
-            }
-            val tronAddress = Base58.encode(tronHash)
+            val tronAddress = ethAddressToTron(create.address)
             LogUtil.e("AAAA", "波场TRON : address = $tronAddress ;; pri = $pri ;; pub = $pub")
         }.start()
     }
 
     /**
-     * 创建钱包
+     * ETH地址转换为TRON地址
      */
-    private fun buildWalletByPri() {
-        val entropy = ByteArray(16)
-        SecureRandom().nextBytes(entropy)
-//        val mnemonic = MnemonicUtils.generateMnemonic(entropy)
-        getViewBinding().tvWords.text = mnemonic
-        LogUtil.e("AAAA", "words = $mnemonic")
-        val parentPath = cacheDir.absolutePath + File.separator + "eth"
-        Thread {
-            val file = File(parentPath)
-            if (!file.exists()) {
-                file.mkdirs()
-            }
-            val seed = MnemonicUtils.generateSeed(mnemonic, SALT)
-            val wallet = WalletUtils.generateBip39WalletFromMnemonic(SALT, mnemonic, file)
-            //这个与欧易地址相同
-            crash = Bip44WalletUtils.loadBip44Credentials(SALT, mnemonic)
+    private fun ethAddressToTron(address: String): String {
+        val addressByte = Numeric.hexStringToByteArray("0x41" + address.substring(2))
+        val firstHash = Hash.sha256(addressByte)
+        val secondHash = Hash.sha256(firstHash)
+        val tronHash = ByteArray(addressByte.size + 4)
+        for (i in addressByte.indices) {
+            tronHash[i] = addressByte[i]
+        }
+        for (i in addressByte.size until tronHash.size) {
+            tronHash[i] = secondHash[i - addressByte.size]
+        }
+        return Base58.encode(tronHash)
+    }
+
+    /**
+     * 私钥生成地址
+     */
+    private fun buildWalletByPri(privateKey: String) {
+        Thread{
+            crash = Credentials.create(privateKey)
             val pri = Numeric.toHexStringWithPrefixZeroPadded(crash!!.ecKeyPair.privateKey, 64)
             val pub = crash!!.ecKeyPair.publicKey.toString(16)
             val address = crash!!.address
-            LogUtil.e("AAAA", "私钥钱包创建完成: ETH系列的 : address = $address ;; pri = $pri ;; pub = $pub")
+            val tronAddress = ethAddressToTron(address)
+            LogUtil.e("AAAA", "私钥钱包创建完成: pri = $pri ;; pub = $pub ;; ETH系列的的address = $address ;; TRON地址 = $tronAddress")
         }.start()
     }
 
