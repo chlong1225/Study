@@ -7,12 +7,28 @@ import android.text.TextUtils
 import android.widget.Toast
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.chl.common.json.BLJsonUtils
+import com.chl.common.net.CallBack
+import com.chl.common.net.HttpMethodType
+import com.chl.common.net.OkHttpManager
+import com.chl.common.net.ParameterInfo
 import com.chl.common.utils.LogUtil
 import com.demo.study.BaseActivity
 import com.demo.study.databinding.ActivityWalletBinding
 import com.demo.study.wallet.bull.BullContractAbi
+import com.demo.study.wallet.tron.AccountBean
+import com.demo.study.wallet.tron.PayInfo
+import com.demo.study.wallet.tron.TransactionInfo
 import com.demo.study.wallet.usdt.ContractAbi
+import com.google.protobuf.ByteString
 import org.bitcoinj.core.Base58
+import org.bitcoinj.core.ECKey
+import org.bitcoinj.core.Sha256Hash
+import org.bitcoinj.core.Utils
+import org.bouncycastle.util.encoders.Base64
+import org.bouncycastle.util.encoders.Base64Encoder
+import org.tron.common.utils.TransactionUtils
+import org.tron.protos.Protocol
 import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Address
@@ -26,6 +42,7 @@ import org.web3j.crypto.Credentials
 import org.web3j.crypto.Hash
 import org.web3j.crypto.MnemonicUtils
 import org.web3j.crypto.RawTransaction
+import org.web3j.crypto.Sign
 import org.web3j.crypto.TransactionEncoder
 import org.web3j.crypto.WalletUtils
 import org.web3j.protocol.Web3j
@@ -40,7 +57,11 @@ import org.web3j.utils.Convert
 import org.web3j.utils.Numeric
 import java.io.File
 import java.math.BigInteger
+import java.security.KeyFactory
+import java.security.MessageDigest
 import java.security.SecureRandom
+import java.security.spec.ECParameterSpec
+import java.security.spec.ECPrivateKeySpec
 
 /**
  * create on 2024/12/2
@@ -90,6 +111,8 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
     }
 
     private var crash: Credentials? = null
+    private var tronAddress = ""
+    private var crashTron: Credentials? = null
 
     override fun buildViewBinding(): ActivityWalletBinding {
         return ActivityWalletBinding.inflate(layoutInflater)
@@ -97,13 +120,14 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        OkHttpManager.instance.init(true)
         getViewBinding().btnWalletWords.setOnClickListener {
             buildWalletByWords()
         }
         getViewBinding().btnWalletPri.setOnClickListener {
             buildWalletByPri("0x689dff4f4d024f2d7a067d12610d7fba0cea9b3d7bc31ca14ea6bb91fd5e4e3b")
         }
-        getViewBinding().btnTron1.setOnClickListener {
+        getViewBinding().btnTron.setOnClickListener {
             buildTronAddress()
         }
         getViewBinding().btnEthBalance.setOnClickListener {
@@ -178,6 +202,119 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         getViewBinding().btnPolPay.setOnClickListener {
             payPol()
         }
+        getViewBinding().btnTronBalance.setOnClickListener {
+            queryTronBalance()
+        }
+        getViewBinding().btnTronPay.setOnClickListener {
+            payTron()
+        }
+    }
+
+    private fun payTron() {
+        if (crashTron == null) {
+            return
+        }
+        /*val amount = getViewBinding().etTronAmount.text.trim().toString()
+        if (TextUtils.isEmpty(amount)) {
+            Toast.makeText(this, "请先输入交易金额", Toast.LENGTH_SHORT).show()
+            return
+        }*/
+        //1，创建交易
+        val parameterInfo = ParameterInfo("https://api.shasta.trongrid.io/wallet/createtransaction", HttpMethodType.POST)
+        parameterInfo.addHeader("TRON-PRO-API-KEY", "da1bad0d-af08-4439-8f0f-18abb7a66b3d")
+        val payInfo = PayInfo("TDj7hnoQW7mWFtu8UZ985fe7VKEWo7acke", "TTNr3jaSBJp4woGy2tffEGvnB97SpyEoYu", BigInteger("" + 1000000))
+        parameterInfo.body = BLJsonUtils.toJson(payInfo)
+        OkHttpManager.instance.httpRequest(parameterInfo, object : CallBack {
+
+            override fun onSuccess(body: String) {
+                val tem =
+                    "d2b5577d4b7c3c6f905b9348bc6de6c06cac6d2ef146902ea1c435eeb47586d5750ea47a4a2904daa533f5adb82e8b135ae4f16f33dd0469768c7c667b7c987701"
+                val hexStringToByteArray = Numeric.hexStringToByteArray(tem)
+
+                LogUtil.e("AAAA", "create : body = $body")
+                val info = BLJsonUtils.fromJson(body, TransactionInfo::class.java)
+                //将私钥转换为长度32的字符串
+//                info.raw_data.timestamp = System.currentTimeMillis()
+//                info.raw_data.expiration = System.currentTimeMillis() + 60 * 1000
+                Thread{
+                    info.signature.clear()
+                    val sha256 = Hash.sha256(BLJsonUtils.toJson(info.raw_data).toByteArray())
+//                    val sha256 = Hash.sha256(info.raw_data_hex.toByteArray())
+                    val signMessage = Sign.signMessage(sha256, crashTron!!.ecKeyPair,false)
+                    val sign1 = crashTron!!.ecKeyPair.sign(sha256)
+                    val a1 = Numeric.hexStringToByteArray(Numeric.toHexStringNoPrefix(sign1.r))
+                    val a2 = Numeric.hexStringToByteArray(Numeric.toHexStringNoPrefix(sign1.s))
+                    val r = signMessage.r
+                    val s = signMessage.s
+                    val v = signMessage.v
+                    val dates = ByteArray(65)
+                    System.arraycopy(r, 0, dates, 0, r.size)
+                    System.arraycopy(s, 0, dates, r.size, s.size)
+                    dates[r.size + s.size] = v[0]
+                    val sign = Numeric.toHexStringNoPrefix(dates)
+                    info.signature.add(sign)
+                    LogUtil.e("AAAA", "signature = $sign ;; v= ${signMessage.v[0]} ;; length = ${sign.length}")
+                    broadcastTransaction(info)
+                }.start()
+            }
+
+
+            override fun onError(errorCode: Int, errorMsg: String?) {
+                val b = 10
+            }
+
+            override fun onCompleted() {
+            }
+
+        })
+    }
+
+    private fun tronSign(transaction: Protocol.Transaction) {
+        val transactionSigned = TransactionUtils.setTimestamp(transaction)
+        val sign = TransactionUtils.sign(transactionSigned, org.tron.common.crypto.ECKey.fromPrivate(crashTron!!.ecKeyPair.privateKey))
+
+    }
+
+    private fun broadcastTransaction(info: TransactionInfo) {
+        val parameterInfo = ParameterInfo("https://api.shasta.trongrid.io/wallet/broadcasttransaction", HttpMethodType.POST)
+        parameterInfo.addHeader("TRON-PRO-API-KEY", "da1bad0d-af08-4439-8f0f-18abb7a66b3d")
+        parameterInfo.body = BLJsonUtils.toJson(info)
+        OkHttpManager.instance.httpRequest(parameterInfo,object:CallBack{
+            override fun onSuccess(body: String) {
+                LogUtil.e("AAAA", "body = $body")
+                val a = 11
+            }
+
+            override fun onError(errorCode: Int, errorMsg: String?) {
+                val b = 11
+            }
+
+            override fun onCompleted() {
+            }
+
+        })
+    }
+
+    private fun queryTronBalance() {
+        val parameterInfo = ParameterInfo("https://api.shasta.trongrid.io/wallet/getaccount", HttpMethodType.POST)
+        parameterInfo.addHeader("TRON-PRO-API-KEY", "da1bad0d-af08-4439-8f0f-18abb7a66b3d")
+        parameterInfo.body = "{\"address\":\"TDj7hnoQW7mWFtu8UZ985fe7VKEWo7acke\",\"visible\":true}"
+        OkHttpManager.instance.httpRequest(parameterInfo, object : CallBack {
+
+            override fun onSuccess(body: String) {
+                val bean = BLJsonUtils.fromJson(body, AccountBean::class.java)
+                getViewBinding().tvTronBalance.text = (bean.balance / 1000000.0).toString() + "TRX"
+            }
+
+
+            override fun onError(errorCode: Int, errorMsg: String?) {
+                val b = 10
+            }
+
+            override fun onCompleted() {
+            }
+
+        })
     }
 
     private fun payPol() {
@@ -974,7 +1111,14 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
                 LogUtil.e("AAAA", "payEth ： fail = ${ethSendTransaction.error.message}")
             } else {
                 LogUtil.e("AAAA", "payEth ： success = ${ethSendTransaction.transactionHash}")
+                val result = web3j.ethGetTransactionReceipt(ethSendTransaction.transactionHash).send().result
+                if (result == null) {
+                    LogUtil.e("AAAAA", "payETH : Transaction was successful!")
+                } else {
+                    LogUtil.e("AAAAA", "payETH : Transaction is still pending...")
+                }
             }
+
         }.start()
     }
 
@@ -1010,10 +1154,10 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
             // m/44'/60'/0'/0/0
             val path = intArrayOf(44 or Bip32ECKeyPair.HARDENED_BIT, 195 or Bip32ECKeyPair.HARDENED_BIT, 0 or Bip32ECKeyPair.HARDENED_BIT, 0, 0)
             val bip44Keypair = Bip32ECKeyPair.deriveKeyPair(masterKeypair, path)
-            val create = Credentials.create(bip44Keypair)
-            val pri = create.ecKeyPair.privateKey.toString(16)
-            val pub = create.ecKeyPair.publicKey.toString(16)
-            val tronAddress = ethAddressToTron(create.address)
+            crashTron = Credentials.create(bip44Keypair)
+            val pri = crashTron!!.ecKeyPair.privateKey.toString(16)
+            val pub = crashTron!!.ecKeyPair.publicKey.toString(16)
+            val tronAddress = ethAddressToTron(crashTron!!.address)
             LogUtil.e("AAAA", "波场TRON : address = $tronAddress ;; pri = $pri ;; pub = $pub")
         }.start()
     }
@@ -1032,7 +1176,8 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         for (i in addressByte.size until tronHash.size) {
             tronHash[i] = secondHash[i - addressByte.size]
         }
-        return Base58.encode(tronHash)
+        tronAddress = Base58.encode(tronHash)
+        return tronAddress
     }
 
     /**

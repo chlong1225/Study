@@ -7,7 +7,7 @@ package com.chl.common.net
  */
 interface CallBack {
 
-    fun onSuccess(returnModel: ReturnModel)
+    fun onSuccess(body: String)
 
     fun onError(errorCode: Int, errorMsg: String?)
 
