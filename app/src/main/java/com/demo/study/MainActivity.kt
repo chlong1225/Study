@@ -68,6 +68,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         }
 
+        getViewBinding().btnWeb.setOnClickListener {
+            WebActivity.openSelf(this)
+        }
+
         val dates = mutableListOf<PieView.PieBean>()
         dates.add(PieView.PieBean(1.0, Color.RED))
         dates.add(PieView.PieBean(2.0, Color.GREEN))

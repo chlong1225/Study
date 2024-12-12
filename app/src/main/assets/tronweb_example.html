@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRON Web Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/tronweb@2.6.0/dist/TronWeb.js"></script>
+</head>
+<body>
+<h1>TRON Web Example</h1>
+<button onclick="sendTRX()">Send TRX</button>
+
+<script>
+        console.log("mmmm 11 = ");
+        const tronWeb = new TronWeb({
+            fullHost: "https://api.shasta.trongrid.io",
+            privateKey: "a41bf1fac715646de65cdab2ed41172bfd9d1cdfb7cb3ab42a71854cd9ea73f8"
+        });
+        console.log("mmmm = " + tronWeb);
+        async function sendTRX() {
+            const fromAddress = "TDj7hnoQW7mWFtu8UZ985fe7VKEWo7acke";
+            const toAddress = "TTNr3jaSBJp4woGy2tffEGvnB97SpyEoYu";
+            const amount = 1000000;  // 1 TRX = 1,000,000 sun
+
+            try {
+                const transaction = await tronWeb.transactionBuilder.sendTrx(toAddress, amount, fromAddress);
+                console.log("aaaa = " + JSON.stringify(transaction));
+                const signedTransaction = await tronWeb.trx.sign(transaction);
+                console.log("bbb = " + JSON.stringify(signedTransaction));
+                const result = await tronWeb.trx.sendRawTransaction(signedTransaction);
+                console.log("ccc = " + JSON.stringify(result));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>

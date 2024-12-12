@@ -2,10 +2,10 @@ package com.demo.study.wallet
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
-import android.os.Build
 import androidx.annotation.RequiresApi
 import com.chl.common.json.BLJsonUtils
 import com.chl.common.net.CallBack
@@ -22,11 +22,6 @@ import com.demo.study.wallet.tron.TransactionInfo
 import com.demo.study.wallet.usdt.ContractAbi
 import com.google.protobuf.ByteString
 import org.bitcoinj.core.Base58
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.Sha256Hash
-import org.bitcoinj.core.Utils
-import org.bouncycastle.util.encoders.Base64
-import org.bouncycastle.util.encoders.Base64Encoder
 import org.tron.common.utils.TransactionUtils
 import org.tron.protos.Protocol
 import org.web3j.abi.FunctionEncoder
@@ -57,11 +52,7 @@ import org.web3j.utils.Convert
 import org.web3j.utils.Numeric
 import java.io.File
 import java.math.BigInteger
-import java.security.KeyFactory
-import java.security.MessageDigest
 import java.security.SecureRandom
-import java.security.spec.ECParameterSpec
-import java.security.spec.ECPrivateKeySpec
 
 /**
  * create on 2024/12/2
@@ -227,10 +218,6 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         OkHttpManager.instance.httpRequest(parameterInfo, object : CallBack {
 
             override fun onSuccess(body: String) {
-                val tem =
-                    "d2b5577d4b7c3c6f905b9348bc6de6c06cac6d2ef146902ea1c435eeb47586d5750ea47a4a2904daa533f5adb82e8b135ae4f16f33dd0469768c7c667b7c987701"
-                val hexStringToByteArray = Numeric.hexStringToByteArray(tem)
-
                 LogUtil.e("AAAA", "create : body = $body")
                 val info = BLJsonUtils.fromJson(body, TransactionInfo::class.java)
                 //将私钥转换为长度32的字符串
@@ -240,20 +227,30 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
                     info.signature.clear()
                     val sha256 = Hash.sha256(BLJsonUtils.toJson(info.raw_data).toByteArray())
 //                    val sha256 = Hash.sha256(info.raw_data_hex.toByteArray())
+
+                    val ecKey = org.tron.common.crypto.ECKey.fromPrivate(crashTron!!.ecKeyPair.privateKey)
+                    val sign2 = ecKey.sign(sha256)
+                    val a11 = Numeric.hexStringToByteArray(Numeric.toHexStringNoPrefix(sign2.r))
+                    val a21 = Numeric.hexStringToByteArray(Numeric.toHexStringNoPrefix(sign2.s))
+                    val copyFrom = ByteString.copyFrom(sign2.toByteArray())
+                    val sign = Numeric.toHexStringNoPrefix(copyFrom.toByteArray())
+
                     val signMessage = Sign.signMessage(sha256, crashTron!!.ecKeyPair,false)
                     val sign1 = crashTron!!.ecKeyPair.sign(sha256)
                     val a1 = Numeric.hexStringToByteArray(Numeric.toHexStringNoPrefix(sign1.r))
                     val a2 = Numeric.hexStringToByteArray(Numeric.toHexStringNoPrefix(sign1.s))
-                    val r = signMessage.r
-                    val s = signMessage.s
-                    val v = signMessage.v
+                    val r = signMessage.r // 32
+                    val s = signMessage.s  //32
+                    val v = signMessage.v //1 27/28
                     val dates = ByteArray(65)
                     System.arraycopy(r, 0, dates, 0, r.size)
                     System.arraycopy(s, 0, dates, r.size, s.size)
                     dates[r.size + s.size] = v[0]
-                    val sign = Numeric.toHexStringNoPrefix(dates)
-                    info.signature.add(sign)
-                    LogUtil.e("AAAA", "signature = $sign ;; v= ${signMessage.v[0]} ;; length = ${sign.length}")
+                    val sign11 = Numeric.toHexStringNoPrefix(dates)
+                    info.signature.add(sign11)
+//                    LogUtil.e("AAAA", "signature = $sign ;; v= ${signMessage.v[0]} ;; length = ${sign.length}")
+                    LogUtil.e("AAAA", "signature = $sign ;;  length = ${sign.length}")
+                    LogUtil.e("AAAA", "signature11 = $sign11 ;;  length = ${sign11.length}")
                     broadcastTransaction(info)
                 }.start()
             }
@@ -1151,7 +1148,7 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>() {
         Thread{
             val seed = MnemonicUtils.generateSeed(mnemonic, SALT)
             val masterKeypair = Bip32ECKeyPair.generateKeyPair(seed)
-            // m/44'/60'/0'/0/0
+            // m/44'/195'/0'/0/0
             val path = intArrayOf(44 or Bip32ECKeyPair.HARDENED_BIT, 195 or Bip32ECKeyPair.HARDENED_BIT, 0 or Bip32ECKeyPair.HARDENED_BIT, 0, 0)
             val bip44Keypair = Bip32ECKeyPair.deriveKeyPair(masterKeypair, path)
             crashTron = Credentials.create(bip44Keypair)
